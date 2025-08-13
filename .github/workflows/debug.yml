@@ -1,11 +1,15 @@
 name: Debug
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        variant: [normalDebug] # matrix with only one item for now
 
     steps:
       - name: Checkout code
@@ -20,11 +24,11 @@ jobs:
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
 
-      - name: Build Debug APK
-        run: ./gradlew assembleNormalDebug
+      - name: Build APK
+        run: ./gradlew assemble${{ matrix.variant }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug.apk-${{ github.run_number }}
-          path: app/build/outputs/apk/normal/debug/*.apk
+          name: app-${{ matrix.variant }}-${{ github.run_number }}
+          path: app/build/outputs/apk/**/${{ matrix.variant }}/*.apk
