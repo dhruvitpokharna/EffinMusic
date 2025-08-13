@@ -111,7 +111,14 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
                             binding.lyricsView.setLabel(context?.getString(R.string.no_lyrics_found))
                             if (PreferenceUtil.showLyrics) {
                                 binding.lyricsView.visibility = View.VISIBLE
-                                binding.fetchLyricsText.visibility = View.VISIBLE
+                                binding.fetchLyricsText.apply {
+                                    alpha = 0f
+                                    visibility = View.VISIBLE
+                                    animate()
+                                        .alpha(1f)
+                                        .setDuration(600)
+                                        .setListener(null)
+                                }
                             }
                         }
                     }
