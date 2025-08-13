@@ -233,8 +233,8 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         when (key) {
             SHOW_LYRICS -> {
+                updateLyrics()
                 if (PreferenceUtil.showLyrics) {
-                    updateLyrics()
                     maybeInitLyrics()
                 } else {
                     showLyrics(false)
