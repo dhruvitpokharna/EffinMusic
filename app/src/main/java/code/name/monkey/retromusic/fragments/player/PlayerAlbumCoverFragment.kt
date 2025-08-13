@@ -107,7 +107,7 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
                     withContext(Dispatchers.Main) {
                         val binding = _binding ?: return@withContext
                         if (!viewDestroyed) {
-                            //binding.lyricsView.visibility = View.VISIBLE
+                            binding.lyricsView.visibility = View.VISIBLE
                             binding.lyricsView.reset()
                             binding.lyricsView.setLabel(context?.getString(R.string.no_lyrics_found))
                             if (PreferenceUtil.showLyrics) {
