@@ -7,6 +7,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        variant: [Release]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,7 +25,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease
+        run: ./gradlew assemble${{ matrix.variant }}
       
       - uses: ilharp/sign-android-release@v2
         name: Sign Normal APK
