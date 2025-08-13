@@ -155,7 +155,6 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
                 }
             }
         }
-        //binding.fetchLyricsText.visibility = View.GONE
         binding.fetchLyricsText.setOnClickListener {
             val song = MusicPlayerRemote.currentSong
             lifecycleScope.launch {
@@ -238,7 +237,6 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
                     maybeInitLyrics()
                 } else {
                     showLyrics(false)
-                    //binding.fetchLyricsText.visibility = View.GONE
                     progressViewUpdateHelper?.stop()
                 }
             }
