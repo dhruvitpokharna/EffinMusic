@@ -234,7 +234,7 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
         when (key) {
             SHOW_LYRICS -> {
                 if (PreferenceUtil.showLyrics) {
-                    //updateLyrics()
+                    updateLyrics()
                     maybeInitLyrics()
                 } else {
                     showLyrics(false)
