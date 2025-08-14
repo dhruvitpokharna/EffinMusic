@@ -141,39 +141,12 @@ class PlaylistsFragment :
         requireContext().setUpMediaRouteButton(menu)
     }
 
-    private val importPlaylistLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val uris = mutableListOf<Uri>()
-                result.data?.data?.let { uri ->
-                    uris.add(uri)
-                }
-                result.data?.clipData?.let { clipData ->
-                    for (i in 0 until clipData.itemCount) {
-                        uris.add(clipData.getItemAt(i).uri)
-                    }
-                }
-                importPlaylists(uris)
-            }
-        }
-
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (handleGridSizeMenuItem(item)) {
             return true
         }
         if (handleSortOrderMenuItem(item)) {
             return true
-        }
-        when (item.itemId) {
-            R.id.action_import_playlist -> {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "*/*" // Allow all file types for now, can be refined later
-                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                }
-                importPlaylistLauncher.launch(intent)
-                return true
-            }
         }
         return super.onMenuItemSelected(item)
     }
@@ -295,99 +268,6 @@ class PlaylistsFragment :
             }
             libraryViewModel.updatePlaylistPositions(dataSet.map { it.playlistEntity })
         }
-    }
-
-    private fun importPlaylists(uris: List<Uri>) {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            var successfulImports = 0
-            var failedImports = 0
-            for (uri in uris) {
-                try {
-                    val playlistName = getFileNameFromUri(uri) ?: "Imported Playlist"
-                    val contentResolver = requireContext().contentResolver
-                    val inputStream = contentResolver.openInputStream(uri)
-                    val reader = BufferedReader(InputStreamReader(inputStream))
-                    val songPaths = mutableListOf<String>()
-                    reader.useLines { lines ->
-                        lines.forEach { line ->
-                            val trimmedLine = line.trim()
-                            if (trimmedLine.isNotEmpty() && !trimmedLine.startsWith("#")) {
-                                songPaths.add(trimmedLine)
-                            }
-                        }
-                    }
-
-                    val allSongs = libraryViewModel.getSongs().value ?: emptyList()
-                    val songsToAddToPlaylist = mutableListOf<Song>()
-
-                    for (path in songPaths) {
-                        val foundSong = allSongs.find { it.data == path }
-                        if (foundSong != null) {
-                            songsToAddToPlaylist.add(foundSong)
-                        } else {
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(requireContext(), "Song not found: $path in playlist $playlistName", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-
-                    if (songsToAddToPlaylist.isNotEmpty()) {
-                        val existingPlaylists = libraryViewModel.checkPlaylistExists(playlistName)
-                        val playlistId: Long
-                        if (existingPlaylists.isEmpty()) {
-                            playlistId = libraryViewModel.createPlaylist(PlaylistEntity(playlistName = playlistName))
-                        } else {
-                            playlistId = existingPlaylists.first().playListId
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(requireContext(), "Playlist '$playlistName' already exists. Adding songs to it.", Toast.LENGTH_LONG).show()
-                            }
-                        }
-
-                        val songEntities = songsToAddToPlaylist.map { it.toSongEntity(playlistId) }
-                        libraryViewModel.insertSongs(songEntities)
-
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), "Successfully imported ${songsToAddToPlaylist.size} songs to playlist '$playlistName'", Toast.LENGTH_LONG).show()
-                        }
-                        successfulImports++
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), "No songs found in playlist file '$playlistName' or no songs could be resolved.", Toast.LENGTH_LONG).show()
-                        }
-                        failedImports++
-                    }
-
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), "Error importing playlist: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
-                    e.printStackTrace()
-                    failedImports++
-                }
-            }
-            withContext(Dispatchers.Main) {
-                if (successfulImports > 0) {
-                    Toast.makeText(requireContext(), "Finished importing $successfulImports playlists. $failedImports failed.", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(requireContext(), "No playlists were imported.", Toast.LENGTH_LONG).show()
-                }
-            }
-            libraryViewModel.forceReload(ReloadType.Playlists)
-        }
-    }
-
-    private fun getFileNameFromUri(uri: Uri): String? {
-        var name: String? = null
-        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                if (nameIndex != -1) {
-                    name = it.getString(nameIndex)
-                }
-            }
-        }
-        return name?.substringBeforeLast(".") // Remove file extension
     }
 
     override fun setGridSize(gridSize: Int) {
