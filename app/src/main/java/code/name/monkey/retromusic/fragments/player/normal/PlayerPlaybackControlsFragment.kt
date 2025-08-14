@@ -169,7 +169,11 @@ class PlayerPlaybackControlsFragment :
         }
         
         // Always display the full artist name string
-        binding.text.text = song.artistName
+        binding.text.text = listOfNotNull(song.albumArtist, song.artistName)
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .distinct()
+            .joinToString(", ")
 
         if (PreferenceUtil.isSongInfo) {
             binding.songInfo.text = getSongInfo(song)
