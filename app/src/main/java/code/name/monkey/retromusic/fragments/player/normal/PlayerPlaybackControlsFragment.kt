@@ -169,7 +169,7 @@ class PlayerPlaybackControlsFragment :
         }
         
         // Always display the full artist name string
-        binding.text.text = song.allArtists
+        binding.text.text = song.artistName
 
         if (PreferenceUtil.isSongInfo) {
             binding.songInfo.text = getSongInfo(song)
