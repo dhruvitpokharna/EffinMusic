@@ -141,12 +141,12 @@ class PlayerPlaybackControlsFragment :
         val song = MusicPlayerRemote.currentSong
         binding.title.text = song.title
 
-        val artistName = song.artistName?.trim()
         val delimiters = PreferenceUtil.artistDelimiters
         
-        val allArtists: List<String> = (song.allArtists?.split(",") ?: emptyList<String>())
+        val allArtists = listOfNotNull(song.albumArtist, song.artistName)
             .map { it.trim() }
             .filter { it.isNotEmpty() }
+            .distinct()
             
         individualArtists = if (delimiters.isBlank()) {
             allArtists
@@ -169,7 +169,8 @@ class PlayerPlaybackControlsFragment :
         }
         
         // Always display the full artist name string
-        binding.text.text = song.allArtists
+        binding.text.text = allArtists
+            .joinToString(", ")
 
         if (PreferenceUtil.isSongInfo) {
             binding.songInfo.text = getSongInfo(song)
