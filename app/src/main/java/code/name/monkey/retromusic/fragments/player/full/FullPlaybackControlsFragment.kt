@@ -95,12 +95,6 @@ class FullPlaybackControlsFragment :
         binding.songTotalTime.setTextColor(Color.WHITE)
         binding.songCurrentProgress.setTextColor(Color.WHITE)
         binding.title.isSelected = true
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-        binding.text.setOnClickListener {
-goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
     }
 
     public override fun show() {
