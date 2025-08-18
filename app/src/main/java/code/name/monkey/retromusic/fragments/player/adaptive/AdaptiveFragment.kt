@@ -23,9 +23,11 @@ import code.name.monkey.retromusic.databinding.FragmentAdaptivePlayerBinding
 import code.name.monkey.retromusic.extensions.*
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
 import code.name.monkey.retromusic.fragments.base.goToAlbum
+import code.name.monkey.retromusic.fragments.base.goToAlbumArtist
 import code.name.monkey.retromusic.fragments.base.goToArtist
 import code.name.monkey.retromusic.fragments.player.PlayerAlbumCoverFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
+import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
@@ -132,7 +134,7 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player) {
                                                         goToAlbumArtist(requireActivity(), selectedArtist.name)
                                                     }
                                                     if (which == 1) {
-                                                        goToArtist(requireActivity(), selectedArtist.name, selectedArtist.id)
+                                                        goToArtist(requireActivity(), selectedArtist.id)
                                                     }
                                                 } else {
                                                     context?.showToast("Artist not found: $selectedArtistName")
@@ -151,7 +153,7 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player) {
                                             it.name.equals(artistName, ignoreCase = true)
                                         }
                                         if (artist != null) {
-                                            goToArtist(requireActivity(), artist.name, artist.id)
+                                            goToArtist(requireActivity(), artist.id)
                                         } else {
                                             context?.showToast("Artist not found: $artistName")
                                         }
