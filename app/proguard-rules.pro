@@ -35,6 +35,10 @@
 -keep,allowobfuscation,allowshrinking class retrofit2.Response
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
+# Keep Coil core classes needed for local image loading
+-keep class coil.** { *; }
+-dontwarn coil.**
+
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule {
