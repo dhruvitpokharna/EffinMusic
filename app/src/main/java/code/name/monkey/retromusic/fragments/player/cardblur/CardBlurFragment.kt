@@ -137,8 +137,6 @@ class CardBlurFragment : AbsPlayerFragment(R.layout.fragment_card_blur_player),
         binding.title.text = song.title
 
         val artistName = song.artistName?.trim()
-        val delimiters = PreferenceUtil.artistDelimiters
-        
         val allArtists = listOfNotNull(song.albumArtist, song.artistName)
             .map { it.trim() }
             .filter { it.isNotEmpty() }
