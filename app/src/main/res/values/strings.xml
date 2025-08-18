@@ -547,11 +547,7 @@
     <string name="your_account_data_is_only_used_for_authentication">Your account data is only used for authentication.</string>
     <string name="could_not_write_tags_to_file">Could not write tags to the music file!</string>
     <string name="sleep_timer_no_permission">No permission to schedule alarms, please allow Retro Music.</string>
-    <string name="pref_title_artist_delimiters">Artist Delimiters</string>
-    <string name="pref_summary_artist_delimiters">Characters used to separate multiple artists (e.g. "/,&amp;,feat.")</string>
     <string name="select_artist">Select Artist</string>
-    <string name="default_artist_delimiters"></string>
-
     <string name="pref_summary_toggle_full_screen">Toggle fullscreen mode</string>
     <string name="pref_summary_toggle_headset">Toggle headset control</string>
     <string name="pref_summary_toggle_volume">Toggle volume control</string>
