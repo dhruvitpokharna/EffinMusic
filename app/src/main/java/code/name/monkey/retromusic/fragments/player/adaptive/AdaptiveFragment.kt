@@ -114,18 +114,26 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player) {
                                         .setItems(individualArtists.toTypedArray()) { _, which ->
                                             val selectedArtistName = individualArtists[which]
                                             lifecycleScope.launch {
-                                                val allArtists = withContext(Dispatchers.IO) {
-                                                    libraryViewModel.artists.value
+                                                val albumArtists = libraryViewModel.albumArtists.value
+                                                val contributingArtists = libraryViewModel.contributingArtists.value
+                                                var selectedArtist: Artist? = null
+                                                if (which == 0) {
+                                                    selectedArtist = albumArtists?.find {
+                                                        it.name.equals(selectedArtistName, ignoreCase = true)
+                                                    }
                                                 }
-                                                val selectedArtist = allArtists?.find {
-                                                    it.name.equals(selectedArtistName, ignoreCase = true)
+                                                if (which == 1) {
+                                                    selectedArtist = contributingArtists?.find {
+                                                        it.name.equals(selectedArtistName, ignoreCase = true)
+                                                    }
                                                 }
                                                 if (selectedArtist != null) {
-                                                    goToArtist(
-                                                        requireActivity(),
-                                                        selectedArtist.name,
-                                                        selectedArtist.id
-                                                    )
+                                                    if (which == 0) {
+                                                        goToAlbumArtist(requireActivity(), selectedArtist.name)
+                                                    }
+                                                    if (which == 1) {
+                                                        goToArtist(requireActivity(), selectedArtist.name, selectedArtist.id)
+                                                    }
                                                 } else {
                                                     context?.showToast("Artist not found: $selectedArtistName")
                                                 }
