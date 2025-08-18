@@ -85,16 +85,6 @@ class SimplePlaybackControlsFragment :
         _binding = FragmentSimpleControlsFragmentBinding.bind(view)
         setUpPlayPauseFab()
         binding.title.isSelected = true
-binding.text.setOnClickListener {
-            goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
-
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-binding.text.setOnClickListener {
-            goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
     }
 
     private fun updateSong() {
