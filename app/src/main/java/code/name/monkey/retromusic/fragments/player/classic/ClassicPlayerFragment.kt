@@ -170,12 +170,6 @@ class ClassicPlayerFragment : AbsPlayerFragment(R.layout.fragment_classic_player
             Color.WHITE,
             requireActivity()
         )
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-        binding.text.setOnClickListener {
-            goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
     }
 
     private fun getQueuePanelSafe(): BottomSheetBehavior<MaterialCardView>? {
