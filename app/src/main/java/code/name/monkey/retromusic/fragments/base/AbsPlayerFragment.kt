@@ -337,13 +337,14 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                             lifecycleScope.launch(Dispatchers.IO) {
                                 val albumArtists = libraryViewModel.albumArtists.value
                                 val contributingArtists = libraryViewModel.contributingArtists.value
+                                var selectedArtist: Artist? = null
                                 if (which == 1) {
-                                    val selectedArtist = albumArtists?.find {
+                                    selectedArtist = albumArtists?.find {
                                         it.name.equals(selectedArtistName, ignoreCase = true)
                                     }
                                 }
                                 if (which == 3) {
-                                    val selectedArtist = contributingArtists?.find {
+                                    selectedArtist = contributingArtists?.find {
                                         it.name.equals(selectedArtistName, ignoreCase = true)
                                     }
                                 }
