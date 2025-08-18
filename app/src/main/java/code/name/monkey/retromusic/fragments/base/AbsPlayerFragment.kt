@@ -333,22 +333,22 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                                 val albumArtists = libraryViewModel.albumArtists.value
                                 val contributingArtists = libraryViewModel.contributingArtists.value
                                 var selectedArtist: Artist? = null
-                                if (which == 1) {
+                                if (which == 0) {
                                     selectedArtist = albumArtists?.find {
                                         it.name.equals(selectedArtistName, ignoreCase = true)
                                     }
                                 }
-                                if (which == 3) {
+                                if (which == 1) {
                                     selectedArtist = contributingArtists?.find {
                                         it.name.equals(selectedArtistName, ignoreCase = true)
                                     }
                                 }
                                 withContext(Dispatchers.Main) {
                                     if (selectedArtist != null) {
-                                        if (which == 1) {
+                                        if (which == 0) {
                                             goToAlbumArtist(requireActivity(), selectedArtist.name)
                                         }
-                                        if (which == 3) {
+                                        if (which == 1) {
                                             goToArtist(requireActivity(), selectedArtist.name, selectedArtist.id)
                                         }
                                     } else {
