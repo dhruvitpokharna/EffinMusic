@@ -60,8 +60,6 @@ class PlayerPlaybackControlsFragment :
     private var _binding: FragmentPlayerPlaybackControlsBinding? = null
     private val binding get() = _binding!!
 
-    private var individualArtists: List<String> = emptyList()
-
     override val progressSlider: Slider
         get() = binding.progressSlider
 
