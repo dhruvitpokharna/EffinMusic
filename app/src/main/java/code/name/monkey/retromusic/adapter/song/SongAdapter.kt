@@ -164,6 +164,7 @@ open class SongAdapter(
             diskCachePolicy(coil.request.CachePolicy.ENABLED)
             crossfade(false)                     // disable animations for speed
             allowHardware(true)                // enable hardware bitmaps for faster decoding
+        }
     }
 
     private fun getSongTitle(song: Song): String {
