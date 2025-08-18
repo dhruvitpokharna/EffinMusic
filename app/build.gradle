@@ -42,8 +42,9 @@ android {
         debug {
             signingConfig theSigningConfig
             applicationIdSuffix ".debug"
-            def random = UUID.randomUUID().toString().take(6)
-            versionNameSuffix "-debug.${random}"
+            versionNameSuffix "-debug"
+            versionCode = (System.currentTimeMillis() / 1000).toInteger()
+
         }
     }
     flavorDimensions = ["version"]
