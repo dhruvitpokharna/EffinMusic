@@ -629,7 +629,7 @@
     <string name="pref_title_show_songs_search_button">Show Songs Search Button</string>
     <string name="pref_summary_show_songs_search_button">Show the search button in the Songs Grid View</string>
     <string name="pref_title_time_display_mode">Time display mode</string>
-    <string name="pref_summary_mini_player_time">Choose whether to show remaining or total time in the player</string>
+    <string name="pref_summary_time_display_mode">Choose whether to show remaining or total time in the player</string>
     <string name="pref_title_mini_player_time">Mini Player Time</string>
     <string name="pref_summary_mini_player_time">Choose whether to show remaining or total time in the mini player</string>
     <string name="remaining_time">Remaining Time</string>
