@@ -122,9 +122,7 @@ class ArtistAdapter(
     }
 
     private fun loadArtistImage(artist: Artist, holder: ViewHolder) {
-        if (holder.image == null) {
-            return
-        }
+        val imageView = holder.image ?: return
 
         val overrideSize = when (PreferenceUtil.artistGridSize) {
             2 -> 500
@@ -133,38 +131,17 @@ class ArtistAdapter(
             else -> 200
         }
 
-        val glideWith = if (PreferenceUtil.fastImage) {
-            Glide.with(holder.image!!)
-        } else {
-            Glide.with(activity)
+       val model = RetroGlideExtension.getArtistModel(artist)
+       
+       imageView.load(model) {
+            size(overrideSize, overrideSize)
+            crossfade(true)
+            allowHardware(true)
+            placeholder(null)
+            memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+            diskCachePolicy(coil.request.CachePolicy.ENABLED)
+            error(null)
         }
-
-        val requestOptions = if (PreferenceUtil.fastImage) {
-            RequestOptions()
-                .format(DecodeFormat.PREFER_RGB_565)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .signature(ObjectKey("${artist.id}_${PreferenceUtil.isOfflineMode}"))
-                .skipMemoryCache(false)
-                .override(overrideSize, overrideSize)
-                .dontAnimate()
-        } else {
-            RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .skipMemoryCache(false)
-                .signature(ObjectKey("${artist.id}_${PreferenceUtil.isOfflineMode}"))
-        }
-        
-        glideWith
-            .asBitmapPalette()
-            .artistImageOptions(artist)
-            .load(RetroGlideExtension.getArtistModel(artist))
-            .apply(requestOptions)
-            .transition(RetroGlideExtension.getDefaultTransition())
-            .into(object : RetroMusicColoredTarget(holder.image!!) {
-                override fun onColorReady(colors: MediaNotificationProcessor) {
-                    setColors(colors, holder)
-                }
-            })
     }
 
     override fun getItemCount(): Int {
