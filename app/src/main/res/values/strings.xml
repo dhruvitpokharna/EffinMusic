@@ -658,9 +658,6 @@
     <string name="pref_title_fix_year">Fix Year</string>
     <string name="pref_summary_fix_year">Fix year when sorting (slow)</string>
 
-    <string name="pref_title_fast_image">Fast Image</string>
-    <string name="pref_summary_fast_image">Faster image loading with slight quality loss</string>
-
     <string name="pref_title_swap_shuffle_repeat">Swap Shuffle and Repeat Buttons</string>
     <string name="pref_summary_swap_shuffle_repeat">Swap the positions of the shuffle and repeat buttons on the now playing screen.</string>
 
