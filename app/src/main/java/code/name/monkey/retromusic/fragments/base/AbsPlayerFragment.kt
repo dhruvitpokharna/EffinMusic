@@ -40,6 +40,7 @@ import androidx.navigation.navOptions
 import androidx.preference.PreferenceManager
 import androidx.viewpager.widget.ViewPager
 import code.name.monkey.appthemehelper.util.VersionUtils
+import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.EXTRA_ARTIST_ID
 import code.name.monkey.retromusic.EXTRA_ARTIST_NAME
@@ -337,7 +338,7 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                             lifecycleScope.launch(Dispatchers.IO) {
                                 val albumArtists = libraryViewModel.albumArtists.value
                                 val contributingArtists = libraryViewModel.contributingArtists.value
-                                var selectedArtist = null
+                                var selectedArtist: Artist? = null
                                 if (which == 1) {
                                     selectedArtist = albumArtists?.find {
                                         it.name.equals(selectedArtistName, ignoreCase = true)
