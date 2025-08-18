@@ -163,15 +163,9 @@ open class SongAdapter(
             crossfade(true)
             allowHardware(true)
             placeholder(null)
+            error(null)
             memoryCachePolicy(coil.request.CachePolicy.ENABLED)
             diskCachePolicy(coil.request.CachePolicy.ENABLED)
-            error(
-                if (!customFallbackUri.isNullOrEmpty()) {
-                    customFallbackUri
-                } else {
-                    R.drawable.default_fallback_image
-                }
-            )
         }
     }
 
