@@ -72,12 +72,6 @@ class FlatPlaybackControlsFragment :
         binding.playPauseButton.setOnClickListener(PlayPauseButtonOnClickHandler())
         binding.title.isSelected = true
         binding.text.isSelected = true
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-        binding.text.setOnClickListener {
-goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
     }
 
     public override fun show() {
