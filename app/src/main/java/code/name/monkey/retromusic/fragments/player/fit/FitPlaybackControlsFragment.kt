@@ -70,13 +70,6 @@ class FitPlaybackControlsFragment :
 
         binding.title.isSelected = true
         binding.text.isSelected = true
-
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-        binding.text.setOnClickListener {
-            goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
     }
 
     private fun updateSong() {
