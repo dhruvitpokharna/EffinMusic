@@ -325,16 +325,10 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
         artistView.setOnClickListener {
             if (PreferenceUtil.tapOnArtist) {
                 if (individualArtists.size > 1) {
-                    val displayList = mutableListOf<String>()
-                    displayList.add("Album Artist")
-                    displayList.add(individualArtists[0])
-                    displayList.add("Contributing Artist")
-                    displayList.add(individualArtists[1])
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.select_artist)
-                        .setItems(displayList.toTypedArray()) { _, which ->
-                            val selectedArtistName = displayList[which]
-                            if (selectedArtistName == "Album Artist" || selectedArtistName == "Contributing Artist") return@setItems
+                        .setItems(individualArtists.toTypedArray()) { _, which ->
+                            val selectedArtistName = individualArtists[which]
                             lifecycleScope.launch(Dispatchers.IO) {
                                 val albumArtists = libraryViewModel.albumArtists.value
                                 val contributingArtists = libraryViewModel.contributingArtists.value
