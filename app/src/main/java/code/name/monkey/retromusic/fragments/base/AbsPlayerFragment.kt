@@ -337,7 +337,7 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                             lifecycleScope.launch(Dispatchers.IO) {
                                 val albumArtists = libraryViewModel.albumArtists.value
                                 val contributingArtists = libraryViewModel.contributingArtists.value
-                                var selectedArtist: Artist? = null
+                                var selectedArtist = null
                                 if (which == 1) {
                                     selectedArtist = albumArtists?.find {
                                         it.name.equals(selectedArtistName, ignoreCase = true)
