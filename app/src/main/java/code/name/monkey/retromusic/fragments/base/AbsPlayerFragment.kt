@@ -574,7 +574,7 @@ fun goToAlbumArtist(activity: Activity, artistName: String) {
             collapsePanel()
         }
         findNavController(R.id.fragment_container).navigate(
-            R.id.albumArtistDetailsFragment,
+            R.id.artistDetailsFragment,
             bundleOf(EXTRA_ARTIST_NAME to artistName)
         )
     }
