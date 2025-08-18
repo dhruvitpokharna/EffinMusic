@@ -120,9 +120,7 @@ open class AlbumAdapter(
     }
 
     protected open fun loadAlbumCover(album: Album, holder: ViewHolder) {
-        if (holder.image == null) {
-            return
-        }
+        val imageView = holder.image ?: return
 
         val overrideSize = when (PreferenceUtil.albumGridSize) {
             2 -> 500
@@ -130,33 +128,19 @@ open class AlbumAdapter(
             4 -> 250
             else -> 200
         }
-
-        val glideWith = if (PreferenceUtil.fastImage) {
-            Glide.with(holder.image!!)
-        } else {
-            Glide.with(activity)
-        }
         
         val song = album.safeGetFirstSong()
-        glideWith
-            .asBitmapPalette()
-            .albumCoverOptions(song)
-            //.checkIgnoreMediaStore()
-            .load(RetroGlideExtension.getSongModel(song))
-            .apply {
-                if (PreferenceUtil.fastImage) {
-                    format(DecodeFormat.PREFER_RGB_565)
-                    diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    skipMemoryCache(false)
-                    .override(overrideSize, overrideSize)
-                    .dontAnimate()
-                }
-            }
-            .into(object : RetroMusicColoredTarget(holder.image!!) {
-                override fun onColorReady(colors: MediaNotificationProcessor) {
-                    setColors(colors, holder)
-                }
-            })
+        val model = RetroGlideExtension.getSongModel(song)
+        
+        imageView.load(model) {
+            size(overrideSize, overrideSize)
+            crossfade(true)
+            allowHardware(true)
+            placeholder(null)
+            memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+            diskCachePolicy(coil.request.CachePolicy.ENABLED)
+            error(null)
+        }
     }
 
     override fun getItemCount(): Int {
