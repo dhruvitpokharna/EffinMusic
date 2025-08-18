@@ -90,12 +90,6 @@ class CirclePlayerFragment : AbsPlayerFragment(R.layout.fragment_circle_player),
 
         setupViews()
         binding.title.isSelected = true
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-        binding.text.setOnClickListener {
-            goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
         binding.songInfo.drawAboveSystemBars()
     }
 
