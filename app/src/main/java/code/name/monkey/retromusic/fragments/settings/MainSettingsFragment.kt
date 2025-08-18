@@ -186,7 +186,6 @@ class MainSettingsFragment : Fragment(), View.OnClickListener {
             SearchableSetting(R.id.otherSettings, getString(R.string.pref_title_offline_mode), getString(R.string.pref_summary_offline_mode), false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
             SearchableSetting(R.id.otherSettings, getString(R.string.pref_title_show_song_only), getString(R.string.pref_summary_show_song_only), false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
             SearchableSetting(R.id.otherSettings, getString(R.string.pref_title_fix_year), getString(R.string.pref_summary_fix_year), false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
-            SearchableSetting(R.id.otherSettings, getString(R.string.pref_title_fast_image), getString(R.string.pref_summary_fast_image), false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
             SearchableSetting(R.id.otherSettings, getString(R.string.pref_language_name), null, false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
 
             // Now Playing Settings (R.id.nowPlayingSettings)
