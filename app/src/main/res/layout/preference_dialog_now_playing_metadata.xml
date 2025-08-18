@@ -14,8 +14,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/preference_time_display_options" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
