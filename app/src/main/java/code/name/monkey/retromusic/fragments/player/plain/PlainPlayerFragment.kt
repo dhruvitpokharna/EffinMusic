@@ -94,12 +94,6 @@ class PlainPlayerFragment : AbsPlayerFragment(R.layout.fragment_plain_player) {
         setUpPlayerToolbar()
         binding.title.isSelected = true
         binding.text.isSelected = true
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-        binding.text.setOnClickListener {
-goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
         playerToolbar().drawAboveSystemBars()
     }
 
