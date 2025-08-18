@@ -873,10 +873,6 @@ object PreferenceUtil {
         get() = sharedPreferences.getBoolean(FIX_YEAR, false)
         set(value) = sharedPreferences.edit { putBoolean(FIX_YEAR, value) }
 
-    var fastImage: Boolean
-        get() = sharedPreferences.getBoolean(FAST_IMAGE, false)
-        set(value) = sharedPreferences.edit { putBoolean(FAST_IMAGE, value) }
-
     const val SHOW_NOW_PLAYING_QUEUE_BUTTON = "show_now_playing_queue_button"
     const val SHOW_OPTIONS_MENU = "show_options_menu"
     const val NOW_PLAYING_METADATA = "now_playing_metadata"
