@@ -15,20 +15,12 @@ import code.name.monkey.retromusic.databinding.PreferenceDialogNowPlayingMetadat
 import code.name.monkey.retromusic.model.EditableMetadataField
 import code.name.monkey.retromusic.model.MetadataField
 import code.name.monkey.retromusic.util.PreferenceUtil
-import code.name.monkey.retromusic.util.PreferenceUtil.TIME_DISPLAY_MODE_REMAINING
-import code.name.monkey.retromusic.util.PreferenceUtil.TIME_DISPLAY_MODE_TOGGLE
-import code.name.monkey.retromusic.util.PreferenceUtil.TIME_DISPLAY_MODE_TOTAL
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class NowPlayingMetadataPreferenceDialog : DialogFragment() {
 
     private var _binding: PreferenceDialogNowPlayingMetadataBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var timeDisplayRadioGroup: RadioGroup
-    private lateinit var radioTotalTime: RadioButton
-    private lateinit var radioRemainingTime: RadioButton
-    private lateinit var radioToggleTime: RadioButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,18 +35,6 @@ class NowPlayingMetadataPreferenceDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         _binding = PreferenceDialogNowPlayingMetadataBinding.inflate(layoutInflater)
-
-        timeDisplayRadioGroup = binding.root.findViewById(R.id.timeDisplayRadioGroup)
-        radioTotalTime = binding.root.findViewById(R.id.radioTotalTime)
-        radioRemainingTime = binding.root.findViewById(R.id.radioRemainingTime)
-        radioToggleTime = binding.root.findViewById(R.id.radioToggleTime)
-
-        // Set initial selection for time display mode
-        when (PreferenceUtil.timeDisplayMode) {
-            TIME_DISPLAY_MODE_TOTAL -> radioTotalTime.isChecked = true
-            TIME_DISPLAY_MODE_REMAINING -> radioRemainingTime.isChecked = true
-            TIME_DISPLAY_MODE_TOGGLE -> radioToggleTime.isChecked = true
-        }
 
         val metadataFieldAdapter = MetadataFieldAdapter()
         // Initialize adapter with current preferences
@@ -86,8 +66,6 @@ class NowPlayingMetadataPreferenceDialog : DialogFragment() {
                     }
                 }.toMutableList()
                 metadataFieldAdapter.notifyDataSetChanged()
-                // Reset time display mode to default (total time)
-                PreferenceUtil.timeDisplayMode = TIME_DISPLAY_MODE_TOTAL
                 dismiss()
             }
             .setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -105,13 +83,6 @@ class NowPlayingMetadataPreferenceDialog : DialogFragment() {
                 }.toMutableList()
                 metadataFieldAdapter.notifyDataSetChanged()
 
-                // Save selected time display mode
-                PreferenceUtil.timeDisplayMode = when (timeDisplayRadioGroup.checkedRadioButtonId) {
-                    R.id.radioTotalTime -> TIME_DISPLAY_MODE_TOTAL
-                    R.id.radioRemainingTime -> TIME_DISPLAY_MODE_REMAINING
-                    R.id.radioToggleTime -> TIME_DISPLAY_MODE_TOGGLE
-                    else -> TIME_DISPLAY_MODE_TOTAL // Default
-                }
                 dismiss()
             }
             .setView(binding.root) // Set view using builder
