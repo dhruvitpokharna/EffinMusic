@@ -190,7 +190,7 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
             }
 
             R.id.action_go_to_artist -> {
-                goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
+                goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistId)
                 return true
             }
 
@@ -349,7 +349,7 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                                             goToAlbumArtist(requireActivity(), selectedArtist.name)
                                         }
                                         if (which == 1) {
-                                            goToArtist(requireActivity(), selectedArtist.name, selectedArtist.id)
+                                            goToArtist(requireActivity(), selectedArtist.id)
                                         }
                                     } else {
                                         context?.showToast("Artist not found: $selectedArtistName")
@@ -370,7 +370,7 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                         }
                         withContext(Dispatchers.Main) {
                             if (artist != null) {
-                                goToArtist(requireActivity(), artist.name, artist.id)
+                                goToArtist(requireActivity(), artist.id)
                             } else {
                                 context?.showToast("Artist not found: $artistName")
                             }
@@ -574,7 +574,7 @@ fun goToAlbumArtist(activity: Activity, artistName: String) {
     }
 }
 
-fun goToArtist(activity: Activity, artistName: String, artistId: Long) {
+fun goToArtist(activity: Activity, artistId: Long) {
     if (activity !is MainActivity) return
     activity.apply {
 
