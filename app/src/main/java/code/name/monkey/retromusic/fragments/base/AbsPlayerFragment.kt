@@ -40,6 +40,7 @@ import androidx.navigation.navOptions
 import androidx.preference.PreferenceManager
 import androidx.viewpager.widget.ViewPager
 import code.name.monkey.appthemehelper.util.VersionUtils
+import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.EXTRA_ARTIST_ID
 import code.name.monkey.retromusic.EXTRA_ARTIST_NAME
@@ -189,7 +190,7 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
             }
 
             R.id.action_go_to_artist -> {
-                goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
+                goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistId)
                 return true
             }
 
@@ -329,13 +330,27 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                         .setItems(individualArtists.toTypedArray()) { _, which ->
                             val selectedArtistName = individualArtists[which]
                             lifecycleScope.launch(Dispatchers.IO) {
-                                val allArtists = libraryViewModel.artists.value
-                                val selectedArtist = allArtists?.find {
-                                    it.name.equals(selectedArtistName, ignoreCase = true)
+                                val albumArtists = libraryViewModel.albumArtists.value
+                                val contributingArtists = libraryViewModel.contributingArtists.value
+                                var selectedArtist: Artist? = null
+                                if (which == 0) {
+                                    selectedArtist = albumArtists?.find {
+                                        it.name.equals(selectedArtistName, ignoreCase = true)
+                                    }
+                                }
+                                if (which == 1) {
+                                    selectedArtist = contributingArtists?.find {
+                                        it.name.equals(selectedArtistName, ignoreCase = true)
+                                    }
                                 }
                                 withContext(Dispatchers.Main) {
                                     if (selectedArtist != null) {
-                                        goToArtist(requireActivity(), selectedArtist.name, selectedArtist.id)
+                                        if (which == 0) {
+                                            goToAlbumArtist(requireActivity(), selectedArtist.name)
+                                        }
+                                        if (which == 1) {
+                                            goToArtist(requireActivity(), selectedArtist.id)
+                                        }
                                     } else {
                                         context?.showToast("Artist not found: $selectedArtistName")
                                     }
@@ -355,7 +370,7 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                         }
                         withContext(Dispatchers.Main) {
                             if (artist != null) {
-                                goToArtist(requireActivity(), artist.name, artist.id)
+                                goToArtist(requireActivity(), artist.id)
                             } else {
                                 context?.showToast("Artist not found: $artistName")
                             }
@@ -544,7 +559,22 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
     }
 }
 
-fun goToArtist(activity: Activity, artistName: String, artistId: Long) {
+fun goToAlbumArtist(activity: Activity, artistName: String) {
+    if (activity !is MainActivity) return
+    activity.apply {
+        currentFragment(R.id.fragment_container)?.exitTransition = null
+        setBottomNavVisibility(false)
+        if (getBottomSheetBehavior().state == BottomSheetBehavior.STATE_EXPANDED) {
+            collapsePanel()
+        }
+        findNavController(R.id.fragment_container).navigate(
+            R.id.albumArtistDetailsFragment,
+            bundleOf(EXTRA_ARTIST_NAME to artistName)
+        )
+    }
+}
+
+fun goToArtist(activity: Activity, artistId: Long) {
     if (activity !is MainActivity) return
     activity.apply {
 
@@ -558,13 +588,9 @@ fun goToArtist(activity: Activity, artistName: String, artistId: Long) {
             collapsePanel()
         }
 
-        val bundle = bundleOf(EXTRA_ARTIST_ID to artistId)
-        if (artistId == 0L) { // Our placeholder for navigating by name
-            bundle.putString(EXTRA_ARTIST_NAME, artistName)
-        }
         findNavController(R.id.fragment_container).navigate(
             R.id.artistDetailsFragment,
-            bundle
+            bundleOf(EXTRA_ARTIST_ID to artistId)
         )
     }
 }

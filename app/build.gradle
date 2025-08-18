@@ -45,6 +45,13 @@ android {
             versionNameSuffix "-debug"
         }
     }
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "debug") {
+            variant.outputs.all { output ->
+                output.versionCodeOverride = (System.currentTimeMillis() / 1000).toInteger()
+            }
+        }
+    }
     flavorDimensions = ["version"]
     productFlavors {
         normal {

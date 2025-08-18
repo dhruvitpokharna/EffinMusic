@@ -34,8 +34,6 @@ import java.io.File
 object PreferenceUtil {
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext())
 
-    private const val ARTIST_DELIMITERS = "artist_delimiters"
-
     val defaultCategories = listOf(
         CategoryInfo(CategoryInfo.Category.Home, true),
         CategoryInfo(CategoryInfo.Category.Songs, true),
@@ -130,10 +128,6 @@ object PreferenceUtil {
         set(value) = sharedPreferences.edit {
             putString(SAF_SDCARD_URI, value)
         }
-
-    var artistDelimiters: String
-        get() = sharedPreferences.getStringOrDefault(ARTIST_DELIMITERS, "")
-        set(value) = sharedPreferences.edit { putString(ARTIST_DELIMITERS, value) }
 
     private val autoDownloadImagesPolicy
         get() = sharedPreferences.getStringOrDefault(

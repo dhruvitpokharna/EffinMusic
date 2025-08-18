@@ -170,12 +170,6 @@ class ClassicPlayerFragment : AbsPlayerFragment(R.layout.fragment_classic_player
             Color.WHITE,
             requireActivity()
         )
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-        binding.text.setOnClickListener {
-            goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
     }
 
     private fun getQueuePanelSafe(): BottomSheetBehavior<MaterialCardView>? {
@@ -226,34 +220,16 @@ class ClassicPlayerFragment : AbsPlayerFragment(R.layout.fragment_classic_player
         binding.title.text = song.title
         
         val artistName = song.artistName?.trim()
-        val delimiters = PreferenceUtil.artistDelimiters
-        
-        val allArtists: List<String> = (song.allArtists?.split(",") ?: emptyList<String>())
+        val allArtists = listOfNotNull(song.albumArtist, song.artistName)
             .map { it.trim() }
             .filter { it.isNotEmpty() }
+            .distinct()
             
-        individualArtists = if (delimiters.isBlank()) {
-            allArtists
-        } else {
-            val splitNames = allArtists
-                .flatMap { artist ->
-                    artist.split(*(
-                            delimiters.split(",")
-                            .map { it.trim() }
-                            .map { if (it.isEmpty()) "," else it }
-                            .distinct()
-                            .toTypedArray()
-                    )).map { it.trim() }
-                }
-                .filter { it.isNotEmpty() }
-                .distinct()
-            (allArtists + splitNames)
-                .filter { it.isNotEmpty() }
-                .distinct()
-        }
+        individualArtists = allArtists
         
         // Always display the full artist name string
-        binding.text.text = song.allArtists
+        binding.text.text = allArtists
+            .joinToString(", ")
 
         if (PreferenceUtil.isSongInfo) {
             binding.playerControlsContainer.songInfo.text = getSongInfo(song)

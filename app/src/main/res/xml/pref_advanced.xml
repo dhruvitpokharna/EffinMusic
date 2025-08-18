@@ -70,14 +70,6 @@
             android:title="@string/pref_show_when_locked_title"
             app:icon="@drawable/ic_screen_lock_portrait" />
 
-        <androidx.preference.EditTextPreference
-            android:key="artist_delimiters"
-            android:title="@string/pref_title_artist_delimiters"
-            android:summary="@string/pref_summary_artist_delimiters"
-            android:defaultValue="@string/default_artist_delimiters"
-            android:layout="@layout/list_item_view"
-            app:icon="@drawable/ic_artist" />
-
         <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             android:defaultValue="false"
             android:key="offline_mode"

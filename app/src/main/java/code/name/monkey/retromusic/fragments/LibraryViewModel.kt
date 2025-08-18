@@ -57,7 +57,9 @@ class LibraryViewModel(
     private val suggestions = MutableLiveData<List<Song>>()
     private val albums = MutableLiveData<List<Album>>()
     private val songs = MutableLiveData<List<Song>>()
-    val artists = MutableLiveData<List<Artist>>() // Changed from private val to val
+    val artists = MutableLiveData<List<Artist>>()
+    val contributingArtists = MutableLiveData<List<Artist>>()
+    val albumArtists = MutableLiveData<List<Artist>>()
     private val playlists = MutableLiveData<List<PlaylistWithSongs>>()
     private val genres = MutableLiveData<List<Genre>>()
     private val searchResults = MutableLiveData<List<Any>>()
@@ -112,6 +114,8 @@ class LibraryViewModel(
     }
 
     private suspend fun fetchArtists() {
+        contributingArtists.postValue(repository.fetchArtists())
+        albumArtists.postValue(repository.albumArtists())
         if (PreferenceUtil.albumArtistsOnly) {
             artists.postValue(repository.albumArtists())
         } else {

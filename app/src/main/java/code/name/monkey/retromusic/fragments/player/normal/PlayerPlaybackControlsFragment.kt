@@ -60,8 +60,6 @@ class PlayerPlaybackControlsFragment :
     private var _binding: FragmentPlayerPlaybackControlsBinding? = null
     private val binding get() = _binding!!
 
-    private var individualArtists: List<String> = emptyList()
-
     override val progressSlider: Slider
         get() = binding.progressSlider
 
@@ -141,32 +139,10 @@ class PlayerPlaybackControlsFragment :
         val song = MusicPlayerRemote.currentSong
         binding.title.text = song.title
 
-        val delimiters = PreferenceUtil.artistDelimiters
-        
         val allArtists = listOfNotNull(song.albumArtist, song.artistName)
             .map { it.trim() }
             .filter { it.isNotEmpty() }
             .distinct()
-            
-        individualArtists = if (delimiters.isBlank()) {
-            allArtists
-        } else {
-            val splitNames = allArtists
-                .flatMap { artist ->
-                    artist.split(*(
-                            delimiters.split(",")
-                            .map { it.trim() }
-                            .map { if (it.isEmpty()) "," else it }
-                            .distinct()
-                            .toTypedArray()
-                    )).map { it.trim() }
-                }
-                .filter { it.isNotEmpty() }
-                .distinct()
-            (allArtists + splitNames)
-                .filter { it.isNotEmpty() }
-                .distinct()
-        }
         
         // Always display the full artist name string
         binding.text.text = allArtists
@@ -178,7 +154,7 @@ class PlayerPlaybackControlsFragment :
         } else {
             binding.songInfo.hide()
         }
-        (requireParentFragment() as? AbsPlayerFragment)?.setupTitleAndArtistClicks(binding.title, binding.text, individualArtists)
+        (requireParentFragment() as? AbsPlayerFragment)?.setupTitleAndArtistClicks(binding.title, binding.text, allArtists)
     }
 
 
