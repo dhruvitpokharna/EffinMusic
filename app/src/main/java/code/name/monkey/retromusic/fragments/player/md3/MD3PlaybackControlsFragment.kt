@@ -77,12 +77,6 @@ class MD3PlaybackControlsFragment :
         }
         binding.title.isSelected = true
         binding.text.isSelected = true
-        binding.title.setOnClickListener {
-            goToAlbum(requireActivity())
-        }
-        binding.text.setOnClickListener {
-goToArtist(requireActivity(), MusicPlayerRemote.currentSong.artistName, MusicPlayerRemote.currentSong.artistId)
-        }
     }
 
     override fun setColor(color: MediaNotificationProcessor) {
