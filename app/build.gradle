@@ -171,6 +171,8 @@ dependencies {
 
     implementation libs.chrisbanes.insetter
 
+    implementation("io.coil-kt:coil:3.3.0")
+
     implementation libs.jaudiotagger
     normalImplementation libs.android.lab.library
     implementation libs.slidableactivity
