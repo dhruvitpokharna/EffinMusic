@@ -221,8 +221,5 @@
     <string name="pref_summary_enable_song_title_marquee">تمكين تأثير التمرير لعناوين الأغاني في علامة تبويب الأغاني</string>
     <string name="pref_title_show_fab_on_scroll">إظهار زر الإجراء العائم عند التمرير</string>
     <string name="pref_summary_show_fab_on_scroll">إبقاء زر الإجراء العائم مرئيًا عند التمرير</string>
-    <string name="pref_title_artist_delimiters">فواصل الفنانين</string>
-    <string name="pref_summary_artist_delimiters">الأحرف المستخدمة لفصل الفنانين المتعددين (مفصولة بفاصلة)</string>
     <string name="select_artist">اختر فنان</string>
-    <string name="default_artist_delimiters"></string>
 </resources>
