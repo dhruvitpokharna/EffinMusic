@@ -240,6 +240,18 @@
         <item>disabled</item>
     </string-array>
 
+    <string-array name="time_display_entries">
+        <item>@string/time_display_mode_total</item>
+        <item>@string/time_display_mode_remaining</item>
+        <item>@string/time_display_mode_toggle</item>
+    </string-array>
+
+    <string-array name="time_display_values">
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+    </string-array>
+
     <string-array name="mini_player_time_entries">
         <item>@string/remaining_time</item>
         <item>@string/total_time</item>
