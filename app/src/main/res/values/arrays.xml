@@ -247,8 +247,8 @@
     </string-array>
 
     <string-array name="time_display_values">
-        <item>remaining</item>
         <item>total</item>
+        <item>remaining</item>
         <item>toggle</item>
     </string-array>
 
