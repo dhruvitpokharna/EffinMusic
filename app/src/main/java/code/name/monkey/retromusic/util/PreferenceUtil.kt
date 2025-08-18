@@ -997,6 +997,9 @@ object PreferenceUtil {
         set(value) = sharedPreferences.edit { putString(CUSTOM_FALLBACK_ARTWORK_URI, value) }
 
     const val TIME_DISPLAY_MODE = "time_display_mode"
+    const val TIME_DISPLAY_MODE_TOTAL = "total"
+    const val TIME_DISPLAY_MODE_REMAINING = "remaining"
+    const val TIME_DISPLAY_MODE_TOGGLE = "toggle"
 
     var timeDisplayMode: Int
         get() = sharedPreferences.getInt(TIME_DISPLAY_MODE, TIME_DISPLAY_MODE_TOTAL)
