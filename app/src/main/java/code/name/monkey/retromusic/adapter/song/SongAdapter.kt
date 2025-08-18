@@ -156,14 +156,22 @@ open class SongAdapter(
 
         val model = RetroGlideExtension.getSongModel(song)
 
+        val customArtworkUri = PreferenceUtil.customFallbackArtworkUri
+
         imageView.load(model) {
             size(overrideSize, overrideSize)
-            placeholder(null)                    // no placeholder, saves draw time
-            error(null)                         // no error drawable for speed
+            crossfade(true)
+            allowHardware(true)
+            placeholder(null)
             memoryCachePolicy(coil.request.CachePolicy.ENABLED)
             diskCachePolicy(coil.request.CachePolicy.ENABLED)
-            crossfade(false)                     // disable animations for speed
-            allowHardware(true)                // enable hardware bitmaps for faster decoding
+            error(
+                if (!customFallbackUri.isNullOrEmpty()) {
+                    customFallbackUri
+                } else {
+                    R.drawable.default_fallback_image
+                }
+            )
         }
     }
 
