@@ -562,13 +562,13 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
 fun goToAlbumArtist(activity: Activity, artistName: String) {
     if (activity !is MainActivity) return
     activity.apply {
-        currentFragment(R.id.fragment_container)?.exitTransition = 
+        currentFragment(R.id.fragment_container)?.exitTransition = null
         setBottomNavVisibility(false)
         if (getBottomSheetBehavior().state == BottomSheetBehavior.STATE_EXPANDED) {
             collapsePanel()
         }
         findNavController(R.id.fragment_container).navigate(
-            R.id.artistDetailsFragment,
+            R.id.albumArtistDetailsFragment,
             bundleOf(EXTRA_ARTIST_NAME to artistName)
         )
     }
