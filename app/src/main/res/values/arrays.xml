@@ -39,9 +39,9 @@
     </string-array>
 
     <string-array name="artwork_click_options_values">
-        <item>remaining</item>
-        <item>total</item>
-        <item>toggle</item>
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
     </string-array>
 
     <string-array name="pref_tab_text_mode_values">
@@ -247,9 +247,9 @@
     </string-array>
 
     <string-array name="time_display_values">
-        <item>0</item>
-        <item>1</item>
-        <item>3</item>
+        <item>remaining</item>
+        <item>total</item>
+        <item>toggle</item>
     </string-array>
 
     <string-array name="mini_player_time_entries">
