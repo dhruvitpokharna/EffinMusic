@@ -240,6 +240,12 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
         if (key == SWAP_SHUFFLE_REPEAT_BUTTONS) {
             applyButtonSwapLogic()
         }
+
+        if (key == PreferenceUtil.TIME_DISPLAY_MODE) {
+            val progress = MusicPlayerRemote.position
+            val total = MusicPlayerRemote.songDurationMillis
+            onUpdateProgressViews(progress, total)
+        }
     }
 
     private fun applyButtonSwapLogic() {
