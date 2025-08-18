@@ -1001,9 +1001,9 @@ object PreferenceUtil {
     const val TIME_DISPLAY_MODE_REMAINING = "remaining"
     const val TIME_DISPLAY_MODE_TOGGLE = "toggle"
 
-    var timeDisplayMode: Int
-        get() = sharedPreferences.getInt(TIME_DISPLAY_MODE, TIME_DISPLAY_MODE_TOTAL)
-        set(value) = sharedPreferences.edit { putInt(TIME_DISPLAY_MODE, value) }
+    var timeDisplayMode: String
+        get() = sharedPreferences.getString(TIME_DISPLAY_MODE, TIME_DISPLAY_MODE_TOTAL)
+        set(value) = sharedPreferences.edit { putString(TIME_DISPLAY_MODE, value) }
 
     const val MINI_PLAYER_TIME = "mini_player_time"
     const val MINI_PLAYER_TIME_REMAINING = 0
