@@ -110,6 +110,10 @@
         android:name="code.name.monkey.retromusic.fragments.settings.OtherSettingsFragment"
         android:label="Other" />
 
+    <fragment
+        android:id="@+id/personalizeSettingsFragment"
+        android:name="code.name.monkey.retromusic.fragments.settings.PersonalizeSettingsFragment"
+        android:label="Personalize" />
 
     <fragment
         android:id="@+id/themeSettingsFragment"
@@ -125,14 +129,4 @@
         android:id="@+id/backup_fragment"
         android:name="code.name.monkey.retromusic.fragments.backup.BackupFragment"
         android:label="About" />
-
-    <fragment
-        android:id="@+id/personalizeSettingsFragment"
-        android:name="code.name.monkey.retromusic.fragments.settings.PersonalizeSettingsFragment"
-        android:label="Personalize">
-        <action
-            android:id="@+id/action_personalizeSettingsFragment_to_nowPlayingMetadataPreferenceDialog"
-            app:destination="@id/nowPlayingMetadataPreferenceDialog" />
-    </fragment>
-
 </navigation>
