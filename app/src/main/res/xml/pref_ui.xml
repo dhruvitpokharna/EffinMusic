@@ -254,12 +254,6 @@
             android:title="@string/pref_title_time_display_mode"
             android:summary="@string/pref_summary_time_display_mode" />
 
-        <androidx.preference.Preference
-            android:key="now_playing_metadata"
-            android:layout="@layout/list_item_view"
-            android:title="@string/pref_header_now_playing_metadata"
-            android:summary="@string/pref_summary_extra_song_info" />
-
         <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             android:key="tap_on_title"
             android:title="@string/pref_title_tap_on_title"
