@@ -135,7 +135,7 @@ open class AlbumAdapter(
         if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
             Glide.with(holder.image!!)
                 .asBitmapPalette()
-                .songCoverOptions(song)
+                .albumCoverOptions(song)
                 .load(RetroGlideExtension.getSongModel(song))
             return
         }
