@@ -126,11 +126,6 @@
         android:name="code.name.monkey.retromusic.fragments.backup.BackupFragment"
         android:label="About" />
 
-    <dialog
-        android:id="@+id/nowPlayingMetadataPreferenceDialog"
-        android:name="code.name.monkey.retromusic.preferences.NowPlayingMetadataPreferenceDialog"
-        android:label="@string/pref_header_now_playing_metadata" />
-
     <fragment
         android:id="@+id/personalizeSettingsFragment"
         android:name="code.name.monkey.retromusic.fragments.settings.PersonalizeSettingsFragment"
