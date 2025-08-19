@@ -123,26 +123,20 @@ class ArtistAdapter(
     }
 
     private fun loadArtistImage(artist: Artist, holder: ViewHolder) {
-        val imageView = holder.image ?: return
-
-        val overrideSize = when (PreferenceUtil.albumGridSize) {
-            2 -> 500
-            3 -> 300
-            4 -> 250
-            else -> 200
+        if (holder.image == null) {
+            return
         }
         
-        val model = RetroGlideExtension.getArtistModelCoil(artist)
-        
-        imageView.load(model) {
-            size(overrideSize, overrideSize)
-            crossfade(true)
-            allowHardware(true)
-            placeholder(null)
-            memoryCachePolicy(coil.request.CachePolicy.ENABLED)
-            diskCachePolicy(coil.request.CachePolicy.ENABLED)
-            error(null)
-        }
+        Glide.with(activity)
+            .asBitmapPalette()
+            .artistImageOptions(artist)
+            .load(RetroGlideExtension.getArtistModel(artist))
+            .transition(RetroGlideExtension.getDefaultTransition())
+            .into(object : RetroMusicColoredTarget(holder.image!!) {
+                override fun onColorReady(colors: MediaNotificationProcessor) {
+                    setColors(colors, holder)
+                }
+            })
     }
 
     override fun getItemCount(): Int {
