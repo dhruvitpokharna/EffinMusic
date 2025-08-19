@@ -152,6 +152,12 @@ class PlayerFragment : AbsPlayerFragment(R.layout.fragment_player),
         )
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+        if (key == SNOWFALL) {
+            startOrStopSnow(PreferenceUtil.isSnowFalling)
+        }
+    }
+    
     private fun startOrStopSnow(isSnowFalling: Boolean) {
         if (_binding == null) return
         if (isSnowFalling && !surfaceColor().isColorLight) {
