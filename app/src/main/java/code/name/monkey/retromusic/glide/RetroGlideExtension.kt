@@ -70,6 +70,18 @@ object RetroGlideExtension {
         return getSongModel(song, PreferenceUtil.isIgnoreMediaStoreArtwork)
     }
 
+    fun getSongModelCoil(song: Song): Any {
+        return if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
+            song.data
+        } else {
+            getMediaStoreAlbumCoverUri(song.albumId)
+        }
+    }
+
+    fun getArtistModelCoil(artist: Artist): Any {
+        return getArtistModel(artist).toUri()
+    }
+
     fun getArtistModel(artist: Artist): Any {
         return getArtistModel(
             artist,
