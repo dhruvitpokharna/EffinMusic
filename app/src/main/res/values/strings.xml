@@ -616,7 +616,6 @@
     <string name="pref_summary_toggle_shuffle">Toggle shuffle mode summary</string>
     <string name="save_playlist_title">Save playlist</string>
     <string name="save_playlists_title">Save playlists</string>
-    <string name="pref_header_now_playing_metadata">Now Playing Metadata</string>
     <string name="pref_header_now_playing">Now Playing</string>
     <string name="pref_summary_tap_on_title">Go to Album on tap</string>
     <string name="pref_title_tap_on_title">Tap on Title</string>
