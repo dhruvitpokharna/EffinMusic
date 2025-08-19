@@ -90,7 +90,7 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
 
     override fun onUpdateProgressViews(progress: Int, total: Int) {
         val safeTotal = total.coerceAtLeast(0)
-        val safeProgress = progress.coerceAtLeast(0)
+        val safeProgress = progress.coerceIn(0, safeTotal)
 
         if (seekBar == null) {
             progressSlider?.let { slider ->
@@ -99,13 +99,13 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
                 slider.valueTo = safeTotal.toFloat()
 
                 // Clamp progress within range
-                slider.value = safeProgress.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
+                slider.value = safeProgress.toFloat()
             }
         } else {
             seekBar?.apply {
                 max = safeTotal
                 if (isSeeking) {
-                    progress = safeProgress
+                    this.progress = safeProgress
                 } else {
                     progressAnimator = ObjectAnimator.ofInt(this, "progress", safeProgress).apply {
                         duration = SLIDER_ANIMATION_TIME
