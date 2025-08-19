@@ -152,7 +152,7 @@ class PlayerFragment : AbsPlayerFragment(R.layout.fragment_player),
         )
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         super.onSharedPreferenceChanged(sharedPreferences, key)
         if (key == SNOWFALL) {
             startOrStopSnow(PreferenceUtil.isSnowFalling)
