@@ -86,13 +86,6 @@
 
         <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             android:defaultValue="false"
-            android:key="fast_image"
-            android:layout="@layout/list_item_view_switch"
-            android:summary="@string/pref_summary_fast_image"
-            android:title="@string/pref_title_fast_image" />
-
-        <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
-            android:defaultValue="false"
             android:key="fix_year"
             android:layout="@layout/list_item_view_switch"
             android:summary="@string/pref_summary_fix_year"

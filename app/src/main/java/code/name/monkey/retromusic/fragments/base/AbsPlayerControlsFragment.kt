@@ -89,30 +89,32 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
     private var progressAnimator: ObjectAnimator? = null
 
     override fun onUpdateProgressViews(progress: Int, total: Int) {
+        val safeTotal = total.coerceAtLeast(0)
+        val safeProgress = progress.coerceIn(0, safeTotal)
+
         if (seekBar == null) {
-            val safeTotal = total.coerceAtLeast(0)
-            progressSlider?.valueTo = total.toFloat()
+            progressSlider?.let { slider ->
+                // Always define a valid range
+                slider.valueFrom = 0f
+                slider.valueTo = safeTotal.toFloat()
 
-            val from = progressSlider?.valueFrom ?: 0f
-            val to = progressSlider?.valueTo ?: safeTotal.toFloat()
-
-            progressSlider?.value = progress.toFloat().coerceIn(from, to)
+                // Clamp progress within range
+                slider.value = safeProgress.toFloat()
+            }
         } else {
-            seekBar?.max = total
-
-            if (isSeeking) {
-                seekBar?.progress = progress
-            } else {
-                progressAnimator =
-                    ObjectAnimator.ofInt(seekBar, "progress", progress).apply {
+            seekBar?.apply {
+                max = safeTotal
+                if (isSeeking) {
+                    this.progress = safeProgress
+                } else {
+                    progressAnimator = ObjectAnimator.ofInt(this, "progress", safeProgress).apply {
                         duration = SLIDER_ANIMATION_TIME
                         interpolator = LinearInterpolator()
                         start()
                     }
-
+                }
             }
         }
-
         val timeDisplayMode = PreferenceUtil.timeDisplayMode
         when (timeDisplayMode) {
             TIME_DISPLAY_MODE_TOTAL -> {
@@ -239,6 +241,12 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == SWAP_SHUFFLE_REPEAT_BUTTONS) {
             applyButtonSwapLogic()
+        }
+
+        if (key == PreferenceUtil.TIME_DISPLAY_MODE) {
+            val progress = MusicPlayerRemote.position
+            val total = MusicPlayerRemote.songDurationMillis
+            onUpdateProgressViews(progress, total)
         }
     }
 

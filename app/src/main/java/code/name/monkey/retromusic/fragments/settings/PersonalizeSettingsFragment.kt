@@ -81,11 +81,6 @@ class PersonalizeSettingsFragment : AbsSettingsFragment() {
         val toggleHomeBanner: ATESwitchPreference? = findPreference("toggle_home_banner")
         toggleHomeBanner?.title = getString(R.string.pref_title_home_banner)
 
-        findPreference<Preference>(PreferenceUtil.NOW_PLAYING_METADATA)?.setOnPreferenceClickListener {
-            findNavController().navigate(R.id.action_personalizeSettingsFragment_to_nowPlayingMetadataPreferenceDialog)
-            true
-        }
-
         pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri: Uri? = result.data?.data

@@ -43,6 +43,7 @@ import code.name.monkey.retromusic.util.PreferenceUtil
 import android.text.TextUtils
 import code.name.monkey.retromusic.util.RetroUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
+import coil.load
 import android.net.Uri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -144,9 +145,7 @@ open class SongAdapter(
     }
 
     protected open fun loadAlbumCover(song: Song, holder: ViewHolder) {
-        if (holder.image == null) {
-            return
-        }
+        val imageView = holder.image ?: return
 
         val overrideSize = when (PreferenceUtil.songGridSize) {
             2 -> 500
@@ -155,50 +154,19 @@ open class SongAdapter(
             else -> 200
         }
 
-        val glideWith = if (PreferenceUtil.fastImage) {
-            Glide.with(holder.image!!)
-        } else {
-            Glide.with(activity)
-        }
-
-        val primaryRequest = glideWith
-            .asBitmapPalette()
-            .songCoverOptions(song)
-            .load(RetroGlideExtension.getSongModel(song))
-            .apply {
-                if (PreferenceUtil.fastImage) {
-                    format(DecodeFormat.PREFER_RGB_565)
-                    diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    skipMemoryCache(false)
-                    .override(overrideSize, overrideSize)
-                    .dontAnimate()
-                }
-            }
+        val model = RetroGlideExtension.getSongModel(song)
 
         val customArtworkUri = PreferenceUtil.customFallbackArtworkUri
-        if (!customArtworkUri.isNullOrEmpty()) {
-            val fallbackRequest: RequestBuilder<BitmapPaletteWrapper> = glideWith
-                .asBitmapPalette()
-                .songCoverOptions(song) // Use songCoverOptions to apply default error/placeholder if custom URI fails
-                .load(Uri.parse(customArtworkUri))
-                .apply {
-                    if (PreferenceUtil.fastImage) {
-                        format(DecodeFormat.PREFER_RGB_565)
-                        diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        skipMemoryCache(false)
-                        .override(overrideSize, overrideSize)
-                        .dontAnimate()
-                    }
-                }
 
-            primaryRequest.error(fallbackRequest)
+        imageView.load(model) {
+            size(overrideSize, overrideSize)
+            crossfade(true)
+            allowHardware(true)
+            placeholder(null)
+            error(null)
+            memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+            diskCachePolicy(coil.request.CachePolicy.ENABLED)
         }
-
-        primaryRequest.into(object : RetroMusicColoredTarget(holder.image!!) {
-            override fun onColorReady(colors: MediaNotificationProcessor) {
-                setColors(colors, holder)
-            }
-        })
     }
 
     private fun getSongTitle(song: Song): String {

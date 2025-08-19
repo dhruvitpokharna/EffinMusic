@@ -207,7 +207,6 @@
     <string name="time_display_mode_toggle">تبديل عند النقر</string>
     <string name="exporting_playlist_title">تصدير قائمة التشغيل</string>
     <string name="exported_playlist_to">تم تصدير قائمة التشغيل إلى %s.</string>
-    <string name="pref_header_now_playing_metadata">بيانات التشغيل الآن</string>
     <string name="pref_header_now_playing">التشغيل الآن</string>
     <string name="pref_title_show_cast_button">إظهار زر الإرسال</string>
     <string name="pref_summary_show_cast_button">تبديل رؤية زر الإرسال إلى الجهاز</string>

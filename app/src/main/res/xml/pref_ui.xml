@@ -243,11 +243,16 @@
         android:layout="@layout/preference_category_title"
         android:title="@string/pref_header_now_playing">
 
-        <androidx.preference.Preference
-            android:key="now_playing_metadata"
+        <code.name.monkey.appthemehelper.common.prefs.supportv7.ATEListPreference
+            android:defaultValue="total"
+            android:entries="@array/time_display_entries"
+            android:entryValues="@array/time_display_values"
+            android:key="time_display_mode"
             android:layout="@layout/list_item_view"
-            android:title="@string/pref_header_now_playing_metadata"
-            android:summary="@string/pref_summary_extra_song_info" />
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_time_display_mode"
+            android:summary="@string/pref_summary_time_display_mode" />
 
         <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             android:key="tap_on_title"

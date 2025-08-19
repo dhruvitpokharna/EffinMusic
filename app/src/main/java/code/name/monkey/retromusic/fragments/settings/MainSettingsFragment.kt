@@ -151,7 +151,6 @@ class MainSettingsFragment : Fragment(), View.OnClickListener {
             SearchableSetting(R.id.personalizeSettings, getString(R.string.keep_header_visible_title), getString(R.string.keep_header_visible_summary), false, R.id.action_mainSettingsFragment_to_personalizeSettingsFragment),
             SearchableSetting(R.id.personalizeSettings, getString(R.string.hide_header_title), getString(R.string.hide_header_summary), false, R.id.action_mainSettingsFragment_to_personalizeSettingsFragment),
             SearchableSetting(R.id.personalizeSettings, getString(R.string.pref_header_now_playing), null, true, R.id.action_mainSettingsFragment_to_personalizeSettingsFragment), // Category title
-            SearchableSetting(R.id.personalizeSettings, getString(R.string.pref_header_now_playing_metadata), getString(R.string.pref_summary_extra_song_info), false, R.id.action_mainSettingsFragment_to_personalizeSettingsFragment),
             SearchableSetting(R.id.personalizeSettings, getString(R.string.pref_title_tap_on_title), getString(R.string.pref_summary_tap_on_title), false, R.id.action_mainSettingsFragment_to_personalizeSettingsFragment),
             SearchableSetting(R.id.personalizeSettings, getString(R.string.pref_title_tap_on_artist), getString(R.string.pref_summary_tap_on_artist), false, R.id.action_mainSettingsFragment_to_personalizeSettingsFragment),
             SearchableSetting(R.id.personalizeSettings, getString(R.string.pref_title_mini_player_scrolling), getString(R.string.pref_summary_mini_player_scrolling), false, R.id.action_mainSettingsFragment_to_personalizeSettingsFragment),
@@ -186,7 +185,6 @@ class MainSettingsFragment : Fragment(), View.OnClickListener {
             SearchableSetting(R.id.otherSettings, getString(R.string.pref_title_offline_mode), getString(R.string.pref_summary_offline_mode), false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
             SearchableSetting(R.id.otherSettings, getString(R.string.pref_title_show_song_only), getString(R.string.pref_summary_show_song_only), false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
             SearchableSetting(R.id.otherSettings, getString(R.string.pref_title_fix_year), getString(R.string.pref_summary_fix_year), false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
-            SearchableSetting(R.id.otherSettings, getString(R.string.pref_title_fast_image), getString(R.string.pref_summary_fast_image), false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
             SearchableSetting(R.id.otherSettings, getString(R.string.pref_language_name), null, false, R.id.action_mainSettingsFragment_to_otherSettingsFragment),
 
             // Now Playing Settings (R.id.nowPlayingSettings)

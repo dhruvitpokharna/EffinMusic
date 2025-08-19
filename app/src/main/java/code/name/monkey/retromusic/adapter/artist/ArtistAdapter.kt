@@ -39,6 +39,7 @@ import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
+import coil.load
 import com.bumptech.glide.Glide
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import com.bumptech.glide.load.DecodeFormat
@@ -125,40 +126,11 @@ class ArtistAdapter(
         if (holder.image == null) {
             return
         }
-
-        val overrideSize = when (PreferenceUtil.artistGridSize) {
-            2 -> 500
-            3 -> 300
-            4 -> 250
-            else -> 200
-        }
-
-        val glideWith = if (PreferenceUtil.fastImage) {
-            Glide.with(holder.image!!)
-        } else {
-            Glide.with(activity)
-        }
-
-        val requestOptions = if (PreferenceUtil.fastImage) {
-            RequestOptions()
-                .format(DecodeFormat.PREFER_RGB_565)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .signature(ObjectKey("${artist.id}_${PreferenceUtil.isOfflineMode}"))
-                .skipMemoryCache(false)
-                .override(overrideSize, overrideSize)
-                .dontAnimate()
-        } else {
-            RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .skipMemoryCache(false)
-                .signature(ObjectKey("${artist.id}_${PreferenceUtil.isOfflineMode}"))
-        }
         
-        glideWith
+        Glide.with(activity)
             .asBitmapPalette()
             .artistImageOptions(artist)
             .load(RetroGlideExtension.getArtistModel(artist))
-            .apply(requestOptions)
             .transition(RetroGlideExtension.getDefaultTransition())
             .into(object : RetroMusicColoredTarget(holder.image!!) {
                 override fun onColorReady(colors: MediaNotificationProcessor) {

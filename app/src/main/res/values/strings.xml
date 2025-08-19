@@ -616,7 +616,6 @@
     <string name="pref_summary_toggle_shuffle">Toggle shuffle mode summary</string>
     <string name="save_playlist_title">Save playlist</string>
     <string name="save_playlists_title">Save playlists</string>
-    <string name="pref_header_now_playing_metadata">Now Playing Metadata</string>
     <string name="pref_header_now_playing">Now Playing</string>
     <string name="pref_summary_tap_on_title">Go to Album on tap</string>
     <string name="pref_title_tap_on_title">Tap on Title</string>
@@ -628,7 +627,8 @@
     <string name="pref_summary_show_song_menu_grid">Show the three-dot menu icon in the Songs section when using Grid View</string>
     <string name="pref_title_show_songs_search_button">Show Songs Search Button</string>
     <string name="pref_summary_show_songs_search_button">Show the search button in the Songs Grid View</string>
-
+    <string name="pref_title_time_display_mode">Time display mode</string>
+    <string name="pref_summary_time_display_mode">Choose whether to show remaining or total time in the player</string>
     <string name="pref_title_mini_player_time">Mini Player Time</string>
     <string name="pref_summary_mini_player_time">Choose whether to show remaining or total time in the mini player</string>
     <string name="remaining_time">Remaining Time</string>
@@ -657,9 +657,6 @@
 
     <string name="pref_title_fix_year">Fix Year</string>
     <string name="pref_summary_fix_year">Fix year when sorting (slow)</string>
-
-    <string name="pref_title_fast_image">Fast Image</string>
-    <string name="pref_summary_fast_image">Faster image loading with slight quality loss</string>
 
     <string name="pref_title_swap_shuffle_repeat">Swap Shuffle and Repeat Buttons</string>
     <string name="pref_summary_swap_shuffle_repeat">Swap the positions of the shuffle and repeat buttons on the now playing screen.</string>
