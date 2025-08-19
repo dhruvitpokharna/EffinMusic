@@ -132,7 +132,6 @@ class ArtistAdapter(
             else -> 200
         }
         
-        val song = album.safeGetFirstSong()
         val model = RetroGlideExtension.getArtistModelCoil(artist)
         
         imageView.load(model) {
