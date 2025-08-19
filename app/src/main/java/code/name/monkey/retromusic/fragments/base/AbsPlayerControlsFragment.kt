@@ -89,30 +89,32 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
     private var progressAnimator: ObjectAnimator? = null
 
     override fun onUpdateProgressViews(progress: Int, total: Int) {
+        val safeTotal = total.coerceAtLeast(0)
+        val safeProgress = progress.coerceAtLeast(0)
+
         if (seekBar == null) {
-            val safeTotal = total.coerceAtLeast(0)
-            progressSlider?.valueTo = total.toFloat()
+            progressSlider?.let { slider ->
+                // Always define a valid range
+                slider.valueFrom = 0f
+                slider.valueTo = safeTotal.toFloat()
 
-            val from = progressSlider?.valueFrom ?: 0f
-            val to = progressSlider?.valueTo ?: safeTotal.toFloat()
-
-            progressSlider?.value = progress.toFloat().coerceIn(from, to)
+                // Clamp progress within range
+                slider.value = safeProgress.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
+            }
         } else {
-            seekBar?.max = total
-
-            if (isSeeking) {
-                seekBar?.progress = progress
-            } else {
-                progressAnimator =
-                    ObjectAnimator.ofInt(seekBar, "progress", progress).apply {
+            seekBar?.apply {
+                max = safeTotal
+                if (isSeeking) {
+                    progress = safeProgress
+                } else {
+                    progressAnimator = ObjectAnimator.ofInt(this, "progress", safeProgress).apply {
                         duration = SLIDER_ANIMATION_TIME
                         interpolator = LinearInterpolator()
                         start()
                     }
-
+                }
             }
         }
-
         val timeDisplayMode = PreferenceUtil.timeDisplayMode
         when (timeDisplayMode) {
             TIME_DISPLAY_MODE_TOTAL -> {
