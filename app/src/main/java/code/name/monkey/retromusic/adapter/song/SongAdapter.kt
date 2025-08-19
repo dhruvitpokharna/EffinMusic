@@ -154,7 +154,7 @@ open class SongAdapter(
             else -> 200
         }
 
-        val model = RetroGlideExtension.getSongModel(song)
+        val model = RetroGlideExtension.getSongModelCoil(song)
 
         val customArtworkUri = PreferenceUtil.customFallbackArtworkUri
 
