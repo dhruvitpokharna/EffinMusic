@@ -79,10 +79,6 @@ object RetroGlideExtension {
         }
     }
 
-    fun getArtistModelCoil(artist: Artist): Any {
-        return getArtistModel(artist).toUri()
-    }
-
     fun getArtistModel(artist: Artist): Any {
         return getArtistModel(
             artist,
