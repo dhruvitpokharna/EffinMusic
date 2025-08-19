@@ -156,7 +156,13 @@ open class SongAdapter(
 
         val model = RetroGlideExtension.getSongModelCoil(song)
 
-        val customArtworkUri = PreferenceUtil.customFallbackArtworkUri
+        if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
+            Glide.with(holder.image!!)
+                .asBitmapPalette()
+                .songCoverOptions(song)
+                .load(RetroGlideExtension.getSongModel(song))
+            return
+        }
 
         imageView.load(model) {
             size(overrideSize, overrideSize)
