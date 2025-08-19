@@ -131,7 +131,7 @@ open class AlbumAdapter(
         }
         
         val song = album.safeGetFirstSong()
-        val model = RetroGlideExtension.getSongModel(song)
+        val model = RetroGlideExtension.getSongModelCoil(song)
         
         imageView.load(model) {
             size(overrideSize, overrideSize)
