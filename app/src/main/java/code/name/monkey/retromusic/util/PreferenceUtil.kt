@@ -875,7 +875,6 @@ object PreferenceUtil {
 
     const val SHOW_NOW_PLAYING_QUEUE_BUTTON = "show_now_playing_queue_button"
     const val SHOW_OPTIONS_MENU = "show_options_menu"
-    const val NOW_PLAYING_METADATA = "now_playing_metadata"
     const val SHOW_CAST_BUTTON = "show_cast_button"
 
     val showNowPlayingQueueButton: Boolean
@@ -987,9 +986,6 @@ object PreferenceUtil {
             HIDE_HEADER, false // Default to false
         )
 
-    const val NOW_PLAYING_METADATA_ORDER = "now_playing_metadata_order"
-    const val NOW_PLAYING_METADATA_VISIBILITY = "now_playing_metadata_visibility"
-
     const val CUSTOM_FALLBACK_ARTWORK_URI = "custom_fallback_artwork_uri"
 
     var customFallbackArtworkUri: String?
@@ -1034,48 +1030,6 @@ object PreferenceUtil {
         set(value) = sharedPreferences.edit {
             // Always store as String
             putString(MINI_PLAYER_TIME, value.toString())
-        }
-
-    var nowPlayingMetadataOrder: List<Int>
-        get() {
-            val json = sharedPreferences.getStringOrDefault(NOW_PLAYING_METADATA_ORDER, "[]")
-            return try {
-                val list = Gson().fromJson<List<Int>>(json, object : TypeToken<List<Int>>() {}.type)
-                if (list.isEmpty()) {
-                    MetadataField.values().map { it.id }
-                } else {
-                    list
-                }
-            } catch (e: JsonSyntaxException) {
-                e.printStackTrace()
-                // Default order: all fields in the order defined in the enum
-                MetadataField.values().map { it.id }
-            }
-        }
-        set(value) {
-            val json = Gson().toJson(value)
-            sharedPreferences.edit { putString(NOW_PLAYING_METADATA_ORDER, json) }
-        }
-
-    var nowPlayingMetadataVisibility: Set<Int>
-        get() {
-            val json = sharedPreferences.getStringOrDefault(NOW_PLAYING_METADATA_VISIBILITY, "[]")
-            return try {
-                val set = Gson().fromJson<Set<Int>>(json, object : TypeToken<Set<Int>>() {}.type)
-                if (set.isEmpty()) {
-                    emptySet()
-                } else {
-                    set
-                }
-            } catch (e: JsonSyntaxException) {
-                e.printStackTrace()
-                // Default visibility: all fields invisible
-                emptySet()
-            }
-        }
-        set(value) {
-            val json = Gson().toJson(value)
-            sharedPreferences.edit { putString(NOW_PLAYING_METADATA_VISIBILITY, json) }
         }
 }
 
