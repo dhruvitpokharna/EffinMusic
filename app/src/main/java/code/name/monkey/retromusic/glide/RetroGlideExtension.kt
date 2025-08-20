@@ -71,14 +71,6 @@ object RetroGlideExtension {
         return getSongModel(song, PreferenceUtil.isIgnoreMediaStoreArtwork)
     }
 
-    fun getSongModelCoil(song: Song): Any {
-        return if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
-            Uri.fromFile(File(song.data))
-        } else {
-            getMediaStoreAlbumCoverUri(song.albumId)
-        }
-    }
-
     fun getArtistModel(artist: Artist): Any {
         return getArtistModel(
             artist,
