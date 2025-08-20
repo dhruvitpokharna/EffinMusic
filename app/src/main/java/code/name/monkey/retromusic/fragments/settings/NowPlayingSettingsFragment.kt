@@ -49,7 +49,7 @@ class NowPlayingSettingsFragment : AbsSettingsFragment(),
         snowfall?.isEnabled =
             PreferenceUtil.nowPlayingScreen in listOf(Adaptive, Circle, Color, Flat, Material, MD3, Normal, Plain, Simple)
         if (snowfall?.isEnabled == false) {
-            snowfall.persistBoolean(false)
+            snowfall.isChecked = false
         }
     }
 
