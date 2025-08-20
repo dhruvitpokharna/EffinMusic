@@ -14,6 +14,7 @@
  */
 package code.name.monkey.retromusic.fragments.player.circle
 
+import android.content.SharedPreferences
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -47,6 +48,7 @@ import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.helper.MusicProgressViewUpdateHelper
 import code.name.monkey.retromusic.helper.MusicProgressViewUpdateHelper.Callback
 import code.name.monkey.retromusic.helper.PlayPauseButtonOnClickHandler
+import code.name.monkey.retromusic.SNOWFALL
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
