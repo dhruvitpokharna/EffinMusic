@@ -63,6 +63,7 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player),
         _binding = FragmentAdaptivePlayerBinding.bind(view)
         setUpSubFragments()
         setUpPlayerToolbar()
+        startOrStopSnow(PreferenceUtil.isSnowFalling)
         PreferenceManager.getDefaultSharedPreferences(requireContext())
             .registerOnSharedPreferenceChangeListener(this)
         binding.playbackControlsFragment.drawAboveSystemBars()
