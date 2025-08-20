@@ -103,6 +103,7 @@ class CardBlurFragment : AbsPlayerFragment(R.layout.fragment_card_blur_player),
         setUpSubFragments()
         setUpPlayerToolbar()
         startOrStopSnow(PreferenceUtil.isSnowFalling)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
         binding.playerToolbar.drawAboveSystemBars()
     }
 
