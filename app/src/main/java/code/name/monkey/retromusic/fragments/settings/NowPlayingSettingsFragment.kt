@@ -38,11 +38,7 @@ class NowPlayingSettingsFragment : AbsSettingsFragment(),
 
         val carouselEffect: TwoStatePreference? = findPreference(CAROUSEL_EFFECT)
         carouselEffect?.setOnPreferenceChangeListener { _, _ -> true }
-
-        val snowfall: ATESwitchPreference? = findPreference(SNOWFALL)
-        snowfall?.isEnabled =
-            PreferenceUtil.nowPlayingScreen in listOf(Adaptive, Circle, Color, Flat, Material, MD3, Normal, Plain, Simple)
-    }
+        }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_now_playing_screen)
