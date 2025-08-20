@@ -15,8 +15,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         applicationId "code.effinmr.music"
-        versionCode 10731
-        versionName '7.3.1'
+        versionCode 10732
+        versionName '7.3.2'
 
         buildConfigField("String", "GOOGLE_PLAY_LICENSING_KEY", "\"${getProperty(getProperties('../public.properties'), 'GOOGLE_PLAY_LICENSE_KEY')}\"")
     }
