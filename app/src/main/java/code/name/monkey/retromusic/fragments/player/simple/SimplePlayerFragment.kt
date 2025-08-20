@@ -14,26 +14,34 @@
  */
 package code.name.monkey.retromusic.fragments.player.simple
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
+import androidx.preference.PreferenceManager
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentSimplePlayerBinding
 import code.name.monkey.retromusic.extensions.colorControlNormal
 import code.name.monkey.retromusic.extensions.drawAboveSystemBars
+import code.name.monkey.retromusic.extensions.isColorLight
+import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.extensions.whichFragment
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
 import code.name.monkey.retromusic.fragments.player.PlayerAlbumCoverFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.SNOWFALL
+import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 
 /**
  * @author Hemanth S (h4h13).
  */
 
-class SimplePlayerFragment : AbsPlayerFragment(R.layout.fragment_simple_player) {
+class SimplePlayerFragment : AbsPlayerFragment(R.layout.fragment_simple_player),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var _binding: FragmentSimplePlayerBinding? = null
     private val binding get() = _binding!!
@@ -53,6 +61,8 @@ class SimplePlayerFragment : AbsPlayerFragment(R.layout.fragment_simple_player) 
         _binding = FragmentSimplePlayerBinding.bind(view)
         setUpSubFragments()
         setUpPlayerToolbar()
+        startOrStopSnow(PreferenceUtil.isSnowFalling)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
         playerToolbar().drawAboveSystemBars()
     }
 
@@ -106,8 +116,30 @@ class SimplePlayerFragment : AbsPlayerFragment(R.layout.fragment_simple_player) 
         )
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == SNOWFALL) {
+            startOrStopSnow(PreferenceUtil.isSnowFalling)
+        }
+    }
+    
+    private fun startOrStopSnow(isSnowFalling: Boolean) {
+        if (_binding == null) return
+        binding.snowfallView?.let { snowfall ->
+            if (isSnowFalling && !surfaceColor().isColorLight) {
+                snowfall.isVisible = true
+                snowfall.restartFalling()
+            } else {
+                snowfall.isVisible = false
+                snowfall.stopFalling()
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .unregisterOnSharedPreferenceChangeListener(this)
         _binding = null
     }
 }
