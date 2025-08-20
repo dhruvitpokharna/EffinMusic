@@ -998,8 +998,27 @@ object PreferenceUtil {
     const val TIME_DISPLAY_MODE_TOGGLE = "toggle"
 
     var timeDisplayMode: String
-        get() = sharedPreferences.getString(TIME_DISPLAY_MODE, TIME_DISPLAY_MODE_TOTAL) ?: TIME_DISPLAY_MODE_TOTAL
-        set(value) = sharedPreferences.edit { putString(TIME_DISPLAY_MODE, value) }
+        get() {
+            return when (val value = sharedPreferences.all[TIME_DISPLAY_MODE]) {
+            is String -> value
+            is Int -> {
+                val stringValue = when (value) {
+                    0 -> TIME_DISPLAY_MODE_TOTAL
+                    1 -> TIME_DISPLAY_MODE_REMAINING
+                    2 -> TIME_DISPLAY_MODE_TOGGLE
+                    else -> TIME_DISPLAY_MODE_TOTAL 
+                }
+                sharedPreferences.edit {
+                    putString(TIME_DISPLAY_MODE, stringValue)
+                }
+                stringValue
+            }
+            else -> TIME_DISPLAY_MODE_TOTAL 
+        }
+    }
+    set(value) {
+        sharedPreferences.edit { putString(TIME_DISPLAY_MODE, value) }
+    }
 
     const val MINI_PLAYER_TIME = "mini_player_time"
     const val MINI_PLAYER_TIME_REMAINING = 0
@@ -1010,25 +1029,21 @@ object PreferenceUtil {
     var miniPlayerTime: Int
         get() {
             return try {
-                // Attempt to get as String, then convert to Int
                 sharedPreferences.getString(MINI_PLAYER_TIME, MINI_PLAYER_TIME_DISABLED.toString())?.toInt()
                     ?: MINI_PLAYER_TIME_DISABLED
             } catch (e: ClassCastException) {
-                // If it was stored as an Int, get it as Int and then convert to String for future use
                 val intValue = sharedPreferences.getInt(MINI_PLAYER_TIME, MINI_PLAYER_TIME_DISABLED)
                 sharedPreferences.edit {
-                    remove(MINI_PLAYER_TIME) // Remove the old, problematic entry
-                    putString(MINI_PLAYER_TIME, intValue.toString()) // Store it correctly as String
+                    remove(MINI_PLAYER_TIME) 
+                    putString(MINI_PLAYER_TIME, intValue.toString()) 
                 }
                 intValue
             } catch (e: NumberFormatException) {
-                // Handle cases where the string might not be a valid integer
                 sharedPreferences.edit { remove(MINI_PLAYER_TIME) }
                 MINI_PLAYER_TIME_DISABLED
             }
         }
         set(value) = sharedPreferences.edit {
-            // Always store as String
             putString(MINI_PLAYER_TIME, value.toString())
         }
 }
