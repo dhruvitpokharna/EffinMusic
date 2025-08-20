@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.retromusic.NEW_BLUR_AMOUNT
@@ -36,6 +37,7 @@ import code.name.monkey.retromusic.glide.RetroGlideExtension.simpleSongCoverOpti
 import code.name.monkey.retromusic.glide.crossfadeListener
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.SNOWFALL
 import code.name.monkey.retromusic.util.PreferenceUtil.blurAmount
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 import com.bumptech.glide.Glide
@@ -98,6 +100,7 @@ class CardBlurFragment : AbsPlayerFragment(R.layout.fragment_card_blur_player),
         _binding = FragmentCardBlurPlayerBinding.bind(view)
         setUpSubFragments()
         setUpPlayerToolbar()
+        startOrStopSnow(PreferenceUtil.isSnowFalling)
         binding.playerToolbar.drawAboveSystemBars()
     }
 
@@ -185,9 +188,26 @@ class CardBlurFragment : AbsPlayerFragment(R.layout.fragment_card_blur_player),
         _binding = null
     }
 
+    private fun startOrStopSnow(isSnowFalling: Boolean) {
+        if (_binding == null) return
+        binding.snowfallView?.let { snowfall ->
+            if (isSnowFalling && !surfaceColor().isColorLight) {
+                snowfall.isVisible = true
+                snowfall.restartFalling()
+            } else {
+                snowfall.isVisible = false
+                snowfall.stopFalling()
+            }
+        }
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == NEW_BLUR_AMOUNT) {
             updateBlur()
+        }
+
+        if (key == SNOWFALL) {
+            startOrStopSnow(PreferenceUtil.isSnowFalling)
         }
     }
 
