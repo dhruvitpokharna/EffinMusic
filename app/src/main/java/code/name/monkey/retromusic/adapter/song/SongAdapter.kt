@@ -157,7 +157,7 @@ open class SongAdapter(
         val model = RetroGlideExtension.getSongModel(song)
 
         if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
-            Glide.with(holder.image!!)
+            Glide.with(imageView)
                 .asBitmapPalette()
                 .songCoverOptions(song)
                 .load(model)
