@@ -34,6 +34,7 @@ class NowPlayingSettingsFragment : AbsSettingsFragment(),
     override fun invalidateSettings() {
         updateNowPlayingScreenSummary()
         updateAlbumCoverStyleSummary()
+        updateSnowFall()
 
         val carouselEffect: TwoStatePreference? = findPreference(CAROUSEL_EFFECT)
         carouselEffect?.setOnPreferenceChangeListener { _, _ -> true }
@@ -45,6 +46,12 @@ class NowPlayingSettingsFragment : AbsSettingsFragment(),
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_now_playing_screen)
+    }
+
+    private fun updateSnowFall() {
+        val snowfall: ATESwitchPreference? = findPreference(SNOWFALL)
+        snowfall?.isEnabled =
+            PreferenceUtil.nowPlayingScreen in listOf(Adaptive, Circle, Color, Flat, Material, MD3, Normal, Plain, Simple)
     }
 
     private fun updateAlbumCoverStyleSummary() {
@@ -74,7 +81,7 @@ class NowPlayingSettingsFragment : AbsSettingsFragment(),
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         when (key) {
-            NOW_PLAYING_SCREEN_ID -> updateNowPlayingScreenSummary()
+            NOW_PLAYING_SCREEN_ID -> updateNowPlayingScreenSummary(), updateSnowFall()
             ALBUM_COVER_STYLE -> updateAlbumCoverStyleSummary()
             CIRCULAR_ALBUM_ART, CAROUSEL_EFFECT -> invalidateSettings()
         }
