@@ -136,7 +136,7 @@ open class AlbumAdapter(
 
         if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
             Glide.with(imageView)
-                .asBitmapPalette()
+                .asBitmap()
                 .albumCoverOptions(song)
                 .load(model)
                 .into(imageView)
