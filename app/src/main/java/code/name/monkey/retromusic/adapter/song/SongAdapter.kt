@@ -158,7 +158,7 @@ open class SongAdapter(
 
         if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
             Glide.with(imageView)
-                .asBitmapPalette()
+                .asBitmap()
                 .songCoverOptions(song)
                 .load(model)
                 .into(imageView)
