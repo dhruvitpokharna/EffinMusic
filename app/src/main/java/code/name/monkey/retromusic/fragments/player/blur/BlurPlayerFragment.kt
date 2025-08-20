@@ -21,14 +21,11 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.retromusic.NEW_BLUR_AMOUNT
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentBlurBinding
-import code.name.monkey.retromusic.extensions.isColorLight
-import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.extensions.drawAboveSystemBars
 import code.name.monkey.retromusic.extensions.whichFragment
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
@@ -39,8 +36,6 @@ import code.name.monkey.retromusic.glide.RetroGlideExtension.simpleSongCoverOpti
 import code.name.monkey.retromusic.glide.crossfadeListener
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
-import code.name.monkey.retromusic.SNOWFALL
-import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.PreferenceUtil.blurAmount
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 import com.bumptech.glide.Glide
@@ -69,8 +64,6 @@ class BlurPlayerFragment : AbsPlayerFragment(R.layout.fragment_blur),
         _binding = FragmentBlurBinding.bind(view)
         setUpSubFragments()
         setUpPlayerToolbar()
-        startOrStopSnow(PreferenceUtil.isSnowFalling)
-        PreferenceManager.getDefaultSharedPreferences(requireContext())
         binding.playerToolbar.drawAboveSystemBars()
     }
 
@@ -165,26 +158,9 @@ class BlurPlayerFragment : AbsPlayerFragment(R.layout.fragment_blur),
         _binding = null
     }
 
-    private fun startOrStopSnow(isSnowFalling: Boolean) {
-        if (_binding == null) return
-        binding.snowfallView?.let { snowfall ->
-            if (isSnowFalling && !surfaceColor().isColorLight) {
-                snowfall.isVisible = true
-                snowfall.restartFalling()
-            } else {
-                snowfall.isVisible = false
-                snowfall.stopFalling()
-            }
-        }
-    }
-
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == NEW_BLUR_AMOUNT) {
             updateBlur()
-        }
-
-        if (key == SNOWFALL) {
-            startOrStopSnow(PreferenceUtil.isSnowFalling)
         }
     }
 }
