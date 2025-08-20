@@ -14,12 +14,15 @@
  */
 package code.name.monkey.retromusic.fragments.player.flat
 
+import android.content.SharedPreferences
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
+import androidx.preference.PreferenceManager
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
@@ -32,12 +35,14 @@ import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
 import code.name.monkey.retromusic.fragments.player.PlayerAlbumCoverFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.SNOWFALL
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.ViewUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 import code.name.monkey.retromusic.views.DrawableGradient
 
-class FlatPlayerFragment : AbsPlayerFragment(R.layout.fragment_flat_player) {
+class FlatPlayerFragment : AbsPlayerFragment(R.layout.fragment_flat_player),
+    SharedPreferences.OnSharedPreferenceChangeListener {
     override fun playerToolbar(): Toolbar {
         return binding.playerToolbar
     }
@@ -70,6 +75,26 @@ class FlatPlayerFragment : AbsPlayerFragment(R.layout.fragment_flat_player) {
         )
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == SNOWFALL) {
+            startOrStopSnow(PreferenceUtil.isSnowFalling)
+        }
+    }
+    
+    private fun startOrStopSnow(isSnowFalling: Boolean) {
+        if (_binding == null) return
+        binding.snowfallView?.let { snowfall ->
+            if (isSnowFalling && !surfaceColor().isColorLight) {
+                snowfall.isVisible = true
+                snowfall.restartFalling()
+            } else {
+                snowfall.isVisible = false
+                snowfall.stopFalling()
+            }
+        }
+    }
+
     private fun colorize(i: Int) {
         if (valueAnimator != null) {
             valueAnimator?.cancel()
@@ -91,6 +116,9 @@ class FlatPlayerFragment : AbsPlayerFragment(R.layout.fragment_flat_player) {
         _binding = FragmentFlatPlayerBinding.bind(view)
         setUpPlayerToolbar()
         setUpSubFragments()
+        startOrStopSnow(PreferenceUtil.isSnowFalling)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .registerOnSharedPreferenceChangeListener(this)
         binding.playerToolbar.drawAboveSystemBars()
     }
 
@@ -137,6 +165,8 @@ class FlatPlayerFragment : AbsPlayerFragment(R.layout.fragment_flat_player) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .unregisterOnSharedPreferenceChangeListener(this)
         _binding = null
     }
 }
