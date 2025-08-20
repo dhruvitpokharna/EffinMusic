@@ -157,10 +157,16 @@ open class SongAdapter(
         val model = RetroGlideExtension.getSongModel(song)
 
         if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
+            val requestOptions = RequestOptions()
+                .format(DecodeFormat.PREFER_RGB_565)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .skipMemoryCache(false)
+                .override(overrideSize, overrideSize)
             Glide.with(imageView)
                 .asBitmap()
                 .songCoverOptions(song)
                 .load(model)
+                .apply(requestOptions)
                 .into(imageView)
             return
         }
