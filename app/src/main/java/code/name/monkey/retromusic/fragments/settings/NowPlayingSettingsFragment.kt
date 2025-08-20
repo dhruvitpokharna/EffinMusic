@@ -77,7 +77,10 @@ class NowPlayingSettingsFragment : AbsSettingsFragment(),
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         when (key) {
-            NOW_PLAYING_SCREEN_ID -> updateNowPlayingScreenSummary(), updateSnowFall()
+            NOW_PLAYING_SCREEN_ID -> {
+                updateNowPlayingScreenSummary() 
+                updateSnowFall()
+            }
             ALBUM_COVER_STYLE -> updateAlbumCoverStyleSummary()
             CIRCULAR_ALBUM_ART, CAROUSEL_EFFECT -> invalidateSettings()
         }
