@@ -38,6 +38,7 @@ import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 import coil.load
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
