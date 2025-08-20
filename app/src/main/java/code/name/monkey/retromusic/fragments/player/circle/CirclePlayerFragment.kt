@@ -14,6 +14,7 @@
  */
 package code.name.monkey.retromusic.fragments.player.circle
 
+import android.content.SharedPreferences
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -26,6 +27,8 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
+import androidx.preference.PreferenceManager
 import androidx.core.content.getSystemService
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
@@ -45,6 +48,7 @@ import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.helper.MusicProgressViewUpdateHelper
 import code.name.monkey.retromusic.helper.MusicProgressViewUpdateHelper.Callback
 import code.name.monkey.retromusic.helper.PlayPauseButtonOnClickHandler
+import code.name.monkey.retromusic.SNOWFALL
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
@@ -61,7 +65,8 @@ import me.tankery.lib.circularseekbar.CircularSeekBar
 
 class CirclePlayerFragment : AbsPlayerFragment(R.layout.fragment_circle_player), Callback,
     OnAudioVolumeChangedListener,
-    CircularSeekBar.OnCircularSeekBarChangeListener {
+    CircularSeekBar.OnCircularSeekBarChangeListener,
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var progressViewUpdateHelper: MusicProgressViewUpdateHelper
     private var audioVolumeObserver: AudioVolumeObserver? = null
@@ -90,6 +95,9 @@ class CirclePlayerFragment : AbsPlayerFragment(R.layout.fragment_circle_player),
 
         setupViews()
         binding.title.isSelected = true
+        startOrStopSnow(PreferenceUtil.isSnowFalling)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .registerOnSharedPreferenceChangeListener(this)
         binding.songInfo.drawAboveSystemBars()
     }
 
@@ -103,6 +111,26 @@ class CirclePlayerFragment : AbsPlayerFragment(R.layout.fragment_circle_player),
                 colorControlNormal(),
                 requireActivity()
             )
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == SNOWFALL) {
+            startOrStopSnow(PreferenceUtil.isSnowFalling)
+        }
+    }
+    
+    private fun startOrStopSnow(isSnowFalling: Boolean) {
+        if (_binding == null) return
+        binding.snowfallView?.let { snowfall ->
+            if (isSnowFalling && !surfaceColor().isColorLight) {
+                snowfall.isVisible = true
+                snowfall.restartFalling()
+            } else {
+                snowfall.isVisible = false
+                snowfall.stopFalling()
+            }
         }
     }
 
@@ -276,6 +304,8 @@ class CirclePlayerFragment : AbsPlayerFragment(R.layout.fragment_circle_player),
         if (audioVolumeObserver != null) {
             audioVolumeObserver!!.unregister()
         }
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .unregisterOnSharedPreferenceChangeListener(this)
         _binding = null
     }
 

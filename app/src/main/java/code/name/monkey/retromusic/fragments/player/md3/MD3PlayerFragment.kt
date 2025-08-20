@@ -14,21 +14,29 @@
  */
 package code.name.monkey.retromusic.fragments.player.md3
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
+import androidx.preference.PreferenceManager
 import code.name.monkey.appthemehelper.util.ATHUtil
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentMd3PlayerBinding
 import code.name.monkey.retromusic.extensions.drawAboveSystemBars
+import code.name.monkey.retromusic.extensions.isColorLight
+import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
 import code.name.monkey.retromusic.fragments.player.PlayerAlbumCoverFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.SNOWFALL
+import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 
-class MD3PlayerFragment : AbsPlayerFragment(R.layout.fragment_md3_player) {
+class MD3PlayerFragment : AbsPlayerFragment(R.layout.fragment_md3_player),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var lastColor: Int = 0
     override val paletteColor: Int
@@ -79,11 +87,15 @@ class MD3PlayerFragment : AbsPlayerFragment(R.layout.fragment_md3_player) {
         _binding = FragmentMd3PlayerBinding.bind(view)
         setUpSubFragments()
         setUpPlayerToolbar()
+        startOrStopSnow(PreferenceUtil.isSnowFalling)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
         playerToolbar().drawAboveSystemBars()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .unregisterOnSharedPreferenceChangeListener(this)
         _binding = null
     }
 
@@ -106,6 +118,26 @@ class MD3PlayerFragment : AbsPlayerFragment(R.layout.fragment_md3_player) {
             ATHUtil.resolveColor(requireContext(), androidx.appcompat.R.attr.colorControlNormal),
             requireActivity()
         )
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == SNOWFALL) {
+            startOrStopSnow(PreferenceUtil.isSnowFalling)
+        }
+    }
+    
+    private fun startOrStopSnow(isSnowFalling: Boolean) {
+        if (_binding == null) return
+        binding.snowfallView?.let { snowfall ->
+            if (isSnowFalling && !surfaceColor().isColorLight) {
+                snowfall.isVisible = true
+                snowfall.restartFalling()
+            } else {
+                snowfall.isVisible = false
+                snowfall.stopFalling()
+            }
+        }
     }
 
     override fun onServiceConnected() {

@@ -14,17 +14,21 @@
  */
 package code.name.monkey.retromusic.fragments.player.material
 
+import android.content.SharedPreferences
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
+import androidx.preference.PreferenceManager
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentMaterialBinding
 import code.name.monkey.retromusic.extensions.colorControlNormal
 import code.name.monkey.retromusic.extensions.drawAboveSystemBars
+import code.name.monkey.retromusic.extensions.isColorLight
 import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.extensions.whichFragment
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
@@ -32,6 +36,7 @@ import code.name.monkey.retromusic.fragments.player.PlayerAlbumCoverFragment
 import code.name.monkey.retromusic.fragments.player.normal.PlayerFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.SNOWFALL
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.ViewUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
@@ -40,7 +45,8 @@ import code.name.monkey.retromusic.views.DrawableGradient
 /**
  * @author Hemanth S (h4h13).
  */
-class MaterialFragment : AbsPlayerFragment(R.layout.fragment_material) {
+class MaterialFragment : AbsPlayerFragment(R.layout.fragment_material),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun playerToolbar(): Toolbar {
         return binding.playerToolbar
@@ -126,6 +132,8 @@ class MaterialFragment : AbsPlayerFragment(R.layout.fragment_material) {
         _binding = FragmentMaterialBinding.bind(view)
         setUpSubFragments()
         setUpPlayerToolbar()
+        startOrStopSnow(PreferenceUtil.isSnowFalling)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
         playerToolbar().drawAboveSystemBars()
     }
 
@@ -149,6 +157,26 @@ class MaterialFragment : AbsPlayerFragment(R.layout.fragment_material) {
         }
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == SNOWFALL) {
+            startOrStopSnow(PreferenceUtil.isSnowFalling)
+        }
+    }
+    
+    private fun startOrStopSnow(isSnowFalling: Boolean) {
+        if (_binding == null) return
+        binding.snowfallView?.let { snowfall ->
+            if (isSnowFalling && !surfaceColor().isColorLight) {
+                snowfall.isVisible = true
+                snowfall.restartFalling()
+            } else {
+                snowfall.isVisible = false
+                snowfall.stopFalling()
+            }
+        }
+    }
+
     override fun onServiceConnected() {
         updateIsFavorite()
     }
@@ -166,6 +194,8 @@ class MaterialFragment : AbsPlayerFragment(R.layout.fragment_material) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .unregisterOnSharedPreferenceChangeListener(this)
         _binding = null
     }
 }

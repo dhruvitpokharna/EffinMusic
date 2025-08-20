@@ -14,24 +14,32 @@
  */
 package code.name.monkey.retromusic.fragments.player.color
 
+import android.content.SharedPreferences
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
+import androidx.preference.PreferenceManager
 import androidx.core.animation.doOnEnd
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentColorPlayerBinding
 import code.name.monkey.retromusic.extensions.colorControlNormal
 import code.name.monkey.retromusic.extensions.drawAboveSystemBars
+import code.name.monkey.retromusic.extensions.isColorLight
+import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.extensions.whichFragment
 import code.name.monkey.retromusic.fragments.base.AbsPlayerFragment
 import code.name.monkey.retromusic.fragments.player.PlayerAlbumCoverFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.SNOWFALL
+import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 
-class ColorFragment : AbsPlayerFragment(R.layout.fragment_color_player) {
+class ColorFragment : AbsPlayerFragment(R.layout.fragment_color_player),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var lastColor: Int = 0
     private var navigationColor: Int = 0
@@ -98,6 +106,8 @@ class ColorFragment : AbsPlayerFragment(R.layout.fragment_color_player) {
             valueAnimator!!.cancel()
             valueAnimator = null
         }
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .unregisterOnSharedPreferenceChangeListener(this)
         _binding = null
     }
 
@@ -106,6 +116,8 @@ class ColorFragment : AbsPlayerFragment(R.layout.fragment_color_player) {
         _binding = FragmentColorPlayerBinding.bind(view)
         setUpSubFragments()
         setUpPlayerToolbar()
+        startOrStopSnow(PreferenceUtil.isSnowFalling)
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
         val playerAlbumCoverFragment: PlayerAlbumCoverFragment =
             whichFragment(R.id.playerAlbumCoverFragment)
         playerAlbumCoverFragment.setCallbacks(this)
@@ -126,6 +138,26 @@ class ColorFragment : AbsPlayerFragment(R.layout.fragment_color_player) {
                 colorControlNormal(),
                 requireActivity()
             )
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+        if (key == SNOWFALL) {
+            startOrStopSnow(PreferenceUtil.isSnowFalling)
+        }
+    }
+    
+    private fun startOrStopSnow(isSnowFalling: Boolean) {
+        if (_binding == null) return
+        binding.snowfallView?.let { snowfall ->
+            if (isSnowFalling && !surfaceColor().isColorLight) {
+                snowfall.isVisible = true
+                snowfall.restartFalling()
+            } else {
+                snowfall.isVisible = false
+                snowfall.stopFalling()
+            }
         }
     }
 
