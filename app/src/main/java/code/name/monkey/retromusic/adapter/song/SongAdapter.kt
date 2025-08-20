@@ -47,6 +47,7 @@ import coil.load
 import android.net.Uri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.request.RequestOptions
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import code.name.monkey.retromusic.glide.palette.BitmapPaletteWrapper
 import com.bumptech.glide.load.DecodeFormat
