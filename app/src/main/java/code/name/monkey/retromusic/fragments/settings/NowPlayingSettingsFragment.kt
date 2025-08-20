@@ -48,6 +48,9 @@ class NowPlayingSettingsFragment : AbsSettingsFragment(),
         val snowfall: ATESwitchPreference? = findPreference(SNOWFALL)
         snowfall?.isEnabled =
             PreferenceUtil.nowPlayingScreen in listOf(Adaptive, Circle, Color, Flat, Material, MD3, Normal, Plain, Simple)
+        if (snowfall?.isEnabled == false) {
+            snowfall.persistBoolean(false)
+        }
     }
 
     private fun updateAlbumCoverStyleSummary() {
