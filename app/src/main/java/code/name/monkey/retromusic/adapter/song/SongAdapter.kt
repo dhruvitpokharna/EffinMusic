@@ -47,6 +47,7 @@ import coil.load
 import android.net.Uri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.request.RequestOptions
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import code.name.monkey.retromusic.glide.palette.BitmapPaletteWrapper
 import com.bumptech.glide.load.DecodeFormat
@@ -156,7 +157,20 @@ open class SongAdapter(
 
         val model = RetroGlideExtension.getSongModel(song)
 
-        val customArtworkUri = PreferenceUtil.customFallbackArtworkUri
+        if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
+            val requestOptions = RequestOptions()
+                .format(DecodeFormat.PREFER_RGB_565)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .skipMemoryCache(false)
+                .override(overrideSize, overrideSize)
+            Glide.with(imageView)
+                .asBitmap()
+                .songCoverOptions(song)
+                .load(model)
+                .apply(requestOptions)
+                .into(imageView)
+            return
+        }
 
         imageView.load(model) {
             size(overrideSize, overrideSize)

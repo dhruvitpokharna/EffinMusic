@@ -38,6 +38,7 @@ import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 import coil.load
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -131,7 +132,23 @@ open class AlbumAdapter(
         }
         
         val song = album.safeGetFirstSong()
+
         val model = RetroGlideExtension.getSongModel(song)
+
+        if (PreferenceUtil.isIgnoreMediaStoreArtwork) {
+            val requestOptions = RequestOptions()
+                .format(DecodeFormat.PREFER_RGB_565)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .skipMemoryCache(false)
+                .override(overrideSize, overrideSize)
+            Glide.with(imageView)
+                .asBitmap()
+                .albumCoverOptions(song)
+                .load(model)
+                .apply(requestOptions)
+                .into(imageView)
+            return
+        }
         
         imageView.load(model) {
             size(overrideSize, overrideSize)
