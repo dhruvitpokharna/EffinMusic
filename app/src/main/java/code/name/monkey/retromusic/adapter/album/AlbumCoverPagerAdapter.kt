@@ -34,6 +34,7 @@ import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.activities.MainActivity
 import code.name.monkey.retromusic.extensions.currentFragment
 import code.name.monkey.retromusic.fragments.AlbumCoverStyle
+import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.fragments.NowPlayingScreen.*
 import code.name.monkey.retromusic.fragments.base.goToLyrics
 import code.name.monkey.retromusic.glide.RetroGlideExtension
@@ -64,6 +65,8 @@ class AlbumCoverPagerAdapter(
 
     private var currentColorReceiver: AlbumCoverFragment.ColorReceiver? = null
     private var currentColorReceiverPosition = -1
+
+    val libraryViewModel: LibraryViewModel by activityViewModel()
 
     override fun getItem(position: Int): Fragment {
         return AlbumCoverFragment.newInstance(dataSet[position])
@@ -139,7 +142,14 @@ class AlbumCoverPagerAdapter(
                 }
                 
                 override fun onDoubleTap(e: MotionEvent): Boolean {
-                    Toast.makeText(requireContext(), "Double tap detected!", Toast.LENGTH_SHORT).show()
+                    val song = MusicPlayerRemote.currentSong
+                    val playlist: PlaylistEntity = libraryViewModel.favoritePlaylist()
+                    if (!libraryViewModel.isSongFavorite(song.id)) {
+                        libraryViewModel.insertSongs(listOf(song.toSongEntity(playlist.playListId)))
+                        Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
+                    }
                     return true
                 }
             })
