@@ -148,6 +148,9 @@ class AlbumCoverPagerAdapter(
                 }
                 
                 override fun onDoubleTap(e: MotionEvent): Boolean {
+                    if (!PreferenceUtil.isDoubleTapFavorite) {
+                        return false
+                    }
                     lifecycleScope.launch(Dispatchers.IO) {
                         val song = MusicPlayerRemote.currentSong
                         val playlist: PlaylistEntity = libraryViewModel.favoritePlaylist()
