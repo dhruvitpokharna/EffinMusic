@@ -15,6 +15,7 @@
 package code.name.monkey.retromusic.adapter.album
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.GestureDetector
@@ -46,6 +47,7 @@ import code.name.monkey.retromusic.glide.RetroGlideExtension.songCoverOptions
 import code.name.monkey.retromusic.glide.RetroMusicColoredTarget
 import code.name.monkey.retromusic.misc.CustomFragmentStatePagerAdapter
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.service.MusicService
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
