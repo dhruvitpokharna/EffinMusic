@@ -32,6 +32,8 @@ import code.name.monkey.retromusic.fragments.lyrics.LyricsFragment
 import androidx.lifecycle.lifecycleScope
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.activities.MainActivity
+import code.name.monkey.retromusic.db.PlaylistEntity
+import code.name.monkey.retromusic.db.toSongEntity
 import code.name.monkey.retromusic.extensions.currentFragment
 import code.name.monkey.retromusic.fragments.AlbumCoverStyle
 import code.name.monkey.retromusic.fragments.LibraryViewModel
@@ -57,6 +59,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import code.name.monkey.retromusic.glide.palette.BitmapPaletteWrapper
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class AlbumCoverPagerAdapter(
     fragmentManager: FragmentManager,
