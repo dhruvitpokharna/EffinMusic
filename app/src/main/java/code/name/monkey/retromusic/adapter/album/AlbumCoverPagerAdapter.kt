@@ -155,7 +155,6 @@ class AlbumCoverPagerAdapter(
                             libraryViewModel.insertSongs(listOf(song.toSongEntity(playlist.playListId)))
                             LocalBroadcastManager.getInstance(requireContext())
                                 .sendBroadcast(Intent(MusicService.FAVORITE_STATE_CHANGED))
-                            }
                         } else {
                             withContext(Dispatchers.Main) {
                                 Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
