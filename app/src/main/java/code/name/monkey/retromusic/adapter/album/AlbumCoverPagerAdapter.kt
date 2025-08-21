@@ -36,7 +36,6 @@ import code.name.monkey.retromusic.db.PlaylistEntity
 import code.name.monkey.retromusic.db.toSongEntity
 import code.name.monkey.retromusic.extensions.currentFragment
 import code.name.monkey.retromusic.fragments.AlbumCoverStyle
-import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.fragments.NowPlayingScreen.*
 import code.name.monkey.retromusic.fragments.base.goToLyrics
 import code.name.monkey.retromusic.glide.RetroGlideExtension
@@ -68,8 +67,6 @@ class AlbumCoverPagerAdapter(
 
     private var currentColorReceiver: AlbumCoverFragment.ColorReceiver? = null
     private var currentColorReceiverPosition = -1
-
-    val libraryViewModel: LibraryViewModel by activityViewModel()
 
     override fun getItem(position: Int): Fragment {
         return AlbumCoverFragment.newInstance(dataSet[position])
