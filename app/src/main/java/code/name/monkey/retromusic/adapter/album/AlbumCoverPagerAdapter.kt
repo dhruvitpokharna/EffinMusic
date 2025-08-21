@@ -28,6 +28,7 @@ import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import code.name.monkey.retromusic.fragments.lyrics.LyricsFragment
 import androidx.lifecycle.lifecycleScope
 import code.name.monkey.retromusic.R
@@ -150,6 +151,8 @@ class AlbumCoverPagerAdapter(
                         val playlist: PlaylistEntity = libraryViewModel.favoritePlaylist()
                         if (!libraryViewModel.isSongFavorite(song.id)) {
                             libraryViewModel.insertSongs(listOf(song.toSongEntity(playlist.playListId)))
+                            LocalBroadcastManager.getInstance(requireContext())
+                                .sendBroadcast(Intent(MusicService.FAVORITE_STATE_CHANGED))
                             withContext(Dispatchers.Main) {
                                 Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
                             }
