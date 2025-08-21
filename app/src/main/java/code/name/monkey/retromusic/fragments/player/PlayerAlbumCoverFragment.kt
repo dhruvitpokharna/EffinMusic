@@ -38,6 +38,7 @@ import code.name.monkey.retromusic.adapter.album.AlbumCoverPagerAdapter.AlbumCov
 import code.name.monkey.retromusic.databinding.FragmentPlayerAlbumCoverBinding
 import code.name.monkey.retromusic.extensions.isColorLight
 import code.name.monkey.retromusic.extensions.surfaceColor
+import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.fragments.NowPlayingScreen.*
 import code.name.monkey.retromusic.fragments.base.AbsMusicServiceFragment
 import code.name.monkey.retromusic.fragments.base.goToLyrics
@@ -66,6 +67,8 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
     private var callbacks: Callbacks? = null
     private var currentPosition: Int = 0
     val viewPager get() = binding.viewPager
+
+    private val libraryViewModel: LibraryViewModel by activityViewModel()
 
     private val colorReceiver = object : AlbumCoverFragment.ColorReceiver {
         override fun onColorReady(color: MediaNotificationProcessor, request: Int) {
