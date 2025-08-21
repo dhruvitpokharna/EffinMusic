@@ -154,8 +154,8 @@ class AlbumCoverPagerAdapter(
                         } else {
                             Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
                         }
-                        return true
                     }
+                    return true
                 }
             })
 
