@@ -68,7 +68,6 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
     var lastDisabledPlaybackControlsColor: Int = 0
 
     private var isSeeking = false
-    private var isShowingRemainingTime = false
 
     open val progressSlider: Slider? = null
 
@@ -119,21 +118,21 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
         when (timeDisplayMode) {
             TIME_DISPLAY_MODE_TOTAL -> {
                 songTotalTime?.text = MusicUtil.getReadableDurationString(total.toLong())
-                songTotalTime?.setOnClickListener(null) // Remove any previous click listener
+                songTotalTime?.setOnClickListener(null) 
             }
             TIME_DISPLAY_MODE_REMAINING -> {
                 songTotalTime?.text = MusicUtil.getReadableDurationString((total - progress).toLong())
-                songTotalTime?.setOnClickListener(null) // Remove any previous click listener
+                songTotalTime?.setOnClickListener(null) 
             }
             TIME_DISPLAY_MODE_TOGGLE -> {
-                if (isShowingRemainingTime) {
+                if (PreferenceUtil.isShowingRemainingTime) {
                     songTotalTime?.text = MusicUtil.getReadableDurationString((total - progress).toLong())
                 } else {
                     songTotalTime?.text = MusicUtil.getReadableDurationString(total.toLong())
                 }
                 songTotalTime?.setOnClickListener {
-                    isShowingRemainingTime = !isShowingRemainingTime
-                    onUpdateProgressViews(progress, total) // Update immediately
+                    PreferenceUtil.isShowingRemainingTime = !PreferenceUtil.isShowingRemainingTime
+                    onUpdateProgressViews(progress, total) 
                 }
             }
         }

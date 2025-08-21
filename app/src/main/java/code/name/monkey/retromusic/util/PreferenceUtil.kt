@@ -996,6 +996,13 @@ object PreferenceUtil {
     const val TIME_DISPLAY_MODE_TOTAL = "total"
     const val TIME_DISPLAY_MODE_REMAINING = "remaining"
     const val TIME_DISPLAY_MODE_TOGGLE = "toggle"
+    const val TIME_DISPLAY_MODE_TOGGLE_REMEMBER = "time_display_mode_toggle_remember"
+
+    var isShowingRemainingTime: Boolean
+        get() = sharedPreferences.getBoolean(
+            TIME_DISPLAY_MODE_TOGGLE_REMEMBER, false 
+        )
+        set(value) = sharedPreferences.edit { putBoolean(TIME_DISPLAY_MODE_TOGGLE_REMEMBER, value) }
 
     var timeDisplayMode: String
         get() {

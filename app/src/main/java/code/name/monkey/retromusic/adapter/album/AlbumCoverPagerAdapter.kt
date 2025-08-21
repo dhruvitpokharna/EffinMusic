@@ -15,8 +15,11 @@
 package code.name.monkey.retromusic.adapter.album
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -26,12 +29,16 @@ import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import code.name.monkey.retromusic.fragments.lyrics.LyricsFragment
 import androidx.lifecycle.lifecycleScope
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.activities.MainActivity
+import code.name.monkey.retromusic.db.PlaylistEntity
+import code.name.monkey.retromusic.db.toSongEntity
 import code.name.monkey.retromusic.extensions.currentFragment
 import code.name.monkey.retromusic.fragments.AlbumCoverStyle
+import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.fragments.NowPlayingScreen.*
 import code.name.monkey.retromusic.fragments.base.goToLyrics
 import code.name.monkey.retromusic.glide.RetroGlideExtension
@@ -40,6 +47,7 @@ import code.name.monkey.retromusic.glide.RetroGlideExtension.songCoverOptions
 import code.name.monkey.retromusic.glide.RetroMusicColoredTarget
 import code.name.monkey.retromusic.misc.CustomFragmentStatePagerAdapter
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.service.MusicService
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
@@ -54,6 +62,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import code.name.monkey.retromusic.glide.palette.BitmapPaletteWrapper
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class AlbumCoverPagerAdapter(
     fragmentManager: FragmentManager,
@@ -105,6 +114,8 @@ class AlbumCoverPagerAdapter(
         private var request: Int = 0
         private val mainActivity get() = activity as MainActivity
 
+        private val libraryViewModel: LibraryViewModel by activityViewModel()
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             if (arguments != null) {
@@ -118,22 +129,46 @@ class AlbumCoverPagerAdapter(
             savedInstanceState: Bundle?
         ): View? {
             val view = inflater.inflate(getLayoutWithPlayerTheme(), container, false)
-            view.setOnClickListener {
-                if (mainActivity.getBottomSheetBehavior().state == STATE_EXPANDED) {
-                    when (PreferenceUtil.artworkClickAction) {
-                        0 -> showLyricsDialog()
-                        1 -> {
-                            // Do nothing
-                        }
-                        2 -> {
-                            if (MusicPlayerRemote.isPlaying) {
-                                MusicPlayerRemote.pauseSong()
-                            } else {
-                                MusicPlayerRemote.resumePlaying()
+            val gestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    if (mainActivity.getBottomSheetBehavior().state == STATE_EXPANDED) {
+                        when (PreferenceUtil.artworkClickAction) {
+                            0 -> showLyricsDialog()
+                            1 -> { /* Do nothing */ }
+                            2 -> {
+                                if (MusicPlayerRemote.isPlaying) {
+                                    MusicPlayerRemote.pauseSong()
+                                } else {
+                                    MusicPlayerRemote.resumePlaying()
+                                }
                             }
                         }
                     }
+                    return true
                 }
+                
+                override fun onDoubleTap(e: MotionEvent): Boolean {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val song = MusicPlayerRemote.currentSong
+                        val playlist: PlaylistEntity = libraryViewModel.favoritePlaylist()
+                        if (!libraryViewModel.isSongFavorite(song.id)) {
+                            libraryViewModel.insertSongs(listOf(song.toSongEntity(playlist.playListId)))
+                            LocalBroadcastManager.getInstance(requireContext())
+                                .sendBroadcast(Intent(MusicService.FAVORITE_STATE_CHANGED))
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    return true
+                }
+            })
+
+            view.setOnTouchListener { _, motionEvent ->
+                gestureDetector.onTouchEvent(motionEvent)
+                true
             }
             return view
         }
