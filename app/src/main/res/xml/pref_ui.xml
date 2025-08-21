@@ -292,6 +292,13 @@
             android:layout="@layout/list_item_view_switch"
             android:summary="@string/pref_summary_auto_hide_mini_player"
             android:title="@string/pref_title_auto_hide_mini_player" />
+
+        <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            android:defaultValue="true"
+            android:key="double_tap_favorite"
+            android:layout="@layout/list_item_view_switch"
+            android:summary="@string/pref_summary_double_tap_favorite"
+            android:title="@string/pref_title_double_tap_favorite" />
     </code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
     <code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory

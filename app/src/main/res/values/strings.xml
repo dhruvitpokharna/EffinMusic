@@ -652,6 +652,10 @@
     <string name="pref_summary_auto_hide_mini_player">Automatically hide the mini player when scrolling down and show it when scrolling up.</string>
     <string name="pref_summary_offline_mode">Complete Offline Mode</string>
 
+    
+    <string name="pref_title_double_tap_favorite">Double tap to favorite</string>
+    <string name="pref_summary_double_tap_favorite">Double tap on player album cover to favorite song</string>
+
     <string name="pref_title_show_song_only">Minimal Artist</string>
     <string name="pref_summary_show_song_only">Show Songs/Albums only in Artist</string>
 
