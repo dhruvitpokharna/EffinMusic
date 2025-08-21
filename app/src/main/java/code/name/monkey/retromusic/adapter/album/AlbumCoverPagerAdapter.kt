@@ -127,7 +127,7 @@ class AlbumCoverPagerAdapter(
         ): View? {
             val view = inflater.inflate(getLayoutWithPlayerTheme(), container, false)
             val gestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
-                override fun onSingleTapConfirmed(e: android.view.MotionEvent?): Boolean {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                     if (mainActivity.getBottomSheetBehavior().state == STATE_EXPANDED) {
                         when (PreferenceUtil.artworkClickAction) {
                             0 -> showLyricsDialog()
@@ -144,7 +144,7 @@ class AlbumCoverPagerAdapter(
                     return true
                 }
                 
-                override fun onDoubleTap(e: android.view.MotionEvent?): Boolean {
+                override fun onDoubleTap(e: MotionEvent): Boolean {
                     val song = MusicPlayerRemote.currentSong
                     val playlist: PlaylistEntity = libraryViewModel.favoritePlaylist()
                     if (!libraryViewModel.isSongFavorite(song.id)) {
