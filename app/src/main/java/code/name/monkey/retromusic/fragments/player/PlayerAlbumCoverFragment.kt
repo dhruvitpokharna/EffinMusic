@@ -19,6 +19,8 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -36,6 +38,8 @@ import code.name.monkey.retromusic.SHOW_LYRICS
 import code.name.monkey.retromusic.adapter.album.AlbumCoverPagerAdapter
 import code.name.monkey.retromusic.adapter.album.AlbumCoverPagerAdapter.AlbumCoverFragment
 import code.name.monkey.retromusic.databinding.FragmentPlayerAlbumCoverBinding
+import code.name.monkey.retromusic.db.PlaylistEntity
+import code.name.monkey.retromusic.db.toSongEntity
 import code.name.monkey.retromusic.extensions.isColorLight
 import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.fragments.LibraryViewModel
@@ -56,6 +60,7 @@ import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_player_album_cover),
     ViewPager.OnPageChangeListener, MusicProgressViewUpdateHelper.Callback,
@@ -94,29 +99,25 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
     private fun updateLyrics(lyrics: String? = null) {
         val song = MusicPlayerRemote.currentSong
         binding.fetchLyricsText.visibility = View.GONE
-        lifecycleScope.launch(Dispatchers.IO) {
-            if (!lyrics.isNullOrBlank()) {
-                binding.lyricsView.loadLrc(lyrics)
-                return@launch
-            }
-            val lrcFile = LyricUtil.getSyncedLyricsFile(song)
-            if (lrcFile != null) {
-                binding.lyricsView.loadLrc(lrcFile)
+        if (!lyrics.isNullOrBlank()) {
+            binding.lyricsView.loadLrc(lyrics)
+            return
+        }
+        val lrcFile = LyricUtil.getSyncedLyricsFile(song)
+        if (lrcFile != null) {
+            binding.lyricsView.loadLrc(lrcFile)
+        } else {
+            val embeddedLyrics = LyricUtil.getEmbeddedSyncedLyrics(song.data)
+            if (embeddedLyrics != null) {
+                _binding?.lyricsView?.loadLrc(embeddedLyrics)
             } else {
-                val embeddedLyrics = LyricUtil.getEmbeddedSyncedLyrics(song.data)
-                if (embeddedLyrics != null) {
-                    _binding?.lyricsView?.loadLrc(embeddedLyrics)
-                } else {
-                    withContext(Dispatchers.Main) {
-                        val binding = _binding ?: return@withContext
-                        if (!viewDestroyed) {
-                            binding.lyricsView.reset()
-                            binding.lyricsView.setLabel(context?.getString(R.string.no_lyrics_found))
-                            if (PreferenceUtil.showLyrics) {
-                                binding.lyricsView.visibility = View.VISIBLE
-                                binding.fetchLyricsText.visibility = View.VISIBLE
-                            }
-                        }
+                val binding = _binding ?: return
+                if (!viewDestroyed) {
+                    binding.lyricsView.reset()
+                    binding.lyricsView.setLabel(context?.getString(R.string.no_lyrics_found))
+                    if (PreferenceUtil.showLyrics) {
+                        binding.lyricsView.visibility = View.VISIBLE
+                        binding.fetchLyricsText.visibility = View.VISIBLE
                     }
                 }
             }
@@ -158,6 +159,40 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
                 }
             }
         }
+        val gestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    if (mainActivity.getBottomSheetBehavior().state == STATE_EXPANDED) {
+                        when (PreferenceUtil.artworkClickAction) {
+                            0 -> showLyricsDialog()
+                            1 -> { /* Do nothing */ }
+                            2 -> {
+                                if (MusicPlayerRemote.isPlaying) {
+                                    MusicPlayerRemote.pauseSong()
+                                } else {
+                                    MusicPlayerRemote.resumePlaying()
+                                }
+                            }
+                        }
+                    }
+                    return true
+                }
+                
+                override fun onDoubleTap(e: MotionEvent): Boolean {
+                    val song = MusicPlayerRemote.currentSong
+                    val playlist: PlaylistEntity = libraryViewModel.favoritePlaylist()
+                    if (!libraryViewModel.isSongFavorite(song.id)) {
+                        libraryViewModel.insertSongs(listOf(song.toSongEntity(playlist.playListId)))
+                        Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
+                    }
+                    return true
+                }
+        })
+        binding.viewPager.setOnTouchListener { _, event ->
+        gestureDetector.onTouchEvent(event)
+        false // let ViewPager still handle swipes
+        }
         binding.fetchLyricsText.setOnClickListener {
             val song = MusicPlayerRemote.currentSong
             lifecycleScope.launch {
@@ -170,6 +205,43 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
             }
         }
     }
+
+    private fun showLyricsDialog(lyrics: String? = null) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val data = lyrics ?: MusicUtil.getLyrics(song)
+                withContext(Dispatchers.Main) {
+                    val dialog = MaterialAlertDialogBuilder(
+                        requireContext(),
+                        com.google.android.material.R.style.ThemeOverlay_MaterialComponents_Dialog_Alert
+                    )
+                        .setTitle(song.title)
+                        .setMessage(if (data.isNullOrEmpty()) "No lyrics found" else data)
+                        .setNeutralButton(R.string.fetch_lyrics_online, null)
+                        .setPositiveButton(R.string.synced_lyrics, null)
+                        .create()
+
+                        dialog.setOnShowListener {
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
+                                dialog.dismiss()
+                                goToLyrics(requireActivity())
+                            }
+                        
+                        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setOnClickListener {
+                            lifecycleScope.launch {
+                                val fetchedLyrics = LyricsLoader.loadLyrics(song, preferSynced = false)
+                                if (!fetchedLyrics.isNullOrBlank()) {
+                                    dialog.dismiss()
+                                    showLyricsDialog(fetchedLyrics)
+                                } else {
+                                    Toast.makeText(requireContext(), R.string.no_lyrics_found, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+                    dialog.show()
+                }
+            }
+        }
 
     private fun setupViewPager() {
         binding.viewPager.addOnPageChangeListener(this)
