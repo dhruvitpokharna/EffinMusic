@@ -986,6 +986,13 @@ object PreferenceUtil {
             HIDE_HEADER, false // Default to false
         )
 
+    const val DOUBLE_TAP_FAVORITE = "double_tap_favorite"
+    var isDoubleTapFavorite: Boolean
+        get() = sharedPreferences.getBoolean(
+            DOUBLE_TAP_FAVORITE, true 
+        )
+        set(value) = sharedPreferences.edit { putBoolean(DOUBLE_TAP_FAVORITE, value) }
+
     const val CUSTOM_FALLBACK_ARTWORK_URI = "custom_fallback_artwork_uri"
 
     var customFallbackArtworkUri: String?
