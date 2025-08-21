@@ -85,6 +85,10 @@ class PersonalizeSettingsFragment : AbsSettingsFragment() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri: Uri? = result.data?.data
                 uri?.let {
+                    requireContext().contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
                     // Persist the URI
                     PreferenceUtil.customFallbackArtworkUri = it.toString()
                     Toast.makeText(requireContext(), "Custom fallback artwork set!", Toast.LENGTH_SHORT).show()
