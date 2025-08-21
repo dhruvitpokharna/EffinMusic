@@ -176,8 +176,8 @@ open class SongAdapter(
             size(overrideSize, overrideSize)
             crossfade(true)
             allowHardware(true)
-            placeholder(null)
-            error(null)
+            placeholder(R.drawable.default_audio_art)
+            error(R.drawable.default_audio_art)
             memoryCachePolicy(coil.request.CachePolicy.ENABLED)
             diskCachePolicy(coil.request.CachePolicy.ENABLED)
         }

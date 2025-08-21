@@ -154,10 +154,10 @@ open class AlbumAdapter(
             size(overrideSize, overrideSize)
             crossfade(true)
             allowHardware(true)
-            placeholder(null)
+            placeholder(R.drawable.default_album_art)
             memoryCachePolicy(coil.request.CachePolicy.ENABLED)
             diskCachePolicy(coil.request.CachePolicy.ENABLED)
-            error(null)
+            error(R.drawable.default_album_art)
         }
     }
 
