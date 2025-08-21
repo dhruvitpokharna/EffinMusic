@@ -16,6 +16,8 @@ package code.name.monkey.retromusic.adapter.album
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -118,26 +120,37 @@ class AlbumCoverPagerAdapter(
             savedInstanceState: Bundle?
         ): View? {
             val view = inflater.inflate(getLayoutWithPlayerTheme(), container, false)
-            view.setOnClickListener {
-                if (mainActivity.getBottomSheetBehavior().state == STATE_EXPANDED) {
-                    when (PreferenceUtil.artworkClickAction) {
-                        0 -> showLyricsDialog()
-                        1 -> {
-                            // Do nothing
-                        }
-                        2 -> {
-                            if (MusicPlayerRemote.isPlaying) {
-                                MusicPlayerRemote.pauseSong()
-                            } else {
-                                MusicPlayerRemote.resumePlaying()
+            val gestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
+                override fun onSingleTapConfirmed(e: android.view.MotionEvent?): Boolean {
+                    if (mainActivity.getBottomSheetBehavior().state == STATE_EXPANDED) {
+                        when (PreferenceUtil.artworkClickAction) {
+                            0 -> showLyricsDialog()
+                            1 -> { /* Do nothing */ }
+                            2 -> {
+                                if (MusicPlayerRemote.isPlaying) {
+                                    MusicPlayerRemote.pauseSong()
+                                } else {
+                                    MusicPlayerRemote.resumePlaying()
+                                }
                             }
                         }
                     }
+                    return true
                 }
+                
+                override fun onDoubleTap(e: android.view.MotionEvent?): Boolean {
+                    Toast.makeText(requireContext(), "Double tap detected!", Toast.LENGTH_SHORT).show()
+                    return true
+                }
+            })
+
+            view.setOnTouchListener { _, motionEvent ->
+                gestureDetector.onTouchEvent(motionEvent)
+                true
             }
             return view
         }
-
+        
         private fun showLyricsDialog(lyrics: String? = null) {
             lifecycleScope.launch(Dispatchers.IO) {
                 val data = lyrics ?: MusicUtil.getLyrics(song)
