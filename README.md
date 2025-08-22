@@ -12,11 +12,8 @@
 
 </p>
 
-## Development paused
-
-## will it continue?
-if there's good amount of interest 
-
+## i made this to make it work how i liked it 
+## not taking anymore requests
 
 ## 🆕 Material You Design Music Player for Android music lovers 
 
