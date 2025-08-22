@@ -12,8 +12,8 @@
 
 </p>
 
-## i made this to make it work how i liked it 
-## not taking anymore requests
+i made this to make it work how i liked it, not taking any more requests
+i started this with aim of making it fully stable and it is very stable now
 
 ## 🆕 Material You Design Music Player for Android music lovers 
 
