@@ -119,9 +119,9 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
-        val listeners = RetroUtil.formatValue(artist.listeners.toFloat())
-        val scrobbles = RetroUtil.formatValue(artist.scrobbles.toFloat())
-
+        val listeners = lastFmArtist?.artist?.stats?.listeners?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
+        val scrobbles = lastFmArtist?.artist?.stats?.playcount?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
+        
         val artistItems = mutableListOf<ArtistItem>().apply {
             add(ArtistItem.Header(artist))
             add(ArtistItem.Albums(artist.sortedAlbums))
@@ -146,8 +146,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             }
         }
 
-        binding.artistTitle.text = artist.name
-        binding.text.text = String.format(
+        binding.artistTitle?.text = artist.name
+        binding.text?.text = String.format(
             "%s • %s",
             MusicUtil.getArtistInfoString(requireContext(), artist),
             MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(artist.songs))
@@ -187,13 +187,15 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             .error(R.drawable.ic_artist)
             .placeholder(R.drawable.ic_artist)
 
-        glideRequest.load(RetroGlideExtension.getArtistModel(artist))
-            .dontAnimate()
-            .into(object : SingleColorTarget(binding.image) {
-                override fun onColorReady(color: Int) {
-                    binding.artistCoverContainer.setBackgroundColor(color)
-                }
-            })
+        binding.image?.let { imageView ->
+            glideRequest.load(RetroGlideExtension.getArtistModel(artist))
+                .dontAnimate()
+                .into(object : SingleColorTarget(imageView) {
+                    override fun onColorReady(color: Int) {
+                        binding.artistCoverContainer?.setCardBackgroundColor(color)
+                    }
+                })
+        }
     }
 
     override fun onAlbumClick(albumId: Long, view: View) {
