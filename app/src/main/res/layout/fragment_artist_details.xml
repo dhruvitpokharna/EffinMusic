@@ -25,8 +25,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
+        android:layout_height="wrap_content"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
         android:overScrollMode="@integer/overScrollMode"
@@ -35,9 +34,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/mini_player_height">
+            android:orientation="vertical">
 
-            <!-- Artist image -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/artistCoverContainer"
                 android:layout_width="0dp"
@@ -58,9 +56,9 @@
                     android:scaleType="centerCrop"
                     android:transitionName="@string/transition_artist_image"
                     tools:srcCompat="@tools:sample/backgrounds/scenic[0]" />
+
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Artist name -->
             <code.name.monkey.retromusic.views.BaselineGridTextView
                 android:id="@+id/artistTitle"
                 android:layout_width="0dp"
@@ -72,12 +70,11 @@
                 android:textAppearance="@style/TextViewHeadline4.Compress"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/artistCoverContainer"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/artistCoverContainer"
                 tools:text="@tools:sample/full_names" />
 
-            <!-- Subtitle -->
             <code.name.monkey.retromusic.views.BaselineGridTextView
                 android:id="@+id/text"
                 android:layout_width="0dp"
@@ -86,217 +83,21 @@
                 android:layout_marginEnd="16dp"
                 android:textAppearance="@style/TextViewSubtitle1"
                 android:textColor="?android:attr/textColorSecondary"
-                app:layout_constraintTop_toBottomOf="@id/artistTitle"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/artistTitle"
                 tools:text="@tools:sample/full_names" />
 
-            <!-- Play Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/playAction"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="4dp"
-                android:paddingVertical="10dp"
-                android:text="@string/action_play_all"
-                android:textAppearance="@style/TextViewButton"
-                android:textColor="?android:attr/textColorPrimary"
-                app:backgroundTint="?attr/colorSurface"
-                app:icon="@drawable/ic_play_arrow"
-                app:layout_constraintTop_toBottomOf="@id/text"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/shuffleAction" />
-
-            <!-- Shuffle Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/shuffleAction"
-                style="@style/Widget.Material3.Button.Icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:paddingVertical="10dp"
-                android:text="@string/shuffle"
-                android:textAppearance="@style/TextViewButton"
-                app:icon="@drawable/ic_shuffle"
-                app:layout_constraintTop_toTopOf="@+id/playAction"
-                app:layout_constraintBottom_toBottomOf="@+id/playAction"
-                app:layout_constraintStart_toEndOf="@+id/playAction"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <!-- Albums Section -->
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/albumTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="@string/albums"
-                android:textAppearance="@style/TextViewHeadline6"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/playAction"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/album_sort_order" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/album_sort_order"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="?roundSelector"
-                app:icon="@drawable/ic_sort"
-                app:iconSize="24dp"
-                app:iconTint="?colorControlNormal"
-                app:layout_constraintTop_toTopOf="@id/albumTitle"
-                app:layout_constraintBottom_toBottomOf="@id/albumTitle"
-                app:layout_constraintStart_toEndOf="@id/albumTitle"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/albumRecyclerView"
+            <include
+                android:id="@+id/fragment_artist_content"
+                layout="@layout/fragment_artist_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:overScrollMode="@integer/overScrollMode"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/albumTitle"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_album_card"
-                tools:spanCount="3" />
-
-            <!-- Songs Section -->
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/songTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="@string/songs"
-                android:textAppearance="@style/TextViewHeadline6"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/albumRecyclerView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/song_sort_order" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/song_sort_order"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="?roundSelector"
-                app:icon="@drawable/ic_sort"
-                app:iconSize="24dp"
-                app:iconTint="?colorControlNormal"
-                app:layout_constraintTop_toTopOf="@id/songTitle"
-                app:layout_constraintBottom_toBottomOf="@id/songTitle"
-                app:layout_constraintStart_toEndOf="@id/songTitle"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:layout_constraintTop_toBottomOf="@id/songTitle"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:listitem="@layout/item_song" />
-
-            <!-- Biography Section -->
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/biographyTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="@string/biography"
-                android:textAppearance="@style/TextViewHeadline6"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/recyclerView"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:visibility="visible" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/biographyText"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lineSpacingExtra="5dp"
-                android:maxLines="4"
-                android:padding="16dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/biographyTitle"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="@string/bug_report_summary"
-                tools:visibility="visible" />
+                app:layout_constraintTop_toBottomOf="@+id/text" />
 
-            <!-- Listeners and Scrobbles -->
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/listenersLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/listeners_label"
-                android:textAppearance="@style/TextViewSubtitle1"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/biographyText"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="visible" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/scrobblesLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="12dp"
-                android:text="@string/scrobbles_label"
-                android:textAppearance="@style/TextViewSubtitle1"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/biographyText"
-                app:layout_constraintStart_toEndOf="@id/listenersLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:visibility="visible" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/listeners"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
-                android:textAppearance="@style/TextViewBody2"
-                android:textColor="?android:attr/textColorTertiary"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/listenersLabel"
-                app:layout_constraintStart_toStartOf="@id/listenersLabel"
-                app:layout_constraintEnd_toEndOf="@id/listenersLabel"
-                tools:text="100000"
-                tools:visibility="visible" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/scrobbles"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
-                android:textAppearance="@style/TextViewBody2"
-                android:textColor="?android:attr/textColorTertiary"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/scrobblesLabel"
-                app:layout_constraintStart_toStartOf="@id/scrobblesLabel"
-                app:layout_constraintEnd_toEndOf="@id/scrobblesLabel"
-                tools:text="100000"
-                tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
