@@ -92,7 +92,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         mainActivity.addMusicServiceEventListener(detailsViewModel)
         mainActivity.setSupportActionBar(binding.toolbar)
         binding.toolbar.title = null
-        binding.artistCoverContainer.transitionName = (artistId ?: artistName).toString()
+        binding.artistCoverContainer?.transitionName = (artistId ?: artistName).toString()
 
         postponeEnterTransition()
         detailsViewModel.getArtist().observe(viewLifecycleOwner) {
@@ -113,7 +113,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == PreferenceUtil.OFFLINE_MODE && ::artist.isInitialized) {
-            Glide.with(this).clear(binding.image)
+            binding.image?.let { Glide.with(this).clear(it) }
             showArtist(artist)
         }
     }
