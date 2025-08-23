@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
+    <!-- Artist Cover -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/artistCoverContainer"
         android:layout_width="0dp"
@@ -23,6 +24,7 @@
             android:scaleType="centerCrop"/>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Artist Name -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/artistTitle"
         android:layout_width="0dp"
@@ -34,14 +36,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
+    <!-- Artist Subtitle (song/album count) -->
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text"
+        android:id="@+id/artistSubtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextViewSubtitle1"
         app:layout_constraintTop_toBottomOf="@id/artistTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Play Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/playButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/action_play_all"
+        app:layout_constraintTop_toBottomOf="@id/artistSubtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/shuffleButton"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Shuffle Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/shuffleButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/shuffle"
+        app:layout_constraintTop_toBottomOf="@id/artistSubtitle"
+        app:layout_constraintStart_toEndOf="@id/playButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
