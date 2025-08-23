@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.retromusic.R
@@ -34,7 +35,7 @@ class ArtistDetailsAdapter(
     companion object {
         private const val TYPE_HEADER = 0
         private const val TYPE_ALBUMS = 1
-        private const val TYPE_SONG = 2
+        private const val TYPE_SONGS = 2
         private const val TYPE_BIOGRAPHY = 3
         private const val TYPE_STATS = 4
     }
@@ -42,7 +43,7 @@ class ArtistDetailsAdapter(
     override fun getItemViewType(position: Int): Int = when (items[position]) {
         is ArtistItem.Header -> TYPE_HEADER
         is ArtistItem.Albums -> TYPE_ALBUMS
-        is ArtistItem.SongItem -> TYPE_SONG
+        is ArtistItem.SongList -> TYPE_SONGS
         is ArtistItem.Biography -> TYPE_BIOGRAPHY
         is ArtistItem.Stats -> TYPE_STATS
     }
@@ -56,8 +57,8 @@ class ArtistDetailsAdapter(
                 ItemArtistAlbumsBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                 albumClickListener
             )
-            TYPE_SONG -> SongViewHolder(
-                ItemArtistSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            TYPE_SONGS -> SongViewHolder(
+                ItemArtistSongsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             )
             TYPE_BIOGRAPHY -> BiographyViewHolder(
                 ItemArtistBiographyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -74,7 +75,7 @@ class ArtistDetailsAdapter(
         when (val item = items[position]) {
             is ArtistItem.Header -> (holder as HeaderViewHolder).bind(item)
             is ArtistItem.Albums -> (holder as AlbumsViewHolder).bind(item)
-            is ArtistItem.SongItem -> (holder as SongViewHolder).bind(item)
+            is ArtistItem.SongList -> (holder as SongViewHolder).bind(item)
             is ArtistItem.Biography -> (holder as BiographyViewHolder).bind(item)
             is ArtistItem.Stats -> (holder as StatsViewHolder).bind(item)
         }
@@ -129,15 +130,16 @@ class ArtistDetailsAdapter(
             binding.albumRecyclerView.layoutManager =
                 LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
             binding.albumRecyclerView.adapter = adapter
+            binding.albumRecyclerView.itemAnimator = DefaultItemAnimator()
         }
     }
 
-    class SongViewHolder(private val binding: ItemArtistSongBinding) :
+    class SongsViewHolder(private val binding: ItemArtistSongsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.SongList) {
             val adapter = SimpleSongAdapter(
                 binding.root.context as FragmentActivity,
-                item.songs, 
+                ArrayList(item.songs), 
                 R.layout.item_song
             )
             binding.songRecyclerView.layoutManager =
