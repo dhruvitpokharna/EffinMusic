@@ -1,29 +1,21 @@
 package code.name.monkey.retromusic.adapter.artist
 
-import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.retromusic.R
-import code.name.monkey.retromusic.adapter.album.HorizontalAlbumAdapter
-import code.name.monkey.retromusic.extensions.inflate
+import code.name.monkey.retromusic.databinding.ItemArtistAlbumsBinding
+import code.name.monkey.retromusic.databinding.ItemArtistBiographyBinding
+import code.name.monkey.retromusic.databinding.ItemArtistHeaderBinding
+import code.name.monkey.retromusic.databinding.ItemArtistSongBinding
+import code.name.monkey.retromusic.databinding.ItemArtistStatsBinding
+import code.name.monkey.retromusic.fragments.artists.ArtistItem
 import code.name.monkey.retromusic.interfaces.IAlbumClickListener
-import code.name.monkey.retromusic.model.Album
-import code.name.monkey.retromusic.model.Artist
+import code.name.monkey.retromusic.adapter.album.HorizontalAlbumAdapter
+import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textview.MaterialTextView
-import androidx.appcompat.widget.AppCompatImageView
-
-sealed class ArtistItem {
-    data class Header(val artist: Artist) : ArtistItem()
-    data class Albums(val albums: List<Album>) : ArtistItem()
-    data class SongItem(val song: Song) : ArtistItem()
-    data class Biography(val text: Spanned) : ArtistItem()
-    data class Stats(val listeners: String, val scrobbles: String) : ArtistItem()
-}
 
 class ArtistDetailsAdapter(
     private val items: List<ArtistItem>,
@@ -38,7 +30,7 @@ class ArtistDetailsAdapter(
         private const val TYPE_STATS = 4
     }
 
-    override fun getItemViewType(position: Int): Int = when(items[position]) {
+    override fun getItemViewType(position: Int): Int = when (items[position]) {
         is ArtistItem.Header -> TYPE_HEADER
         is ArtistItem.Albums -> TYPE_ALBUMS
         is ArtistItem.SongItem -> TYPE_SONG
@@ -47,68 +39,88 @@ class ArtistDetailsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        when(viewType) {
-            TYPE_HEADER -> HeaderViewHolder(parent.inflate(R.layout.item_artist_header))
-            TYPE_ALBUMS -> AlbumsViewHolder(parent.inflate(R.layout.item_artist_albums), albumClickListener)
-            TYPE_SONG -> SongViewHolder(parent.inflate(R.layout.item_song))
-            TYPE_BIOGRAPHY -> BiographyViewHolder(parent.inflate(R.layout.item_artist_biography))
-            TYPE_STATS -> StatsViewHolder(parent.inflate(R.layout.item_artist_stats))
-            else -> throw IllegalArgumentException("Invalid view type")
+        when (viewType) {
+            TYPE_HEADER -> HeaderViewHolder(
+                ItemArtistHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+            TYPE_ALBUMS -> AlbumsViewHolder(
+                ItemArtistAlbumsBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                albumClickListener
+            )
+            TYPE_SONG -> SongViewHolder(
+                ItemArtistSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+            TYPE_BIOGRAPHY -> BiographyViewHolder(
+                ItemArtistBiographyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+            TYPE_STATS -> StatsViewHolder(
+                ItemArtistStatsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+            else -> throw IllegalArgumentException("Unknown view type")
         }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(val item = items[position]) {
-            is ArtistItem.Header -> (holder as HeaderViewHolder).bind(item.artist)
-            is ArtistItem.Albums -> (holder as AlbumsViewHolder).bind(item.albums)
-            is ArtistItem.SongItem -> (holder as SongViewHolder).bind(item.song)
-            is ArtistItem.Biography -> (holder as BiographyViewHolder).bind(item.text)
-            is ArtistItem.Stats -> (holder as StatsViewHolder).bind(item.listeners, item.scrobbles)
+        when (val item = items[position]) {
+            is ArtistItem.Header -> (holder as HeaderViewHolder).bind(item)
+            is ArtistItem.Albums -> (holder as AlbumsViewHolder).bind(item)
+            is ArtistItem.SongItem -> (holder as SongViewHolder).bind(item)
+            is ArtistItem.Biography -> (holder as BiographyViewHolder).bind(item)
+            is ArtistItem.Stats -> (holder as StatsViewHolder).bind(item)
         }
     }
 
-    // ---------------- ViewHolders ----------------
+    class HeaderViewHolder(private val binding: ItemArtistHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ArtistItem.Header) {
+            binding.artistTitle.text = item.artist.name
+            binding.artistSubtitle.text = "${item.artist.songCount} songs • ${item.artist.albumCount} albums"
 
-    class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val artistImage: AppCompatImageView = view.findViewById(R.id.image)
-        private val artistName: MaterialTextView = view.findViewById(R.id.artistTitle)
-        private val artistInfo: MaterialTextView = view.findViewById(R.id.text)
-
-        fun bind(artist: Artist) {
-            artistName.text = artist.name
-            artistInfo.text = "${artist.songCount} songs • ${artist.albumCount} albums"
-            // Load image via Glide as before
+            binding.playButton.setOnClickListener {
+                MusicPlayerRemote.openQueue(item.artist.sortedSongs, 0, true)
+            }
+            binding.shuffleButton.setOnClickListener {
+                MusicPlayerRemote.openAndShuffleQueue(item.artist.songs, true)
+            }
         }
     }
 
-    class AlbumsViewHolder(view: View, private val listener: IAlbumClickListener) : RecyclerView.ViewHolder(view) {
-        private val recycler: RecyclerView = view.findViewById(R.id.albumRecyclerView)
-        private val adapter = HorizontalAlbumAdapter(view.context, emptyList(), listener, true)
-
-        init { recycler.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
-               recycler.adapter = adapter
+    class AlbumsViewHolder(
+        private val binding: ItemArtistAlbumsBinding,
+        private val listener: IAlbumClickListener
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ArtistItem.Albums) {
+            val adapter = HorizontalAlbumAdapter(item.albums, listener)
+            binding.recyclerView.layoutManager =
+                LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
+            binding.recyclerView.adapter = adapter
         }
-
-        fun bind(albums: List<Album>) { adapter.swapDataSet(albums) }
     }
 
-    class SongViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val songTitle: MaterialTextView = view.findViewById(R.id.songTitle)
-        fun bind(song: Song) { songTitle.text = song.title }
+    class SongViewHolder(private val binding: ItemArtistSongBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ArtistItem.SongItem) {
+            binding.songTitle.text = item.song.title
+            binding.songDuration.text = item.song.duration.formatDuration() // Extension function
+            binding.root.setOnClickListener {
+                MusicPlayerRemote.openQueue(listOf(item.song), 0, true)
+            }
+        }
     }
 
-    class BiographyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val bioText: MaterialTextView = view.findViewById(R.id.biographyText)
-        fun bind(text: Spanned) { bioText.text = text }
+    class BiographyViewHolder(private val binding: ItemArtistBiographyBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ArtistItem.Biography) {
+            binding.biographyText.text = item.text
+        }
     }
 
-    class StatsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val listeners: MaterialTextView = view.findViewById(R.id.listeners)
-        private val scrobbles: MaterialTextView = view.findViewById(R.id.scrobbles)
-        fun bind(listenersValue: String, scrobblesValue: String) {
-            listeners.text = listenersValue
-            scrobbles.text = scrobblesValue
+    class StatsViewHolder(private val binding: ItemArtistStatsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ArtistItem.Stats) {
+            binding.listeners.text = item.listeners
+            binding.scrobbles.text = item.scrobbles
         }
     }
 }
