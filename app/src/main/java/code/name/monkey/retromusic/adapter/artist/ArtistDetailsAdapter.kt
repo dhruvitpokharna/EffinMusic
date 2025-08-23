@@ -43,7 +43,7 @@ class ArtistDetailsAdapter(
     override fun getItemViewType(position: Int): Int = when (items[position]) {
         is ArtistItem.Header -> TYPE_HEADER
         is ArtistItem.Albums -> TYPE_ALBUMS
-        is ArtistItem.SongList -> TYPE_SONGS
+        is ArtistItem.Songs -> TYPE_SONGS
         is ArtistItem.Biography -> TYPE_BIOGRAPHY
         is ArtistItem.Stats -> TYPE_STATS
     }
@@ -136,7 +136,7 @@ class ArtistDetailsAdapter(
 
     class SongsViewHolder(private val binding: ItemArtistSongsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ArtistItem.SongList) {
+        fun bind(item: ArtistItem.SongsList) {
             val adapter = SimpleSongAdapter(
                 binding.root.context as FragmentActivity,
                 ArrayList(item.songs), 
