@@ -127,7 +127,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         val artistItems = mutableListOf<ArtistItem>().apply {
             add(ArtistItem.Header(artist))
             add(ArtistItem.Albums(artist.sortedAlbums))
-            add(ArtistItem.SongList(artist.sortedSongs))
+            add(ArtistItem.Songs(artist.sortedSongs))
             biography?.let { add(ArtistItem.Biography(it)) }
             add(ArtistItem.Stats(listeners, scrobbles))
         }
