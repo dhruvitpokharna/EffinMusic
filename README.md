@@ -12,6 +12,8 @@
 
 </p>
 
+## i made it to work the way i liked it, for now not taking any more requests
+
 ## 🆕 Material You Design Music Player for Android music lovers 
 
 ## Download
