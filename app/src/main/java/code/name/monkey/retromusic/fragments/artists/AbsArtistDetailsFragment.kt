@@ -130,7 +130,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             add(ArtistItem.Stats(listeners, scrobbles))
         }
 
-        binding.recyclerView.apply {
+        binding.recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = ArtistDetailsAdapter(artistItems, this@AbsArtistDetailsFragment)
         }
