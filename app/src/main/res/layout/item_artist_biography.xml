@@ -7,86 +7,33 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/biographyTitle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@string/biography"
         android:textAppearance="@style/TextViewHeadline6"
         android:textColor="?android:attr/textColorPrimary"
-        android:textStyle="bold"/>
-    
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/biographyText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:ellipsize="end"
-        android:maxLines="4"
-        android:lineSpacingExtra="5dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/listenersLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/listeners_label"
-        android:textAppearance="@style/TextViewSubtitle1"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/biographyText"
-        tools:visibility="visible" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/scrobblesLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:text="@string/scrobbles_label"
-        android:textAppearance="@style/TextViewSubtitle1"
-        android:textColor="?android:attr/textColorSecondary"
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listenersLabel"
-        app:layout_constraintTop_toBottomOf="@id/biographyText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
         tools:visibility="visible" />
-
+    
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/listeners"
-        android:layout_width="0dp"
+        android:id="@+id/biographyText"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
-        android:textAppearance="@style/TextViewBody2"
-        android:textColor="?android:attr/textColorTertiary"
+        android:ellipsize="end"
+        android:lineSpacingExtra="5dp"
+        android:maxLines="4"
+        android:padding="16dp"
         android:visibility="gone"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="@id/listenersLabel"
-        app:layout_constraintStart_toStartOf="@id/listenersLabel"
-        app:layout_constraintTop_toBottomOf="@id/listenersLabel"
-        tools:text="100000"
-        tools:visibility="visible" />
-
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/scrobbles"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
-        android:textAppearance="@style/TextViewBody2"
-        android:textColor="?android:attr/textColorTertiary"
-        android:visibility="gone"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="@id/scrobblesLabel"
-        app:layout_constraintStart_toStartOf="@id/scrobblesLabel"
-        app:layout_constraintTop_toBottomOf="@id/scrobblesLabel"
-        tools:text="100000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/biographyTitle"
+        tools:text="@string/bug_report_summary"
         tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
