@@ -13,6 +13,7 @@ import code.name.monkey.retromusic.databinding.ItemArtistSongBinding
 import code.name.monkey.retromusic.databinding.ItemArtistStatsBinding
 import code.name.monkey.retromusic.fragments.artists.ArtistItem
 import code.name.monkey.retromusic.interfaces.IAlbumClickListener
+import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.adapter.album.HorizontalAlbumAdapter
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
@@ -97,9 +98,9 @@ class ArtistDetailsAdapter(
                 listener,
                 showCovers = true
             )
-            binding.recyclerView.layoutManager =
+            binding.albumRecyclerView.layoutManager =
                 LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
-            binding.recyclerView.adapter = adapter
+            binding.albumRecyclerView.adapter = adapter
         }
     }
 
@@ -107,7 +108,7 @@ class ArtistDetailsAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.SongItem) {
             binding.songTitle.text = item.song.title
-            binding.songDuration.text = item.song.duration.formatDuration() // Extension function
+            binding.songDuration.text = MusicUtil.getReadableDurationString(item.song.duration)
             binding.root.setOnClickListener {
                 MusicPlayerRemote.openQueue(listOf(item.song), 0, true)
             }
