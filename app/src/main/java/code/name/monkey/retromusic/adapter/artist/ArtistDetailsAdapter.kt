@@ -79,11 +79,31 @@ class ArtistDetailsAdapter(
             binding.artistTitle.text = item.artist.name
             binding.artistSubtitle.text = "${item.artist.songCount} songs • ${item.artist.albumCount} albums"
 
+            loadArtistImage(item.artist)
+
             binding.playButton.setOnClickListener {
                 MusicPlayerRemote.openQueue(item.artist.sortedSongs, 0, true)
             }
             binding.shuffleButton.setOnClickListener {
                 MusicPlayerRemote.openAndShuffleQueue(item.artist.songs, true)
+            }
+        }
+
+        private fun loadArtistImage(artist: Artist) {
+            val glideRequest = Glide.with(binding.image.context)
+                .asBitmapPalette()
+                .artistImageOptions(artist)
+                .error(R.drawable.ic_artist)
+                .placeholder(R.drawable.ic_artist)
+
+            binding.image?.let { imageView ->
+                glideRequest.load(RetroGlideExtension.getArtistModel(artist))
+                    .dontAnimate()
+                    .into(object : SingleColorTarget(binding.image) {
+                        override fun onColorReady(color: Int) {
+                            binding.artistCoverContainer?.setCardBackgroundColor(color)
+                        }
+                    })
             }
         }
     }
