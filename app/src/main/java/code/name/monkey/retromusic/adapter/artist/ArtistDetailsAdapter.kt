@@ -133,12 +133,16 @@ class ArtistDetailsAdapter(
 
     class SongViewHolder(private val binding: ItemArtistSongBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ArtistItem.SongItem) {
-            binding.songTitle.text = item.song.title
-            binding.songDuration.text = MusicUtil.getReadableDurationString(item.song.duration)
-            binding.root.setOnClickListener {
-                MusicPlayerRemote.openQueue(listOf(item.song), 0, true)
-            }
+        fun bind(item: ArtistItem.SongList) {
+            val adapter = SimpleSongAdapter(
+                binding.root.context as FragmentActivity,
+                item.songs, 
+                R.layout.item_song
+            )
+            binding.songRecyclerView.layoutManager =
+                LinearLayoutManager(binding.root.context)
+            binding.songRecyclerView.adapter = adapter
+            binding.songRecyclerView.itemAnimator = DefaultItemAnimator()            
         }
     }
 
