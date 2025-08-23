@@ -3,6 +3,7 @@ package code.name.monkey.retromusic.adapter.artist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.retromusic.R
