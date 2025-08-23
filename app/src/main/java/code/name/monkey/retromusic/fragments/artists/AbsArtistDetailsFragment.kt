@@ -151,17 +151,16 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
-        albumAdapter = HorizontalAlbumAdapter(requireActivity(), ArrayList(), this, true)
-        binding.fragmentArtistContent.albumRecyclerView.apply {
-            itemAnimator = DefaultItemAnimator()
-            layoutManager = GridLayoutManager(this.context, 1, GridLayoutManager.HORIZONTAL, false)
-            adapter = albumAdapter
+        val artistItems = mutableListOf<ArtistItem>().apply {
+            add(ArtistItem.Header(artist))
+            add(ArtistItem.Albums(artist.sortedAlbums))
+            artist.sortedSongs.forEach { add(ArtistItem.SongItem(it)) }
+            biography?.let { add(ArtistItem.Biography(it)) }
+            add(ArtistItem.Stats(listeners, scrobbles))
         }
-        songAdapter = SimpleSongAdapter(requireActivity(), ArrayList(), R.layout.item_song)
         binding.fragmentArtistContent.recyclerView.apply {
-            itemAnimator = DefaultItemAnimator()
-            layoutManager = LinearLayoutManager(this.context)
-            adapter = songAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = ArtistDetailsAdapter(artistItems, this@AbsArtistDetailsFragment)
         }
     }
 
