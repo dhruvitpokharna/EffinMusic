@@ -89,10 +89,10 @@ class ArtistDetailsAdapter(
 
             loadArtistImage(item.artist)
 
-            binding.playButton.setOnClickListener {
+            binding.playAction.setOnClickListener {
                 MusicPlayerRemote.openQueue(item.artist.sortedSongs, 0, true)
             }
-            binding.shuffleButton.setOnClickListener {
+            binding.shuffleAction.setOnClickListener {
                 MusicPlayerRemote.openAndShuffleQueue(item.artist.songs, true)
             }
         }
@@ -109,7 +109,8 @@ class ArtistDetailsAdapter(
                     .dontAnimate()
                     .into(object : SingleColorTarget(binding.image) {
                         override fun onColorReady(color: Int) {
-                            binding.artistCoverContainer?.setCardBackgroundColor(color)
+                            binding.shuffleAction.applyColor(color)
+                            binding.playAction.applyOutlineColor(color)
                         }
                     })
             }
