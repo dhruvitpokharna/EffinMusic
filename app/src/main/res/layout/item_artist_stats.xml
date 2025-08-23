@@ -46,17 +46,30 @@
         android:id="@+id/listeners"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
         android:textAppearance="@style/TextViewBody2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/scrobbles"/>
+        android:textColor="?android:attr/textColorTertiary"
+        android:visibility="gone"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="@id/listenersLabel"
+        app:layout_constraintStart_toStartOf="@id/listenersLabel"
+        app:layout_constraintTop_toBottomOf="@id/listenersLabel"
+        tools:text="100000"
+        tools:visibility="visible" />
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/scrobbles"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
         android:textAppearance="@style/TextViewBody2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/listeners"/>
+        android:textColor="?android:attr/textColorTertiary"
+        android:visibility="gone"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="@id/scrobblesLabel"
+        app:layout_constraintStart_toStartOf="@id/scrobblesLabel"
+        app:layout_constraintTop_toBottomOf="@id/scrobblesLabel"
+        tools:text="100000"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
