@@ -58,6 +58,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     abstract val artistId: Long?
     abstract val artistName: String?
 
+    private var lastFm: LastFmArtist? = null
+
     private lateinit var artist: Artist
     private var biography: Spanned? = null
     private var lang: String? = null
@@ -168,6 +170,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun artistInfo(lastFmArtist: LastFmArtist?) {
+        lastFm = lastFmArtist
         val bioContent = lastFmArtist?.artist?.bio?.content
         if (!bioContent.isNullOrBlank()) {
             biography = bioContent.parseAsHtml()
