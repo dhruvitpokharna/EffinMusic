@@ -5,6 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/songTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/songs"
+        android:textAppearance="@style/TextViewHeadline6"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/song_sort_order"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/song_sort_order"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="?roundSelector"
+        app:icon="@drawable/ic_sort"
+        app:iconSize="24dp"
+        app:iconTint="?colorControlNormal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/songTitle"
+        app:layout_constraintBottom_toBottomOf="@id/songTitle"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/songRecyclerView"
         android:layout_width="0dp"
