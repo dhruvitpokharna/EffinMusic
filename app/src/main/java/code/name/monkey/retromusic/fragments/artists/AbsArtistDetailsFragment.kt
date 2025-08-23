@@ -121,8 +121,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
-        val listeners = lastFmArtist?.artist?.stats?.listeners?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
-        val scrobbles = lastFmArtist?.artist?.stats?.playcount?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
+        val listeners = lastFm?.artist?.stats?.listeners?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
+        val scrobbles = lastFm?.artist?.stats?.playcount?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
         
         val artistItems = mutableListOf<ArtistItem>().apply {
             add(ArtistItem.Header(artist))
