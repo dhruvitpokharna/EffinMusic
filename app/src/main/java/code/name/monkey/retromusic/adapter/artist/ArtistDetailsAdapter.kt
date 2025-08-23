@@ -21,6 +21,7 @@ import code.name.monkey.retromusic.interfaces.IAlbumClickListener
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.adapter.album.HorizontalAlbumAdapter
+import code.name.monkey.retromusic.adapter.song.SimpleSongAdapter
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
 import com.bumptech.glide.Glide
