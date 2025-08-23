@@ -13,11 +13,17 @@ import code.name.monkey.retromusic.databinding.ItemArtistHeaderBinding
 import code.name.monkey.retromusic.databinding.ItemArtistSongBinding
 import code.name.monkey.retromusic.databinding.ItemArtistStatsBinding
 import code.name.monkey.retromusic.fragments.artists.ArtistItem
+import code.name.monkey.retromusic.glide.RetroGlideExtension
+import code.name.monkey.retromusic.glide.RetroGlideExtension.artistImageOptions
+import code.name.monkey.retromusic.glide.RetroGlideExtension.asBitmapPalette
+import code.name.monkey.retromusic.glide.SingleColorTarget
 import code.name.monkey.retromusic.interfaces.IAlbumClickListener
+import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.adapter.album.HorizontalAlbumAdapter
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
+import com.bumptech.glide.Glide
 
 class ArtistDetailsAdapter(
     private val items: List<ArtistItem>,
