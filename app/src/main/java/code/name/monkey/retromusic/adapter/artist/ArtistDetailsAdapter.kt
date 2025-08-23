@@ -91,7 +91,12 @@ class ArtistDetailsAdapter(
         private val listener: IAlbumClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.Albums) {
-            val adapter = HorizontalAlbumAdapter(item.albums, listener)
+            val adapter = HorizontalAlbumAdapter(
+                binding.root.context as FragmentActivity,
+                item.albums,
+                listener,
+                showCovers = true
+            )
             binding.recyclerView.layoutManager =
                 LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
             binding.recyclerView.adapter = adapter
