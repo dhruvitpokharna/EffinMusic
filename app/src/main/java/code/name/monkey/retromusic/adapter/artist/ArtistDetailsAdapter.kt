@@ -11,7 +11,7 @@ import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.ItemArtistAlbumsBinding
 import code.name.monkey.retromusic.databinding.ItemArtistBiographyBinding
 import code.name.monkey.retromusic.databinding.ItemArtistHeaderBinding
-import code.name.monkey.retromusic.databinding.ItemArtistSongBinding
+import code.name.monkey.retromusic.databinding.ItemArtistSongsBinding
 import code.name.monkey.retromusic.databinding.ItemArtistStatsBinding
 import code.name.monkey.retromusic.fragments.artists.ArtistItem
 import code.name.monkey.retromusic.glide.RetroGlideExtension
@@ -75,7 +75,7 @@ class ArtistDetailsAdapter(
         when (val item = items[position]) {
             is ArtistItem.Header -> (holder as HeaderViewHolder).bind(item)
             is ArtistItem.Albums -> (holder as AlbumsViewHolder).bind(item)
-            is ArtistItem.SongsList -> (holder as SongsViewHolder).bind(item)
+            is ArtistItem.Songs -> (holder as SongsViewHolder).bind(item)
             is ArtistItem.Biography -> (holder as BiographyViewHolder).bind(item)
             is ArtistItem.Stats -> (holder as StatsViewHolder).bind(item)
         }
@@ -136,7 +136,7 @@ class ArtistDetailsAdapter(
 
     class SongsViewHolder(private val binding: ItemArtistSongsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ArtistItem.SongsList) {
+        fun bind(item: ArtistItem.Songs) {
             val adapter = SimpleSongAdapter(
                 binding.root.context as FragmentActivity,
                 ArrayList(item.songs), 
