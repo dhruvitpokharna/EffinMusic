@@ -47,30 +47,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"/>
 
-    <!-- Play Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/playButton"
+        android:id="@+id/playAction"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/action_play_all"
-        app:layout_constraintTop_toBottomOf="@id/artistSubtitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/shuffleButton"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginTop="8dp"/>
+        android:paddingVertical="10dp"
+        android:text="@string/action_play_all"
+        android:textAppearance="@style/TextViewButton"
+        android:textColor="?android:attr/textColorPrimary"
+        app:backgroundTint="?attr/colorSurface"
+        app:icon="@drawable/ic_play_arrow"
+        app:layout_constraintEnd_toStartOf="@+id/shuffleAction"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Shuffle Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/shuffleButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:id="@+id/shuffleAction"
+        style="@style/Widget.Material3.Button.Icon"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/shuffle"
-        app:layout_constraintTop_toBottomOf="@id/artistSubtitle"
-        app:layout_constraintStart_toEndOf="@id/playButton"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="0dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginEnd="16dp"
+        android:paddingVertical="10dp"
+        android:text="@string/shuffle"
+        android:textAppearance="@style/TextViewButton"
+        app:icon="@drawable/ic_shuffle"
+        app:layout_constraintBottom_toBottomOf="@+id/playAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/playAction"
+        app:layout_constraintTop_toTopOf="@+id/playAction" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
