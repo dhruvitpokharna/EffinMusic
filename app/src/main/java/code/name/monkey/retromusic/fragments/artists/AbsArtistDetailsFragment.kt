@@ -151,6 +151,9 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
+        val listeners = RetroUtil.formatValue(artist.listeners.toFloat())
+        val scrobbles = RetroUtil.formatValue(artist.scrobbles.toFloat())
+        
         val artistItems = mutableListOf<ArtistItem>().apply {
             add(ArtistItem.Header(artist))
             add(ArtistItem.Albums(artist.sortedAlbums))
