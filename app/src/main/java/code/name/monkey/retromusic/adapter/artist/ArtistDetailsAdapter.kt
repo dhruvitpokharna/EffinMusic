@@ -75,7 +75,7 @@ class ArtistDetailsAdapter(
         when (val item = items[position]) {
             is ArtistItem.Header -> (holder as HeaderViewHolder).bind(item)
             is ArtistItem.Albums -> (holder as AlbumsViewHolder).bind(item)
-            is ArtistItem.SongsList -> (holder as SongViewHolder).bind(item)
+            is ArtistItem.SongsList -> (holder as SongsViewHolder).bind(item)
             is ArtistItem.Biography -> (holder as BiographyViewHolder).bind(item)
             is ArtistItem.Stats -> (holder as StatsViewHolder).bind(item)
         }
