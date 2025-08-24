@@ -23,8 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.adapter.artist.ArtistDetailsAdapter
-import code.name.monkey.retromusic.adapter.artist.OnAlbumSortClickListener
-import code.name.monkey.retromusic.adapter.artist.OnSongSortClickListener
 import code.name.monkey.retromusic.databinding.FragmentArtistDetailsBinding
 import code.name.monkey.retromusic.dialogs.AddToPlaylistDialog
 import code.name.monkey.retromusic.extensions.*
@@ -140,7 +138,12 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     private fun setupRecyclerView() {
         if (!::adapter.isInitialized) {
-            adapter = ArtistDetailsAdapter(emptyList(), this, this, this)
+            adapter = ArtistDetailsAdapter(
+                emptyList(),
+                this,
+                onAlbumSortClicked = { anchor -> showAlbumSortPopup(anchor) },
+                onSongSortClicked = { anchor -> showSongSortPopup(anchor) }
+            )
             binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
             binding.recyclerView?.adapter = adapter
         }
