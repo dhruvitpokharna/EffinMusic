@@ -273,30 +273,25 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupSongSortButton() {
-        binding.recyclerView?.let { recycler ->
-            val popupAnchor = recycler.getChildAt(0)?.findViewById<View>(R.id.song_sort_order)
-            popupAnchor?.let { anchor ->
-                val popup = PopupMenu(requireContext(), anchor)
-                popup.inflate(R.menu.menu_artist_song_sort_order)
-                setUpSortOrderMenu(popup.menu)
-                popup.setOnMenuItemClickListener { item ->
-                    val sortOrder = when (item.itemId) {
-                        R.id.action_sort_order_title -> SortOrder.ArtistSongSortOrder.SONG_A_Z
-                        R.id.action_sort_order_title_desc -> SortOrder.ArtistSongSortOrder.SONG_Z_A
-                        R.id.action_sort_order_album -> SortOrder.ArtistSongSortOrder.SONG_ALBUM
-                        R.id.action_sort_order_year -> SortOrder.ArtistSongSortOrder.SONG_YEAR
-                        R.id.action_sort_order_song_duration -> SortOrder.ArtistSongSortOrder.SONG_DURATION
-                        else -> {
-                            throw IllegalArgumentException("invalid ${item.title}")
-                        }
+        val popup = PopupMenu(requireContext(), null)
+            popup.inflate(R.menu.menu_artist_song_sort_order)
+            setUpSortOrderMenu(popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                val sortOrder = when (item.itemId) {
+                    R.id.action_sort_order_title -> SortOrder.ArtistSongSortOrder.SONG_A_Z
+                    R.id.action_sort_order_title_desc -> SortOrder.ArtistSongSortOrder.SONG_Z_A
+                    R.id.action_sort_order_album -> SortOrder.ArtistSongSortOrder.SONG_ALBUM
+                    R.id.action_sort_order_year -> SortOrder.ArtistSongSortOrder.SONG_YEAR
+                    R.id.action_sort_order_song_duration -> SortOrder.ArtistSongSortOrder.SONG_DURATION
+                    else -> {
+                        throw IllegalArgumentException("invalid ${item.title}")
                     }
-                    item.isChecked = true
-                    setSaveSortOrder(sortOrder)
-                    true
                 }
-                popup.show()
+                item.isChecked = true
+                setSaveSortOrder(sortOrder)
+                true
             }
-        }
+            popup.show()
     }
 
     private fun setSaveSortOrder(sortOrder: String) {
@@ -305,27 +300,22 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupAlbumSortButton() {
-        binding.recyclerView?.let { recycler ->
-            val popupAnchor = recycler.getChildAt(0)?.findViewById<View>(R.id.album_sort_order)
-            popupAnchor?.let { anchor ->
-                val popup = PopupMenu(requireContext(), anchor)
-                popup.inflate(R.menu.menu_artist_album_sort_order)
-                setUpAlbumSortOrderMenu(popup.menu)
-                popup.setOnMenuItemClickListener { item ->
-                    val sortOrder = when (item.itemId) {
-                        R.id.action_sort_order_title -> SortOrder.ArtistAlbumSortOrder.ALBUM_A_Z
-                        R.id.action_sort_order_title_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_Z_A
-                        R.id.action_sort_order_year -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR_ASC
-                        R.id.action_sort_order_year_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR
-                        else -> throw IllegalArgumentException("invalid ${item.title}")
-                    }
-                    item.isChecked = true
-                    setSaveAlbumSortOrder(sortOrder)
-                    true
+        val popup = PopupMenu(requireContext(), null)
+            popup.inflate(R.menu.menu_artist_album_sort_order)
+            setUpAlbumSortOrderMenu(popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                val sortOrder = when (item.itemId) {
+                    R.id.action_sort_order_title -> SortOrder.ArtistAlbumSortOrder.ALBUM_A_Z
+                    R.id.action_sort_order_title_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_Z_A
+                    R.id.action_sort_order_year -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR_ASC
+                    R.id.action_sort_order_year_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR
+                    else -> throw IllegalArgumentException("invalid ${item.title}")
                 }
-                popup.show()
+                item.isChecked = true
+                setSaveAlbumSortOrder(sortOrder)
+                true
             }
-        }
+            popup.show()
     }
 
     private fun setSaveAlbumSortOrder(sortOrder: String) {
