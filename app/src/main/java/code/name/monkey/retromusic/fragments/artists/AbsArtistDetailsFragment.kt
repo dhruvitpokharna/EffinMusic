@@ -58,6 +58,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     abstract val artistId: Long?
     abstract val artistName: String?
 
+    private lateinit var adapter: ArtistDetailsAdapter
+
     private var lastFm: LastFmArtist? = null
 
     private lateinit var artist: Artist
@@ -123,6 +125,14 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
+        if (!::adapter.isInitialized) {
+            adapter = ArtistDetailsAdapter(emptyList(), this)
+            binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerView?.adapter = adapter
+        }
+    }
+
+    private fun updateRecyclerView() {
         val listeners = lastFm?.artist?.stats?.listeners?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
         val scrobbles = lastFm?.artist?.stats?.playcount?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
         
@@ -134,10 +144,13 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             add(ArtistItem.Stats(listeners, scrobbles))
         }
 
-        binding.recyclerView?.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = ArtistDetailsAdapter(artistItems, this@AbsArtistDetailsFragment)
-        }
+        val layoutManager = binding.recyclerView?.layoutManager as? LinearLayoutManager
+        val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
+        val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
+
+        adapter.swapDataSet(artistItems)
+
+        layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
     private fun showArtist(artist: Artist) {
