@@ -8,7 +8,7 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     android:paddingTop="8dp"
-    android:paddingBottom="@dimen/bottom_nav_mini_player_height">
+    android:paddingBottom="@dimen/mini_player_height">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/listenersLabel"
