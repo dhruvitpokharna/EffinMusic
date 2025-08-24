@@ -151,7 +151,7 @@ class ArtistDetailsAdapter(
             binding.albumRecyclerView.adapter = adapter
             binding.albumRecyclerView.itemAnimator = DefaultItemAnimator()
             binding.albumSortOrder.setOnClickListener {
-                onAlbumSortClicked(binding.albumSortOrder)
+                onAlbumSortClicked(it)
             }
         }
     }
@@ -171,7 +171,7 @@ class ArtistDetailsAdapter(
             binding.songRecyclerView.adapter = adapter
             binding.songRecyclerView.itemAnimator = DefaultItemAnimator()  
             binding.songSortOrder.setOnClickListener {
-                onSongSortClicked(binding.songSortOrder)
+                onSongSortClicked(it)
             }
         }
     }
