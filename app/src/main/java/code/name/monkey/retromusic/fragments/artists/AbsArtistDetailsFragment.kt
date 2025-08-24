@@ -106,8 +106,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
                 startPostponedEnterTransition() 
             }
         }
-        setupSongSortButton()
-        setupAlbumSortButton()
         binding.appBarLayout?.background = ColorDrawable(surfaceColor())
     }
 
@@ -133,8 +131,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             adapter = ArtistDetailsAdapter(
                 emptyList(),
                 this,
-                onAlbumSortClicked = { anchor -> showAlbumSortPopup(anchor) },
-                onSongSortClicked = { anchor -> showSongSortPopup(anchor) }
+                { view -> showAlbumSortPopup(view) },
+                { view -> showSongSortPopup(view) }
             )
             binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
             binding.recyclerView?.adapter = adapter
