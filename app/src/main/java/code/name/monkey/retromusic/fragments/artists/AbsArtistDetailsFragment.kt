@@ -50,7 +50,7 @@ import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 
 abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_artist_details),
-    IAlbumClickListener, OnAlbumSortClickListener, OnSongSortClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+    IAlbumClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var _binding: FragmentArtistDetailsBinding? = null
     private val binding get() = _binding!!
