@@ -93,6 +93,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentArtistDetailsBinding.bind(view)
         mainActivity.addMusicServiceEventListener(detailsViewModel)
         mainActivity.setSupportActionBar(binding.toolbar)
         binding.toolbar.title = null
@@ -105,6 +106,9 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
                 startPostponedEnterTransition() 
             }
         }
+        setupSongSortButton()
+        setupAlbumSortButton()
+        binding.appBarLayout?.background = ColorDrawable(surfaceColor())
     }
 
     override fun onDestroyView() {
@@ -133,24 +137,26 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun updateRecyclerView() {
+        val layoutManager = binding.recyclerView?.layoutManager as? LinearLayoutManager
+        val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
+        val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
+
+        adapter.swapDataSet(buildArtistItems())
+
+        layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
+    }
+
+    private fun buildArtistItems(): List<ArtistItem> {
         val listeners = lastFm?.artist?.stats?.listeners?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
         val scrobbles = lastFm?.artist?.stats?.playcount?.let { RetroUtil.formatValue(it.toFloat()) } ?: "0"
         
-        val artistItems = mutableListOf<ArtistItem>().apply {
+        return mutableListOf<ArtistItem>().apply {
             add(ArtistItem.Header(artist))
             add(ArtistItem.Albums(artist.sortedAlbums))
             add(ArtistItem.Songs(artist.sortedSongs))
             biography?.let { add(ArtistItem.Biography(it)) }
             add(ArtistItem.Stats(listeners, scrobbles))
         }
-
-        val layoutManager = binding.recyclerView?.layoutManager as? LinearLayoutManager
-        val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
-        val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
-
-        adapter.swapDataSet(artistItems)
-
-        layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
     private fun showArtist(artist: Artist) {
@@ -254,6 +260,108 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             }
         }
         return true
+    }
+
+    private fun setupSongSortButton() {
+        binding.songSortOrder.setOnClickListener {
+            PopupMenu(requireContext(), binding.songSortOrder).apply {
+                inflate(R.menu.menu_artist_song_sort_order)
+                setUpSortOrderMenu(menu)
+                setOnMenuItemClickListener { item ->
+                    val sortOrder = when (item.itemId) {
+                        R.id.action_sort_order_title -> SortOrder.ArtistSongSortOrder.SONG_A_Z
+                        R.id.action_sort_order_title_desc -> SortOrder.ArtistSongSortOrder.SONG_Z_A
+                        R.id.action_sort_order_album -> SortOrder.ArtistSongSortOrder.SONG_ALBUM
+                        R.id.action_sort_order_year -> SortOrder.ArtistSongSortOrder.SONG_YEAR
+                        R.id.action_sort_order_song_duration -> SortOrder.ArtistSongSortOrder.SONG_DURATION
+                        else -> {
+                            throw IllegalArgumentException("invalid ${item.title}")
+                        }
+                    }
+                    item.isChecked = true
+                    setSaveSortOrder(sortOrder)
+                    return@setOnMenuItemClickListener true
+                }
+                show()
+            }
+        }
+    }
+
+    private fun setSaveSortOrder(sortOrder: String) {
+        PreferenceUtil.artistDetailSongSortOrder = sortOrder
+        updateRecyclerView()
+    }
+
+    private fun setupAlbumSortButton() {
+        binding.albumSortOrder.setOnClickListener {
+            PopupMenu(requireContext(), binding.albumSortOrder).apply {
+                inflate(R.menu.menu_artist_album_sort_order)
+                setUpAlbumSortOrderMenu(menu)
+                setOnMenuItemClickListener { item ->
+                    val sortOrder = when (item.itemId) {
+                        R.id.action_sort_order_title -> SortOrder.ArtistAlbumSortOrder.ALBUM_A_Z
+                        R.id.action_sort_order_title_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_Z_A
+                        R.id.action_sort_order_year -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR_ASC
+                        R.id.action_sort_order_year_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR
+                        else -> {
+                            throw IllegalArgumentException("invalid ${item.title}")
+                        }
+                    }
+                    item.isChecked = true
+                    setSaveAlbumSortOrder(sortOrder)
+                    return@setOnMenuItemClickListener true
+                }
+                show()
+            }
+        }
+    }
+
+    private fun setSaveAlbumSortOrder(sortOrder: String) {
+        PreferenceUtil.artistAlbumSortOrder = sortOrder
+        updateRecyclerView()
+    }
+
+    private fun setUpAlbumSortOrderMenu(sortOrder: Menu) {
+        when (savedAlbumSortOrder) {
+            SortOrder.ArtistAlbumSortOrder.ALBUM_A_Z -> sortOrder.findItem(R.id.action_sort_order_title).isChecked =
+                true
+
+            SortOrder.ArtistAlbumSortOrder.ALBUM_Z_A -> sortOrder.findItem(R.id.action_sort_order_title_desc).isChecked =
+                true
+
+            SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR_ASC -> sortOrder.findItem(R.id.action_sort_order_year).isChecked =
+                true
+
+            SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR -> sortOrder.findItem(R.id.action_sort_order_year_desc).isChecked =
+                true
+
+            else -> {
+                throw IllegalArgumentException("invalid $savedAlbumSortOrder")
+            }
+        }
+    }
+
+    private fun setUpSortOrderMenu(sortOrder: Menu) {
+        when (savedSongSortOrder) {
+            SortOrder.ArtistSongSortOrder.SONG_A_Z -> sortOrder.findItem(R.id.action_sort_order_title).isChecked =
+                true
+
+            SortOrder.ArtistSongSortOrder.SONG_Z_A -> sortOrder.findItem(R.id.action_sort_order_title_desc).isChecked =
+                true
+
+            SortOrder.ArtistSongSortOrder.SONG_ALBUM -> sortOrder.findItem(R.id.action_sort_order_album).isChecked =
+                true
+
+            SortOrder.ArtistSongSortOrder.SONG_YEAR -> sortOrder.findItem(R.id.action_sort_order_year).isChecked =
+                true
+
+            SortOrder.ArtistSongSortOrder.SONG_DURATION -> sortOrder.findItem(R.id.action_sort_order_song_duration).isChecked =
+                true
+
+            else -> {
+                throw IllegalArgumentException("invalid $savedSongSortOrder")
+            }
+        }
     }
 
     private val selectImageLauncher =
