@@ -140,13 +140,13 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun updateRecyclerView() {
-        val layoutManager = binding.recyclerView?.layoutManager as? LinearLayoutManager
-        val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
-        val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
+        //val layoutManager = binding.recyclerView?.layoutManager as? LinearLayoutManager
+        //val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
+        //val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
         adapter.swapDataSet(buildArtistItems())
 
-        layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
+        //layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
     private fun buildArtistItems(): List<ArtistItem> {
