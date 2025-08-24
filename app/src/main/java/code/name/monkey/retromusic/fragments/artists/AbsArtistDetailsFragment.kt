@@ -146,9 +146,11 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
         val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
-        adapter.swapDataSet(buildArtistItems())
-
-        layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
+        val artistItems = buildArtistItems()
+        binding.recyclerView?.post {
+            adapter.swapDataSet(artistItems)
+            layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
+        }
     }
 
     private fun buildArtistItems(): List<ArtistItem> {
