@@ -132,7 +132,8 @@ class ArtistDetailsAdapter(
 
     class AlbumsViewHolder(
         private val binding: ItemArtistAlbumsBinding,
-        private val listener: IAlbumClickListener
+        private val listener: IAlbumClickListener,
+        private val onAlbumSortClicked: (View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.Albums) {
             val adapter = HorizontalAlbumAdapter(
@@ -152,7 +153,8 @@ class ArtistDetailsAdapter(
     }
 
     class SongsViewHolder(
-        private val binding: ItemArtistSongsBinding
+        private val binding: ItemArtistSongsBinding,
+        private val onSongSortClicked: (View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.Songs) {
             val adapter = SimpleSongAdapter(
