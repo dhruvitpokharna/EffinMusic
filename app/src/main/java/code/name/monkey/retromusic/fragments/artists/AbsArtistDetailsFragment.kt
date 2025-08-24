@@ -96,9 +96,10 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         binding.toolbar.title = null
         binding.artistCoverContainer?.transitionName = (artistId ?: artistName).toString()
 
-        postponeEnterTransition()
-        detailsViewModel.getArtist().observe(viewLifecycleOwner) {
-            view.doOnPreDraw { startPostponedEnterTransition() }
+        view.doOnPreDraw { 
+            startPostponedEnterTransition() 
+        }
+        detailsViewModel.getArtist().observe(viewLifecycleOwner) {    
             showArtist(it)
         }
     }
