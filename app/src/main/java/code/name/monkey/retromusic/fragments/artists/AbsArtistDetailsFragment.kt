@@ -147,10 +147,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
         val artistItems = buildArtistItems()
-        binding.recyclerView?.post {
-            adapter.swapDataSet(artistItems)
-            layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
-        }
+        adapter.swapDataSet(artistItems)
+        layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
     private fun buildArtistItems(): List<ArtistItem> {
