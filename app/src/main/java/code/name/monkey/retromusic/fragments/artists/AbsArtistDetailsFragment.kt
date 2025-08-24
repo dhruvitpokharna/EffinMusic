@@ -101,7 +101,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         postponeEnterTransition()
         detailsViewModel.getArtist().observe(viewLifecycleOwner) {    
             showArtist(it)
-            binding.recyclerView.doOnPreDraw { 
+            binding.recyclerView?.doOnPreDraw { 
                 startPostponedEnterTransition() 
             }
         }
@@ -151,6 +151,11 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         adapter.swapDataSet(artistItems)
 
         layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
+    }
+
+    fun swapDataSet(newItems: List<ArtistItem>) {
+        this.items = newItems
+        notifyDataSetChanged()
     }
 
     private fun showArtist(artist: Artist) {
