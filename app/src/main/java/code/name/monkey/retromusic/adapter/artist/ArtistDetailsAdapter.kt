@@ -28,19 +28,12 @@ import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.extensions.*
 import com.bumptech.glide.Glide
 
-interface OnAlbumSortClickListener {
-        fun onSongSortClicked(anchor: View)
-}
-
-interface OnSongSortClickListener {
-        fun onAlbumSortClicked(anchor: View)
-}
 
 class ArtistDetailsAdapter(
     private var items: List<ArtistItem>,
     private var albumClickListener: IAlbumClickListener,
-    private val albumSortListener: OnAlbumSortClickListener,
-    private val songSortListener: OnSongSortClickListener
+    private val onAlbumSortClicked: (View) -> Unit,
+    private val onSongSortClicked: (View) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -50,6 +43,9 @@ class ArtistDetailsAdapter(
         private const val TYPE_BIOGRAPHY = 3
         private const val TYPE_STATS = 4
     }
+
+    abstract fun onAlbumSortClicked(anchor: View)
+    abstract fun onSongSortClicked(anchor: View)
 
     override fun getItemViewType(position: Int): Int = when (items[position]) {
         is ArtistItem.Header -> TYPE_HEADER
@@ -155,7 +151,7 @@ class ArtistDetailsAdapter(
             binding.albumRecyclerView.adapter = adapter
             binding.albumRecyclerView.itemAnimator = DefaultItemAnimator()
             binding.albumSortOrder.setOnClickListener {
-                sortClickListener.onAlbumSortClicked(binding.albumSortOrder)
+                onAlbumSortClicked(binding.albumSortOrder)
             }
         }
     }
@@ -175,7 +171,7 @@ class ArtistDetailsAdapter(
             binding.songRecyclerView.adapter = adapter
             binding.songRecyclerView.itemAnimator = DefaultItemAnimator()  
             binding.songSortOrder.setOnClickListener {
-                sortClickListener.onSongSortClicked(binding.songSortOrder)
+                onSongSortClicked(binding.songSortOrder)
             }
         }
     }
