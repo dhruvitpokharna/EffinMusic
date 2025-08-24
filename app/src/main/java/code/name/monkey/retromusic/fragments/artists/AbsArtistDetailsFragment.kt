@@ -24,6 +24,7 @@ import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.adapter.artist.ArtistDetailsAdapter
 import code.name.monkey.retromusic.adapter.artist.OnAlbumSortClickListener
+import code.name.monkey.retromusic.adapter.artist.OnSongSortClickListener
 import code.name.monkey.retromusic.databinding.FragmentArtistDetailsBinding
 import code.name.monkey.retromusic.dialogs.AddToPlaylistDialog
 import code.name.monkey.retromusic.extensions.*
@@ -51,7 +52,7 @@ import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 
 abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_artist_details),
-    IAlbumClickListener, OnAlbumSortClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+    IAlbumClickListener, OnAlbumSortClickListener, OnSongSortClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var _binding: FragmentArtistDetailsBinding? = null
     private val binding get() = _binding!!
@@ -131,6 +132,10 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     override fun onAlbumSortClicked() {
         setupAlbumSortButton() // reuse your existing album sort popup logic
+    }
+
+    override fun onAlbumSortClicked() {
+        setupSongSortButton() // reuse your existing album sort popup logic
     }
 
     private fun setupRecyclerView() {
@@ -268,11 +273,13 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupSongSortButton() {
-        binding.songSortOrder.setOnClickListener {
-            PopupMenu(requireContext(), binding.songSortOrder).apply {
-                inflate(R.menu.menu_artist_song_sort_order)
-                setUpSortOrderMenu(menu)
-                setOnMenuItemClickListener { item ->
+        binding.recyclerView?.let { recycler ->
+            val popupAnchor = recycler.getChildAt(0)?.findViewById<View>(R.id.song_sort_order)
+            popupAnchor?.let { anchor ->
+                val popup = PopupMenu(requireContext(), anchor)
+                popup.inflate(R.menu.menu_artist_song_sort_order)
+                setUpSongSortOrderMenu(popup.menu)
+                popup.setOnMenuItemClickListener { item ->
                     val sortOrder = when (item.itemId) {
                         R.id.action_sort_order_title -> SortOrder.ArtistSongSortOrder.SONG_A_Z
                         R.id.action_sort_order_title_desc -> SortOrder.ArtistSongSortOrder.SONG_Z_A
@@ -285,9 +292,9 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
                     }
                     item.isChecked = true
                     setSaveSortOrder(sortOrder)
-                    return@setOnMenuItemClickListener true
+                    true
                 }
-                show()
+                popup.show()
             }
         }
     }
