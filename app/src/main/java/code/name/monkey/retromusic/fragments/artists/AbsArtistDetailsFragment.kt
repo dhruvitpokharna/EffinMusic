@@ -137,8 +137,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
                 { view -> showSongSortPopup(view) }
             )
             binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
-            binding.recyclerView?.adapter = adapter
         }
+        binding.recyclerView?.adapter = adapter
     }
 
     private fun updateRecyclerView() {
