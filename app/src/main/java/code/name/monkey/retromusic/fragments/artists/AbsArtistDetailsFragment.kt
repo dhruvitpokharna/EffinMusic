@@ -301,25 +301,22 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         binding.recyclerView?.let { recycler ->
             val popupAnchor = recycler.getChildAt(0)?.findViewById<View>(R.id.albumSortOrder)
             popupAnchor?.let { anchor ->
-                PopupMenu(requireContext(), anchor).apply {
-                    inflate(R.menu.menu_artist_album_sort_order)
-                    setUpAlbumSortOrderMenu(menu)
-                    setOnMenuItemClickListener { item ->
-                        val sortOrder = when (item.itemId) {
-                            R.id.action_sort_order_title -> SortOrder.ArtistAlbumSortOrder.ALBUM_A_Z
-                            R.id.action_sort_order_title_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_Z_A
-                            R.id.action_sort_order_year -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR_ASC
-                            R.id.action_sort_order_year_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR
-                            else -> {
-                                throw IllegalArgumentException("invalid ${item.title}")
-                            }
-                        }
+                val popup = PopupMenu(requireContext(), anchor)
+                popup.inflate(R.menu.menu_artist_album_sort_order)
+                setUpAlbumSortOrderMenu(popup.menu)
+                popup.setOnMenuItemClickListener { item ->
+                    val sortOrder = when (item.itemId) {
+                        R.id.action_sort_order_title -> SortOrder.ArtistAlbumSortOrder.ALBUM_A_Z
+                        R.id.action_sort_order_title_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_Z_A
+                        R.id.action_sort_order_year -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR_ASC
+                        R.id.action_sort_order_year_desc -> SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR
+                        else -> throw IllegalArgumentException("invalid ${item.title}")
                     }
                     item.isChecked = true
                     setSaveAlbumSortOrder(sortOrder)
-                    return@setOnMenuItemClickListener true
+                    true
                 }
-                show()
+                popup.show()
             }
         }
     }
