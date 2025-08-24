@@ -77,8 +77,7 @@
         android:text="@string/shuffle"
         android:textAppearance="@style/TextViewButton"
         app:icon="@drawable/ic_shuffle"
-        app:layout_constraintTop_toTopOf="@id/playAction"
-        app:layout_constraintBottom_toBottomOf="@id/playAction"
+        app:layout_constraintTop_toBottomOf="@id/artistSubtitle"
         app:layout_constraintStart_toEndOf="@id/playAction"
         app:layout_constraintEnd_toEndOf="parent" />
 
