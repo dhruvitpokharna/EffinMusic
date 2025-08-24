@@ -50,7 +50,7 @@ import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 
 abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_artist_details),
-    IAlbumClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+    IAlbumClickListener, OnAlbumSortClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var _binding: FragmentArtistDetailsBinding? = null
     private val binding get() = _binding!!
@@ -128,9 +128,13 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         }
     }
 
+    override fun onAlbumSortClicked() {
+        setupAlbumSortButton() // reuse your existing album sort popup logic
+    }
+
     private fun setupRecyclerView() {
         if (!::adapter.isInitialized) {
-            adapter = ArtistDetailsAdapter(emptyList(), this)
+            adapter = ArtistDetailsAdapter(emptyList(), this, this)
             binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
             binding.recyclerView?.adapter = adapter
         }
