@@ -86,7 +86,11 @@ class ArtistDetailsAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.Header) {
             binding.artistTitle.text = item.artist.name
-            binding.artistSubtitle.text = "${item.artist.songCount} songs • ${item.artist.albumCount} albums"
+            binding.artistSubtitle.text = String.format(
+                "%s • %s",
+                MusicUtil.getArtistInfoString(binding.artistSubtitle.context, item.artist),
+                MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(item.artist.songs))
+            )
 
             loadArtistImage(item.artist)
 
