@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.adapter.artist.ArtistDetailsAdapter
+import code.name.monkey.retromusic.adapter.artist.OnAlbumSortClickListener
 import code.name.monkey.retromusic.databinding.FragmentArtistDetailsBinding
 import code.name.monkey.retromusic.dialogs.AddToPlaylistDialog
 import code.name.monkey.retromusic.extensions.*
