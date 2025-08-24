@@ -140,7 +140,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     private fun setupRecyclerView() {
         if (!::adapter.isInitialized) {
-            adapter = ArtistDetailsAdapter(emptyList(), this, this)
+            adapter = ArtistDetailsAdapter(emptyList(), this, this, this)
             binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
             binding.recyclerView?.adapter = adapter
         }
@@ -278,7 +278,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             popupAnchor?.let { anchor ->
                 val popup = PopupMenu(requireContext(), anchor)
                 popup.inflate(R.menu.menu_artist_song_sort_order)
-                setUpSongSortOrderMenu(popup.menu)
+                setUpSortOrderMenu(popup.menu)
                 popup.setOnMenuItemClickListener { item ->
                     val sortOrder = when (item.itemId) {
                         R.id.action_sort_order_title -> SortOrder.ArtistSongSortOrder.SONG_A_Z
