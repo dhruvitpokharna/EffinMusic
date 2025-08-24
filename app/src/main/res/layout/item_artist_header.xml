@@ -60,10 +60,10 @@
         android:textColor="?android:attr/textColorPrimary"
         app:backgroundTint="?attr/colorSurface"
         app:icon="@drawable/ic_play_arrow"
-        app:layout_constraintEnd_toStartOf="@+id/shuffleAction"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintTop_toBottomOf="@id/artistSubtitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/shuffleAction" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/shuffleAction"
@@ -76,10 +76,9 @@
         android:text="@string/shuffle"
         android:textAppearance="@style/TextViewButton"
         app:icon="@drawable/ic_shuffle"
-        app:layout_constraintBottom_toBottomOf="@+id/playAction"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/playAction"
-        app:layout_constraintTop_toTopOf="@+id/playAction" />
+        app:layout_constraintTop_toBottomOf="@id/artistSubtitle"
+        app:layout_constraintStart_toEndOf="@id/playAction"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
