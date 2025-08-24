@@ -29,8 +29,8 @@ import code.name.monkey.retromusic.extensions.*
 import com.bumptech.glide.Glide
 
 class ArtistDetailsAdapter(
-    private val items: List<ArtistItem>,
-    private val albumClickListener: IAlbumClickListener
+    private var items: List<ArtistItem>,
+    private var albumClickListener: IAlbumClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -47,6 +47,11 @@ class ArtistDetailsAdapter(
         is ArtistItem.Songs -> TYPE_SONGS
         is ArtistItem.Biography -> TYPE_BIOGRAPHY
         is ArtistItem.Stats -> TYPE_STATS
+    }
+
+    fun swapDataSet(newItems: List<ArtistItem>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
