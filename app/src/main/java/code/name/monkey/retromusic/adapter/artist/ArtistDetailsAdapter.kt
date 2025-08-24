@@ -32,10 +32,15 @@ interface OnAlbumSortClickListener {
         fun onAlbumSortClicked()
 }
 
+interface OnSongSortClickListener {
+        fun onSongSortClicked()
+}
+
 class ArtistDetailsAdapter(
     private var items: List<ArtistItem>,
     private var albumClickListener: IAlbumClickListener,
-    private val albumSortListener: OnAlbumSortClickListener
+    private val albumSortListener: OnAlbumSortClickListener,
+    private val songSortListener: OnSongSortClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -69,7 +74,8 @@ class ArtistDetailsAdapter(
                 albumClickListener, albumSortListener
             )
             TYPE_SONGS -> SongsViewHolder(
-                ItemArtistSongsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemArtistSongsBinding.inflate(LayoutInflater.from(parent.context), parent, false), 
+                songSortListener
             )
             TYPE_BIOGRAPHY -> BiographyViewHolder(
                 ItemArtistBiographyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -154,8 +160,10 @@ class ArtistDetailsAdapter(
         }
     }
 
-    class SongsViewHolder(private val binding: ItemArtistSongsBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class SongsViewHolder(
+        private val binding: ItemArtistSongsBinding,
+        private val sortClickListener: OnSongSortClickListener
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.Songs) {
             val adapter = SimpleSongAdapter(
                 binding.root.context as FragmentActivity,
@@ -165,7 +173,10 @@ class ArtistDetailsAdapter(
             binding.songRecyclerView.layoutManager =
                 LinearLayoutManager(binding.root.context)
             binding.songRecyclerView.adapter = adapter
-            binding.songRecyclerView.itemAnimator = DefaultItemAnimator()            
+            binding.songRecyclerView.itemAnimator = DefaultItemAnimator()  
+            binding.SongSortOrder.setOnClickListener {
+                sortClickListener.onSongSortClicked()
+            }
         }
     }
 
