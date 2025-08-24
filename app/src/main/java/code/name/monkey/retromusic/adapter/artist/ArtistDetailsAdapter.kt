@@ -29,11 +29,11 @@ import code.name.monkey.retromusic.extensions.*
 import com.bumptech.glide.Glide
 
 interface OnAlbumSortClickListener {
-        fun onAlbumSortClicked()
+        fun onSongSortClicked(anchor: View)
 }
 
 interface OnSongSortClickListener {
-        fun onSongSortClicked()
+        fun onAlbumSortClicked(anchor: View)
 }
 
 class ArtistDetailsAdapter(
@@ -155,7 +155,7 @@ class ArtistDetailsAdapter(
             binding.albumRecyclerView.adapter = adapter
             binding.albumRecyclerView.itemAnimator = DefaultItemAnimator()
             binding.albumSortOrder.setOnClickListener {
-                sortClickListener.onAlbumSortClicked()
+                sortClickListener.onAlbumSortClicked(binding.albumSortOrder)
             }
         }
     }
@@ -175,7 +175,7 @@ class ArtistDetailsAdapter(
             binding.songRecyclerView.adapter = adapter
             binding.songRecyclerView.itemAnimator = DefaultItemAnimator()  
             binding.songSortOrder.setOnClickListener {
-                sortClickListener.onSongSortClicked()
+                sortClickListener.onSongSortClicked(binding.songSortOrder)
             }
         }
     }
