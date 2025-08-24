@@ -171,6 +171,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         )
 
         setupRecyclerView()
+        updateRecyclerView()
     }
 
     private fun loadBiography(name: String, lang: String? = Locale.getDefault().language) {
