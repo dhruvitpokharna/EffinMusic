@@ -128,14 +128,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         }
     }
 
-    override fun onAlbumSortClicked() {
-        setupAlbumSortButton() 
-    }
-
-    override fun onSongSortClicked() {
-        setupSongSortButton() 
-    }
-
     private fun setupRecyclerView() {
         if (!::adapter.isInitialized) {
             adapter = ArtistDetailsAdapter(
@@ -275,8 +267,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         return true
     }
 
-    private fun setupSongSortButton() {
-        val popup = PopupMenu(requireContext(), null)
+    private fun showSongSortPopup(anchor: View) {
+        val popup = PopupMenu(requireContext(), anchor)
             popup.inflate(R.menu.menu_artist_song_sort_order)
             setUpSortOrderMenu(popup.menu)
             popup.setOnMenuItemClickListener { item ->
@@ -302,8 +294,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         updateRecyclerView()
     }
 
-    private fun setupAlbumSortButton() {
-        val popup = PopupMenu(requireContext(), null)
+    private fun showAlbumSortPopup(anchor: View) {
+        val popup = PopupMenu(requireContext(), anchor)
             popup.inflate(R.menu.menu_artist_album_sort_order)
             setUpAlbumSortOrderMenu(popup.menu)
             popup.setOnMenuItemClickListener { item ->
