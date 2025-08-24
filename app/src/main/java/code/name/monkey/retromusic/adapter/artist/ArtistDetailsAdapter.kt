@@ -44,9 +44,6 @@ class ArtistDetailsAdapter(
         private const val TYPE_STATS = 4
     }
 
-    abstract fun onAlbumSortClicked(anchor: View)
-    abstract fun onSongSortClicked(anchor: View)
-
     override fun getItemViewType(position: Int): Int = when (items[position]) {
         is ArtistItem.Header -> TYPE_HEADER
         is ArtistItem.Albums -> TYPE_ALBUMS
@@ -136,8 +133,7 @@ class ArtistDetailsAdapter(
 
     class AlbumsViewHolder(
         private val binding: ItemArtistAlbumsBinding,
-        private val listener: IAlbumClickListener,
-        private val sortClickListener: OnAlbumSortClickListener
+        private val listener: IAlbumClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.Albums) {
             val adapter = HorizontalAlbumAdapter(
@@ -157,8 +153,7 @@ class ArtistDetailsAdapter(
     }
 
     class SongsViewHolder(
-        private val binding: ItemArtistSongsBinding,
-        private val sortClickListener: OnSongSortClickListener
+        private val binding: ItemArtistSongsBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArtistItem.Songs) {
             val adapter = SimpleSongAdapter(
