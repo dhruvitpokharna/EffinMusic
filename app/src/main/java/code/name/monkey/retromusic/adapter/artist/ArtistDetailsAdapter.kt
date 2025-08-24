@@ -146,7 +146,7 @@ class ArtistDetailsAdapter(
             binding.albumRecyclerView.layoutManager =
                 LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
             binding.albumRecyclerView.adapter = adapter
-            binding.albumRecyclerView.itemAnimator = DefaultItemAnimator()
+            binding.albumRecyclerView.itemAnimator = null
             binding.albumSortOrder.setOnClickListener {
                 onAlbumSortClicked(it)
             }
@@ -157,12 +157,12 @@ class ArtistDetailsAdapter(
         private val binding: ItemArtistSongsBinding,
         private val onSongSortClicked: (View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ArtistItem.Songs) {
-            val adapter = SimpleSongAdapter(
-                binding.root.context as FragmentActivity,
-                ArrayList(item.songs), 
-                R.layout.item_song
-            )
+        val adapter = SimpleSongAdapter(
+            binding.root.context as FragmentActivity,
+            ArrayList(), 
+            R.layout.item_song
+        )
+        init {
             binding.songRecyclerView.layoutManager =
                 LinearLayoutManager(binding.root.context)
             binding.songRecyclerView.adapter = adapter
@@ -170,6 +170,9 @@ class ArtistDetailsAdapter(
             binding.songSortOrder.setOnClickListener {
                 onSongSortClicked(it)
             }
+        }
+        fun bind(item: ArtistItem.Songs) {
+            adapter.swapDataSet(item.songs)
         }
     }
 
