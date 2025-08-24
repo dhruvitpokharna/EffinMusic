@@ -131,11 +131,11 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     override fun onAlbumSortClicked() {
-        setupAlbumSortButton() // reuse your existing album sort popup logic
+        setupAlbumSortButton() 
     }
 
-    override fun onAlbumSortClicked() {
-        setupSongSortButton() // reuse your existing album sort popup logic
+    override fun onSongSortClicked() {
+        setupSongSortButton() 
     }
 
     private fun setupRecyclerView() {
