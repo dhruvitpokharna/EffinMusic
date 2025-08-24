@@ -101,10 +101,10 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
         postponeEnterTransition()
         detailsViewModel.getArtist().observe(viewLifecycleOwner) {    
-            showArtist(it)
-            binding.recyclerView?.doOnPreDraw { 
+            view.doOnPreDraw {
                 startPostponedEnterTransition() 
             }
+            showArtist(it)
         }
         binding.appBarLayout?.background = ColorDrawable(surfaceColor())
     }
