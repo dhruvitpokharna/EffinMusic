@@ -174,7 +174,7 @@ class ArtistDetailsAdapter(
                 LinearLayoutManager(binding.root.context)
             binding.songRecyclerView.adapter = adapter
             binding.songRecyclerView.itemAnimator = DefaultItemAnimator()  
-            binding.SongSortOrder.setOnClickListener {
+            binding.songSortOrder.setOnClickListener {
                 sortClickListener.onSongSortClicked()
             }
         }
