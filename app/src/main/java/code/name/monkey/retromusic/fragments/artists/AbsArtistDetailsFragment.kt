@@ -153,11 +153,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
-    fun swapDataSet(newItems: List<ArtistItem>) {
-        this.items = newItems
-        notifyDataSetChanged()
-    }
-
     private fun showArtist(artist: Artist) {
         this.artist = artist
 
