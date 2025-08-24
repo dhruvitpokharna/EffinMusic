@@ -299,7 +299,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     private fun setupAlbumSortButton() {
         binding.recyclerView?.let { recycler ->
-            val popupAnchor = recycler.getChildAt(0)?.findViewById<View>(R.id.albumSortOrder)
+            val popupAnchor = recycler.getChildAt(0)?.findViewById<View>(R.id.album_sort_order)
             popupAnchor?.let { anchor ->
                 val popup = PopupMenu(requireContext(), anchor)
                 popup.inflate(R.menu.menu_artist_album_sort_order)
