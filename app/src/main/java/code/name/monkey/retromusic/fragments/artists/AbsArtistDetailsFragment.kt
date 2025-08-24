@@ -194,7 +194,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         if (biography == null && lang != null) {
             loadBiography(artist.name, null)
         } else {
-            setupRecyclerView() // update RecyclerView with biography
+            updateRecyclerView()
         }
     }
 
