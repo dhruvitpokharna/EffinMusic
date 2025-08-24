@@ -64,10 +64,11 @@ class ArtistDetailsAdapter(
             )
             TYPE_ALBUMS -> AlbumsViewHolder(
                 ItemArtistAlbumsBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                albumClickListener
+                albumClickListener, onAlbumSortClicked
             )
             TYPE_SONGS -> SongsViewHolder(
-                ItemArtistSongsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemArtistSongsBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                onSongSortClicked
             )
             TYPE_BIOGRAPHY -> BiographyViewHolder(
                 ItemArtistBiographyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
