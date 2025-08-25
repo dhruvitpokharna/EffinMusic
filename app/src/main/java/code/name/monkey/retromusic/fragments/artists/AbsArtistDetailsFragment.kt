@@ -142,7 +142,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             setHasFixedSize(true)
             itemAnimator = null
             setItemViewCacheSize(30)
-            layoutManager = adapter = (layoutManager as? LinearLayoutManager)
+            layoutManager = (layoutManager as? LinearLayoutManager)
                 ?: LinearLayoutManager(requireContext()).apply {
                     initialPrefetchItemCount = 10
                 }
