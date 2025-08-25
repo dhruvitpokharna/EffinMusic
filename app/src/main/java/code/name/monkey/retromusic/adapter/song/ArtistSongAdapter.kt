@@ -1,74 +1,86 @@
+/*
+ * Copyright (c) 2020 Hemanth Savarla.
+ *
+ * Licensed under the GNU General Public License v3
+ *
+ * This is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ */
 package code.name.monkey.retromusic.adapter.song
 
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import code.name.monkey.retromusic.databinding.ItemSongBinding
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
+import android.util.TypedValue
+import com.google.android.material.textview.MaterialTextView
+import androidx.core.view.isVisible
 
-class ArtistSongAdapter(
-    private val activity: FragmentActivity
-) : ListAdapter<Song, ArtistSongAdapter.SongViewHolder>(DIFF_CALLBACK) {
+class SimpleSongAdapter(
+    context: FragmentActivity,
+    songs: ArrayList<Song>,
+    layoutRes: Int
+) : SongAdapter(context, songs, layoutRes) {
 
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Song>() {
-            override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean =
-                oldItem.id == newItem.id
+    private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
-            override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean =
-                oldItem == newItem
+    init {
+        differ.submitList(songs)
+    }
+
+    override fun swapDataSet(dataSet: List<Song>) {
+        differ.submitList(dataSet.toList())
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(activity).inflate(itemLayoutRes, parent, false))
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+
+        val song = differ.currentList[position]
+        val fixedTrackNumber = MusicUtil.getFixedTrackNumber(song.trackNumber)
+
+        holder.imageText?.text = if (fixedTrackNumber > 0) fixedTrackNumber.toString() else "-"
+        holder.time?.text = String.format("%s | %s", fixedTrackNumber, MusicUtil.getReadableDurationString(song.duration))
+
+        val songTextSize = PreferenceUtil.songTextSize.toFloat()
+        holder.title?.setTextSize(TypedValue.COMPLEX_UNIT_SP, songTextSize)
+
+        if (PreferenceUtil.showArtistInSongs) {
+            holder.artist?.text = song.allArtists
+            holder.artist?.isVisible = true
+            val artistTextSize = PreferenceUtil.artistTextSize.toFloat()
+            holder.artist?.setTextSize(TypedValue.COMPLEX_UNIT_SP, artistTextSize) // Slightly smaller for artist
+        } else {
+            holder.artist?.isVisible = false
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
-        val binding = ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SongViewHolder(binding)
+    override fun getItemCount(): Int {
+        return differ.currentList.size
     }
 
-    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
-        holder.bind(getItem(position))
-    }
-
-    class SongViewHolder(private val binding: ItemSongBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(song: Song) {
-            val fixedTrackNumber = MusicUtil.getFixedTrackNumber(song.trackNumber)
-
-            // Track number as imageText
-            binding.imageText.text = if (fixedTrackNumber > 0) fixedTrackNumber.toString() else "-"
-
-            // Duration
-            binding.time.text = String.format(
-                "%s | %s",
-                fixedTrackNumber,
-                MusicUtil.getReadableDurationString(song.duration)
-            )
-
-            // Title
-            val songTextSize = PreferenceUtil.songTextSize.toFloat()
-            binding.songTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, songTextSize)
-            binding.songTitle.text = song.title
-
-            // Artist
-            if (PreferenceUtil.showArtistInSongs) {
-                binding.songArtist.text = song.allArtists
-                binding.songArtist.isVisible = true
-                val artistTextSize = PreferenceUtil.artistTextSize.toFloat()
-                binding.songArtist.setTextSize(TypedValue.COMPLEX_UNIT_SP, artistTextSize)
-            } else {
-                binding.songArtist.isVisible = false
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Song>() {
+            override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
+                return oldItem.id == newItem.id
             }
 
-            // TODO: if your layout had album art / imageView, bind it here too.
-            // e.g., binding.songImage.load(song.albumArtUri)
+            override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }
