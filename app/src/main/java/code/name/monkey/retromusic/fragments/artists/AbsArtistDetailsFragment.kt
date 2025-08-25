@@ -138,8 +138,16 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             { view -> showAlbumSortPopup(view) },
             { view -> showSongSortPopup(view) }
         )
-        binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView?.adapter = adapter
+        binding.recyclerView?.apply{
+            setHasFixedSize(true)
+            itemAnimator = null
+            setItemViewCacheSize(30)
+            layoutManager = adapter = (layoutManager as? LinearLayoutManager)
+                ?: LinearLayoutManager(requireContext()).apply {
+                    initialPrefetchItemCount = 10
+                }
+            adapter = this@AbsArtistDetailsFragment.adapter
+        }
     }
 
     private fun updateRecyclerView() {
@@ -147,9 +155,11 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
         val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
-        adapter.swapDataSet(buildArtistItems())
-        
-        layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
+        lifecycleScope.launch {
+            val items = withContext(Dispatchers.Default) { buildArtistItems() }
+            adapter.swapDataSet(items)
+            layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
+        }
     }
 
     private fun buildArtistItems(): List<ArtistItem> {
