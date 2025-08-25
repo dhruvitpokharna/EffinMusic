@@ -100,6 +100,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         binding.toolbar.title = null
         binding.artistCoverContainer?.transitionName = (artistId ?: artistName).toString()
 
+        setupRecyclerView()
+
         postponeEnterTransition()
         detailsViewModel.getArtist().observe(viewLifecycleOwner) { 
             binding.recyclerView?.doOnPreDraw { 
@@ -132,14 +134,16 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
-        adapter = ArtistDetailsAdapter(
-            buildArtistItems(),
-            this,
-            { view -> showAlbumSortPopup(view) },
-            { view -> showSongSortPopup(view) }
-        )
-        binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView?.adapter = adapter
+        if (!::adapter.isInitialized) {
+            adapter = ArtistDetailsAdapter(
+                emptyList(),
+                this,
+                { view -> showAlbumSortPopup(view) },
+                { view -> showSongSortPopup(view) }
+            )
+            binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerView?.adapter = adapter
+        }
     }
 
     private fun updateRecyclerView() {
@@ -147,6 +151,8 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
         val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
+        adapter.swapDataSet(buildArtistItems())
+        
         layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
@@ -179,7 +185,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(artist.songs))
         )
         
-        setupRecyclerView()
+        updateRecyclerView()
     }
 
     private fun loadBiography(name: String, lang: String? = Locale.getDefault().language) {
@@ -203,7 +209,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         if (biography == null && lang != null) {
             loadBiography(artist.name, null)
         } else {
-            setupRecyclerView()
+            updateRecyclerView()
         }
     }
 
