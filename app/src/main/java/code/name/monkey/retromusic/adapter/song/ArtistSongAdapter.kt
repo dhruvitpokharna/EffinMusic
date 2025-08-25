@@ -13,9 +13,9 @@ import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 
-class SimpleSongAdapter(
+class ArtistSongAdapter(
     private val activity: FragmentActivity
-) : ListAdapter<Song, SimpleSongAdapter.SongViewHolder>(DIFF_CALLBACK) {
+) : ListAdapter<Song, ArtistSongAdapter.SongViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Song>() {
