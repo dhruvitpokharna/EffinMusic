@@ -26,7 +26,7 @@ import android.util.TypedValue
 import com.google.android.material.textview.MaterialTextView
 import androidx.core.view.isVisible
 
-class SimpleSongAdapter(
+class ArtistSongAdapter(
     context: FragmentActivity,
     songs: ArrayList<Song>,
     layoutRes: Int
