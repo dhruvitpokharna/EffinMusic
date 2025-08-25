@@ -132,16 +132,14 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
-        if (!::adapter.isInitialized) {
-            adapter = ArtistDetailsAdapter(
-                buildArtistItems(),
-                this,
-                { view -> showAlbumSortPopup(view) },
-                { view -> showSongSortPopup(view) }
-            )
-            binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
-            binding.recyclerView?.adapter = adapter
-        }
+        adapter = ArtistDetailsAdapter(
+            buildArtistItems(),
+            this,
+            { view -> showAlbumSortPopup(view) },
+            { view -> showSongSortPopup(view) }
+        )
+        binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView?.adapter = adapter
     }
 
     private fun updateRecyclerView() {
