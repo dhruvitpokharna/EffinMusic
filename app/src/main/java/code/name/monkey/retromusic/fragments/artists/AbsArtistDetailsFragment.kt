@@ -128,6 +128,12 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     override fun onResume() {
         super.onResume()
         Toast.makeText(requireContext(), "onResume called", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            "onResume: adapter=${if (::adapter.isInitialized) "set" else "null"}, " +
+            "artist=${if (::artist.isInitialized) "set" else "null"}",
+            Toast.LENGTH_SHORT
+        ).show()
         if (::adapter.isInitialized && ::artist.isInitialized) {
             updateRecyclerView()
             Toast.makeText(requireContext(), "updateRecyclerView called", Toast.LENGTH_SHORT).show()
@@ -155,11 +161,19 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun updateRecyclerView() {
+        if (!::adapter.isInitialized || !::artist.isInitialized) {
+            Toast.makeText(requireContext(), "Adapter or Artist NOT ready", Toast.LENGTH_SHORT).show()
+        }
         val layoutManager = binding.recyclerView?.layoutManager as? LinearLayoutManager
         val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
         val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
         adapter.swapDataSet(buildArtistItems())
+        Toast.makeText(
+            requireContext(),
+            "Updating RecyclerView with ${artistItems.size} items",
+            Toast.LENGTH_SHORT
+        ).show()
         layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
