@@ -22,7 +22,7 @@ import code.name.monkey.retromusic.interfaces.IAlbumClickListener
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.adapter.album.HorizontalAlbumAdapter
-import code.name.monkey.retromusic.adapter.song.SimpleSongAdapter
+import code.name.monkey.retromusic.adapter.song.ArtistSongAdapter
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.extensions.*
@@ -157,7 +157,7 @@ class ArtistDetailsAdapter(
         private val binding: ItemArtistSongsBinding,
         private val onSongSortClicked: (View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        val adapter = SimpleSongAdapter(
+        val adapter = ArtistSongAdapter(
             binding.root.context as FragmentActivity,
             ArrayList(), 
             R.layout.item_song
