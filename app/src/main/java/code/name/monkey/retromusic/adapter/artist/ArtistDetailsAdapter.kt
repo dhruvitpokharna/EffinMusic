@@ -173,7 +173,9 @@ class ArtistDetailsAdapter(
             }
         }
         fun bind(item: ArtistItem.Songs) {
-            adapter.swapDataSet(item.songs)
+            binding.songRecyclerView.post {
+                adapter.swapDataSet(item.songs)
+            }
         }
     }
 
