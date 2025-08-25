@@ -102,8 +102,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         binding.toolbar.title = null
         binding.artistCoverContainer?.transitionName = (artistId ?: artistName).toString()
 
-        setupRecyclerView()
-
         postponeEnterTransition()
         detailsViewModel.getArtist().observe(viewLifecycleOwner) { 
             binding.recyclerView?.doOnPreDraw { 
@@ -127,17 +125,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(requireContext(), "onResume called", Toast.LENGTH_SHORT).show()
-        Toast.makeText(
-            requireContext(),
-            "onResume: adapter=${if (::adapter.isInitialized) "set" else "null"}, " +
-            "artist=${if (::artist.isInitialized) "set" else "null"}",
-            Toast.LENGTH_SHORT
-        ).show()
-        if (::adapter.isInitialized && ::artist.isInitialized) {
-            updateRecyclerView()
-            Toast.makeText(requireContext(), "updateRecyclerView called", Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -148,34 +135,23 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun setupRecyclerView() {
-        if (!::adapter.isInitialized) {
-            adapter = ArtistDetailsAdapter(
-                emptyList(),
-                this,
-                { view -> showAlbumSortPopup(view) },
-                { view -> showSongSortPopup(view) }
-            )
-            binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
+        adapter = ArtistDetailsAdapter(
+            buildArtistItems(),
+            this,
+            { view -> showAlbumSortPopup(view) },
+            { view -> showSongSortPopup(view) }
+        )
+        binding.recyclerView.apply{
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = adapter
         }
-        binding.recyclerView?.adapter = adapter
     }
 
     private fun updateRecyclerView() {
-        if (!::adapter.isInitialized || !::artist.isInitialized) {
-            Toast.makeText(requireContext(), "Adapter or Artist NOT ready", Toast.LENGTH_SHORT).show()
-        }
         val layoutManager = binding.recyclerView?.layoutManager as? LinearLayoutManager
         val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
         val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
-        val artistItems = buildArtistItems()
-
-        adapter.swapDataSet(artistItems)
-        Toast.makeText(
-            requireContext(),
-            "Updating RecyclerView with ${artistItems.size} items",
-            Toast.LENGTH_SHORT
-        ).show()
         layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
@@ -194,8 +170,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     private fun showArtist(artist: Artist) {
         this.artist = artist
-        Toast.makeText(requireContext(), "showartist called", Toast.LENGTH_SHORT).show()
-
         if (!PreferenceUtil.showSongOnly) {
             loadArtistImage(artist)
             if (!PreferenceUtil.isOfflineMode && PreferenceUtil.isAllowedToDownloadMetadata(requireContext())) {
@@ -210,7 +184,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(artist.songs))
         )
         
-        updateRecyclerView()
+        setupRecyclerView()
     }
 
     private fun loadBiography(name: String, lang: String? = Locale.getDefault().language) {
@@ -235,7 +209,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         if (biography == null && lang != null) {
             loadBiography(artist.name, null)
         } else {
-            updateRecyclerView()
+            setupRecyclerView()
         }
     }
 
