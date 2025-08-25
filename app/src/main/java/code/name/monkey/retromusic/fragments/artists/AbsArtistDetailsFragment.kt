@@ -133,7 +133,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     private fun setupRecyclerView() {
         adapter = ArtistDetailsAdapter(
-            buildArtistItems(),
+            emptyList(),
             this,
             { view -> showAlbumSortPopup(view) },
             { view -> showSongSortPopup(view) }
