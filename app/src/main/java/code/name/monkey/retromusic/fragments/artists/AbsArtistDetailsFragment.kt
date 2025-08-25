@@ -48,7 +48,6 @@ import org.koin.android.ext.android.get
 import java.util.*
 import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
-import android.widget.Toast
 
 
 abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_artist_details),
@@ -96,7 +95,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Toast.makeText(requireContext(), "onViewCreated called", Toast.LENGTH_SHORT).show()
         mainActivity.addMusicServiceEventListener(detailsViewModel)
         mainActivity.setSupportActionBar(binding.toolbar)
         binding.toolbar.title = null
@@ -107,7 +105,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             binding.recyclerView?.doOnPreDraw { 
                 startPostponedEnterTransition() 
             }
-            Toast.makeText(requireContext(), "LiveData observer called", Toast.LENGTH_SHORT).show()
             showArtist(it) 
         }
         binding.appBarLayout?.background = ColorDrawable(surfaceColor())
@@ -199,7 +196,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun artistInfo(lastFmArtist: LastFmArtist?) {
-        Toast.makeText(requireContext(), "artistinfo called", Toast.LENGTH_SHORT).show()
         lastFm = lastFmArtist
         val bioContent = lastFmArtist?.artist?.bio?.content
         if (!bioContent.isNullOrBlank()) {
