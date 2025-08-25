@@ -110,10 +110,10 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         binding.appBarLayout?.background = ColorDrawable(surfaceColor())
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    //override fun onDestroyView() {
+      //  super.onDestroyView()
+        //_binding = null
+    //}
 
     override fun onDestroy() {
         super.onDestroy()
