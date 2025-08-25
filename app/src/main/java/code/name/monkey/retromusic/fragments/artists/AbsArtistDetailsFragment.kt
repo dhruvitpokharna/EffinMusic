@@ -100,8 +100,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         binding.toolbar.title = null
         binding.artistCoverContainer?.transitionName = (artistId ?: artistName).toString()
 
-        setupRecyclerView()
-
         postponeEnterTransition()
         detailsViewModel.getArtist().observe(viewLifecycleOwner) { 
             binding.recyclerView?.doOnPreDraw { 
@@ -136,7 +134,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     private fun setupRecyclerView() {
         if (!::adapter.isInitialized) {
             adapter = ArtistDetailsAdapter(
-                emptyList(),
+                buildArtistItems(),
                 this,
                 { view -> showAlbumSortPopup(view) },
                 { view -> showSongSortPopup(view) }
