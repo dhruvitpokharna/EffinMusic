@@ -121,6 +121,13 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         PreferenceUtil.unregisterOnSharedPreferenceChangedListener(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (::adapter.isInitialized && ::artist.isInitialized) {
+            updateRecyclerView()
+        }
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == PreferenceUtil.OFFLINE_MODE && ::artist.isInitialized) {
             binding.image?.let { Glide.with(this).clear(it) }
@@ -146,8 +153,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
         val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
-        val artistItems = buildArtistItems()
-        adapter.swapDataSet(artistItems)
+        adapter.swapDataSet(buildArtistItems())
         layoutManager?.scrollToPositionWithOffset(firstVisible, offset)
     }
 
