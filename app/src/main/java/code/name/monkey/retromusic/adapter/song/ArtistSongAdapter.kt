@@ -72,6 +72,10 @@ class ArtistSongAdapter(
         return differ.currentList.size
     }
 
+    override fun getItemId(position: Int): Long {
+        return differ.currentList.getOrNull(position)?.id ?: RecyclerView.NO_ID
+    }
+
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Song>() {
             override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
