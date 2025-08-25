@@ -48,6 +48,8 @@ import org.koin.android.ext.android.get
 import java.util.*
 import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
+import android.widget.Toast
+
 
 abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_artist_details),
     IAlbumClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -94,6 +96,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Toast.makeText(requireContext(), "onViewCreated called", Toast.LENGTH_SHORT).show()
         mainActivity.addMusicServiceEventListener(detailsViewModel)
         mainActivity.setSupportActionBar(binding.toolbar)
         binding.toolbar.title = null
@@ -106,6 +109,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
             binding.recyclerView?.doOnPreDraw { 
                 startPostponedEnterTransition() 
             }
+            Toast.makeText(requireContext(), "LiveData observer called", Toast.LENGTH_SHORT).show()
             showArtist(it) 
         }
         binding.appBarLayout?.background = ColorDrawable(surfaceColor())
@@ -118,14 +122,15 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.recyclerView?.adapter = null
         PreferenceUtil.unregisterOnSharedPreferenceChangedListener(this)
     }
 
     override fun onResume() {
         super.onResume()
+        Toast.makeText(requireContext(), "onResume called", Toast.LENGTH_SHORT).show()
         if (::adapter.isInitialized && ::artist.isInitialized) {
             updateRecyclerView()
+            Toast.makeText(requireContext(), "updateRecyclerView called", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -173,6 +178,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
 
     private fun showArtist(artist: Artist) {
         this.artist = artist
+        Toast.makeText(requireContext(), "showartist called", Toast.LENGTH_SHORT).show()
 
         if (!PreferenceUtil.showSongOnly) {
             loadArtistImage(artist)
@@ -203,6 +209,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     }
 
     private fun artistInfo(lastFmArtist: LastFmArtist?) {
+        Toast.makeText(requireContext(), "artistinfo called", Toast.LENGTH_SHORT).show()
         lastFm = lastFmArtist
         val bioContent = lastFmArtist?.artist?.bio?.content
         if (!bioContent.isNullOrBlank()) {
