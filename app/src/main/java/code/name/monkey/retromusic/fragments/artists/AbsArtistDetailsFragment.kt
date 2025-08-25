@@ -140,7 +140,6 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         )
         binding.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView?.adapter = adapter
-        }
     }
 
     private fun updateRecyclerView() {
