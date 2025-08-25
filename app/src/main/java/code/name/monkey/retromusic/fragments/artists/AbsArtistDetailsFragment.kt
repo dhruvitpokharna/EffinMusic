@@ -168,7 +168,9 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         val firstVisible = layoutManager?.findFirstVisibleItemPosition() ?: 0
         val offset = binding.recyclerView?.getChildAt(0)?.top ?: 0
 
-        adapter.swapDataSet(buildArtistItems())
+        val artistItems = buildArtistItems()
+
+        adapter.swapDataSet(artistItems)
         Toast.makeText(
             requireContext(),
             "Updating RecyclerView with ${artistItems.size} items",
