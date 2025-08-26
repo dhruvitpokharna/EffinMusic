@@ -99,7 +99,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         mainActivity.addMusicServiceEventListener(detailsViewModel)
         mainActivity.setSupportActionBar(binding.toolbar)
         binding.toolbar.title = null
-        binding.artistCoverContainer.transitionName = (artistId ?: artistName).toString()
+        binding.artistCoverContainer?.transitionName = (artistId ?: artistName).toString()
         postponeEnterTransition()
         detailsViewModel.getArtist().observe(viewLifecycleOwner) {
             view.doOnPreDraw {
