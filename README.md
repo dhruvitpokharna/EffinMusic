@@ -23,6 +23,7 @@
 
 
 ## 📦 Included Features
+- Fast!
 - Major bugs fixed
 - LRCLIB Lyrics
 - Improved Search Bar
