@@ -29,6 +29,8 @@
 - Improved Search Bar
 - Minimal Artist
 - Settings Search Bar
+- Custom Library
+- Double Tap to Favorite
 - Built-in Equalizer
 - Playlist Drag-Drop
 - Sort by Recording date
