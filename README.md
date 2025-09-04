@@ -30,6 +30,7 @@
 - Minimal Artist
 - Settings Search Bar
 - Double Tap to Favorite
+- Artist Delimiter
 - Built-in Equalizer
 - Playlist Drag-Drop
 - Sort by Recording date
