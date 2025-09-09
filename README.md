@@ -29,6 +29,7 @@
 - Improved Search Bar
 - Minimal Artist
 - Artist Delimiter
+- Wavy Slider
 - Settings Search Bar
 - Double Tap to Favorite
 - Built-in Equalizer
