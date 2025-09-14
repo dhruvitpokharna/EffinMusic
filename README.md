@@ -30,6 +30,7 @@
 - Minimal Artist
 - Artist Delimiter
 - Wavy Slider
+- ReplayGain
 - Settings Search Bar
 - Double Tap to Favorite
 - Built-in Equalizer
