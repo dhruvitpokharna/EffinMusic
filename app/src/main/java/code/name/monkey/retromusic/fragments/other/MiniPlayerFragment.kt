@@ -109,7 +109,16 @@ open class MiniPlayerFragment : AbsMusicServiceFragment(R.layout.fragment_mini_p
         val title = song.title.toSpannable()
         title.setSpan(ForegroundColorSpan(textColorPrimary()), 0, title.length, 0)
 
-        val text = song.artistName.toSpannable()
+        val allArtists = if (!PreferenceUtil.fixYear) {
+            listOfNotNull(song.albumArtist, song.artistName)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .distinct()
+        } else {
+            song.artistNames?.split(",")?.map { it.trim() } ?: emptyList()
+        }
+
+        val text = allArtists.joinToString(", ").toSpannable()
         text.setSpan(ForegroundColorSpan(textColorSecondary()), 0, text.length, 0)
 
         builder.append(title).append(" • ").append(text)

@@ -80,6 +80,7 @@ import code.name.monkey.retromusic.util.PreferenceUtil.isClassicNotification
 import code.name.monkey.retromusic.util.PreferenceUtil.isHeadsetPlugged
 import code.name.monkey.retromusic.util.PreferenceUtil.isLockScreen
 import code.name.monkey.retromusic.util.PreferenceUtil.isPauseOnZeroVolume
+import code.name.monkey.retromusic.util.PreferenceUtil.isSkipToPrevious
 import code.name.monkey.retromusic.util.PreferenceUtil.playbackPitch
 import code.name.monkey.retromusic.util.PreferenceUtil.playbackSpeed
 import code.name.monkey.retromusic.util.PreferenceUtil.registerOnSharedPreferenceChangedListener
@@ -386,7 +387,7 @@ class MusicService : MediaBrowserServiceCompat(),
     }
 
     fun back(force: Boolean) {
-        if (songProgressMillis > 2000) {
+        if (songProgressMillis > isSkipToPrevious*1000) {
             seek(0)
         } else {
             playPreviousSong(force)

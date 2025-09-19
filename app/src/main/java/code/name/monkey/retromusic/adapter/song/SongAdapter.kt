@@ -61,6 +61,7 @@ open class SongAdapter(
     override val activity: FragmentActivity,
     var dataSet: MutableList<Song>,
     protected var itemLayoutRes: Int,
+    private val forcedSize: Int? = null,
     showSectionName: Boolean = true
 ) : AbsMultiSelectAdapter<SongAdapter.ViewHolder, Song>(
     activity,
@@ -148,7 +149,7 @@ open class SongAdapter(
     protected open fun loadAlbumCover(song: Song, holder: ViewHolder) {
         val imageView = holder.image ?: return
 
-        val overrideSize = when (PreferenceUtil.songGridSize) {
+        val overrideSize = forcedSize ?: when (PreferenceUtil.songGridSize) {
             2 -> 500
             3 -> 300
             4 -> 250
@@ -188,11 +189,15 @@ open class SongAdapter(
     }
 
     private fun getSongText(song: Song): String {
-        return listOfNotNull(song.albumArtist, song.artistName)
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-            .distinct()
-            .joinToString(", ")
+        val allArtists = if (!PreferenceUtil.fixYear) {
+            listOfNotNull(song.albumArtist, song.artistName)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .distinct()
+        } else {
+            song.artistNames?.split(",")?.map { it.trim() } ?: emptyList()
+        }
+        return allArtists.joinToString(", ")
     }
 
     private fun getSongText2(song: Song): String {

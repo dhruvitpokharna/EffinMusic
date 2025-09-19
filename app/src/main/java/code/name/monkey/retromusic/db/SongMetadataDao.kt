@@ -16,4 +16,7 @@ interface SongMetadataDao {
 
     @Query("SELECT * FROM song_metadata")
     suspend fun getAllMetadata(): List<SongMetadataEntity>
+
+    @Query("DELETE FROM song_metadata")
+    suspend fun clearAll()
 }

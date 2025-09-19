@@ -50,7 +50,16 @@ class SimpleSongAdapter(
         holder.title?.setTextSize(TypedValue.COMPLEX_UNIT_SP, songTextSize)
 
         if (PreferenceUtil.showArtistInSongs) {
-            holder.artist?.text = dataSet[position].allArtists
+            val song = dataSet[position]
+            val allArtists = if (!PreferenceUtil.fixYear) {
+                listOfNotNull(song.albumArtist, song.artistName)
+                    .map { it.trim() }
+                    .filter { it.isNotEmpty() }
+                    .distinct()
+            } else {
+                song.artistNames?.split(",")?.map { it.trim() } ?: emptyList()
+            }
+            holder.artist?.text = allArtists.joinToString(", ")
             holder.artist?.isVisible = true
             val artistTextSize = PreferenceUtil.artistTextSize.toFloat()
             holder.artist?.setTextSize(TypedValue.COMPLEX_UNIT_SP, artistTextSize) // Slightly smaller for artist

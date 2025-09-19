@@ -41,6 +41,12 @@ interface DeezerService {
         ): OkHttpClient.Builder = OkHttpClient.Builder()
             .cache(createDefaultCache(context))
             .addInterceptor(createCacheControlInterceptor())
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .header("User-Agent", "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36")
+                    .build()
+                chain.proceed(request)
+            }
 
         private fun createDefaultCache(
             context: Context

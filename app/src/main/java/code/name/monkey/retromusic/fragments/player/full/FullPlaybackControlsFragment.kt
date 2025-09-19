@@ -21,6 +21,7 @@ import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.SeekBar
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.TextView
@@ -65,8 +66,8 @@ class FullPlaybackControlsFragment :
     private val binding get() = _binding!!
 
     private var individualArtists: List<String> = emptyList()
-
-    override val progressSlider: Slider
+    
+    override val seekBar: SeekBar
         get() = binding.progressSlider
 
     override val shuffleButton: ImageButton
@@ -149,10 +150,14 @@ class FullPlaybackControlsFragment :
         
         val artistName = song.artistName?.trim()
         
-        val allArtists = listOfNotNull(song.albumArtist, song.artistName)
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-            .distinct()
+        val allArtists = if (!PreferenceUtil.fixYear) {
+            listOfNotNull(song.albumArtist, song.artistName)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .distinct()
+        } else {
+            song.artistNames?.split(",")?.map { it.trim() } ?: emptyList()
+        }
             
         individualArtists = allArtists
         
@@ -177,6 +182,11 @@ class FullPlaybackControlsFragment :
 
     override fun onPlayStateChanged() {
         updatePlayPauseDrawableState()
+        if (MusicPlayerRemote.isPlaying && PreferenceUtil.isSquiggly) {
+            squiggly.animate = true
+        } else {
+            squiggly.animate = false
+        }
     }
 
     private fun updatePlayPauseDrawableState() {

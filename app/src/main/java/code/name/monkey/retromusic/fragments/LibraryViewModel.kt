@@ -147,15 +147,19 @@ class LibraryViewModel(
 
     fun startMetadataScan(
         context: Context,
+        force: Boolean = false,
         onProgress: (String, Int, Int) -> Unit = { _, _, _ -> },
-        onComplete: () -> Unit = {}
+        onComplete: () -> Unit = {},
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val songs = repository.songs(PreferenceUtil.hideDuplicateSongs)
             val dao    = RetroDatabase.getInstance(context).songMetadataDao()
+            if (force) {
+                dao.clearAll()
+            }
             val scanner = MetadataScanner(dao)
             
-            scanner.scanIfNotExists(songs) { title, idx, total ->
+            scanner.scanIfNotExists(songs, context) { title, idx, total ->
                 scanProgress.postValue("Scanning: $title ($idx/$total)")
                 onProgress(title, idx, total)
             }

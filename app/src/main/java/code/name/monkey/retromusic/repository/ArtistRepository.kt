@@ -19,7 +19,9 @@ import code.name.monkey.retromusic.ALBUM_ARTIST
 import code.name.monkey.retromusic.helper.SortOrder
 import code.name.monkey.retromusic.model.Album
 import code.name.monkey.retromusic.model.Artist
+import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.util.PreferenceUtil
+import android.widget.Toast
 import java.text.Collator
 
 interface ArtistRepository {
@@ -64,15 +66,61 @@ class RealArtistRepository(
             return Artist(Artist.VARIOUS_ARTISTS_ID, albums)
         }
 
-        val songs = songRepository.songs(
-            songRepository.makeSongCursor(
-                AudioColumns.ARTIST_ID + "=?",
-                arrayOf(artistId.toString()),
-                getSongLoaderSortOrder()
-            ),
-            hideDuplicates = PreferenceUtil.hideDuplicateSongs
+        val songs = if (!PreferenceUtil.fixYear) {
+            songRepository.songs(
+                songRepository.makeSongCursor(
+                    AudioColumns.ARTIST_ID + "=?",
+                    arrayOf(artistId.toString()),
+                    getSongLoaderSortOrder()
+                ),
+                hideDuplicates = PreferenceUtil.hideDuplicateSongs
+            )
+        } else {
+            songRepository.songs(PreferenceUtil.hideDuplicateSongs)
+                .filter { song ->
+                    val artistIds = song.artistIds
+                        ?.split(",")
+                        ?.mapNotNull { it.trim().toLongOrNull() } 
+                        ?: emptyList()
+                    artistId in artistIds
+                }
+        }
+        val albums = albumRepository.splitIntoAlbums(songs)
+            .map { album ->
+                val songsForArtist = album.songs.filter { song ->
+                    val artistIds = song.artistIds
+                        ?.split(",")
+                        ?.mapNotNull { it.trim().toLongOrNull() } 
+                        ?: emptyList()
+                    artistId in artistIds
+                }
+                album.copy(songs = songsForArtist)
+            }
+            .filter { it.songs.isNotEmpty() }
+
+        if (songs.isEmpty()) {
+            return Artist(artistId, emptyList(), _name = artistId.toString())
+        }
+
+        val ids = songs[0].artistIds
+            ?.split(",")
+            ?.map { it.trim() } 
+            ?.filter { it.isNotEmpty() }
+            ?: emptyList()
+        val index = ids.indexOf(artistId.toString())
+
+        val names = songs[0].artistNames
+            ?.split(",")
+            ?.map { it.trim() } 
+            ?.filter { it.isNotEmpty() }
+            ?: emptyList()
+        val name = if (index != -1 && index < names.size) names[index] else null
+        
+        return Artist(
+            id = artistId, 
+            albums = albums,
+            _name = name
         )
-        return Artist(artistId, albumRepository.splitIntoAlbums(songs))
     }
 
     override fun albumArtist(artistName: String): Artist {
@@ -168,10 +216,52 @@ class RealArtistRepository(
             }
     }
 
-
     fun splitIntoArtists(albums: List<Album>): List<Artist> {
-        return albums.groupBy { it.artistId }
-            .map { Artist(it.key, it.value) }
+        val songToArtistIds = albums.flatMap { it.songs }
+            .associateWith { song ->
+                song.artistIds
+                    ?.split(",")
+                    ?.map { it.trim() }
+                    ?.filter { it.isNotEmpty() }
+                    ?: emptyList()
+            }
+
+        val songToArtistIdNamePairs = albums.flatMap { it.songs }
+            .associateWith { song ->
+                val ids = song.artistIds
+                    ?.split(",")
+                    ?.map { it.trim() } 
+                    ?.filter { it.isNotEmpty() }
+                    ?: emptyList()
+                val names = song.artistNames
+                    ?.split(",")
+                    ?.map { it.trim() } 
+                    ?.filter { it.isNotEmpty() }
+                    ?: emptyList()
+                ids.zip(names) 
+        }
+            
+        val allArtistIds = songToArtistIds.values.flatten().toSet()
+            
+        return allArtistIds.map { artistId ->
+            val artistAlbums = albums.mapNotNull { album ->
+                val songsForArtist = album.songs.filter { song ->
+                    artistId in (songToArtistIds[song] ?: emptyList())
+                    }
+                if (songsForArtist.isNotEmpty()) {
+                    album.copy(songs = songsForArtist)
+                } else null
+            }
+            val name = songToArtistIdNamePairs.values
+                .flatten()
+                .firstOrNull { it.first == artistId }
+                ?.second ?: "Unknown"
+            Artist(
+                id = artistId.toLongOrNull() ?: 0L,
+                albums = artistAlbums,
+                _name = name
+            )
+        }
     }
 
     private fun sortArtists(artists: List<Artist>): List<Artist> {

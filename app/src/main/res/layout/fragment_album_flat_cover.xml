@@ -18,4 +18,16 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription,UnusedAttribute"
         tools:srcCompat="@tools:sample/backgrounds/scenic[6]" />
+
+    <ImageView
+        android:id="@+id/heartView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

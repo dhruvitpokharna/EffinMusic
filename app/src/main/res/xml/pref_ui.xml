@@ -123,6 +123,13 @@
             android:title="@string/pref_title_show_artist_in_songs"
             android:summary="@string/pref_summary_show_artist_in_songs" />
 
+        <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            android:defaultValue="false"
+            android:key="show_song_only"
+            android:layout="@layout/list_item_view_switch"
+            android:summary="@string/pref_summary_show_song_only"
+            android:title="@string/pref_title_show_song_only" />
+
         <Preference
             android:key="custom_fallback_artwork"
             android:layout="@layout/list_item_view"
@@ -299,6 +306,27 @@
             android:layout="@layout/list_item_view_switch"
             android:summary="@string/pref_summary_double_tap_favorite"
             android:title="@string/pref_title_double_tap_favorite" />
+    </code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
+
+    <code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory
+        android:layout="@layout/preference_category_title"
+        android:title="@string/notification">
+
+        <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            android:defaultValue="false"
+            android:key="classic_notification"
+            android:layout="@layout/list_item_view_switch"
+            android:summary="@string/pref_summary_classic_notification"
+            android:title="@string/pref_title_classic_notification"
+            app:icon="@drawable/ic_notification_classic" />
+        
+        <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            android:defaultValue="true"
+            android:key="colored_notification"
+            android:layout="@layout/list_item_view_switch"
+            android:summary="@string/pref_summary_colored_notification"
+            android:title="@string/pref_title_colored_notification" />
+        
     </code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
     <code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory

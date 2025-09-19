@@ -5,12 +5,9 @@ import code.name.monkey.retromusic.model.Song
 object LyricsLoader {
 
         suspend fun loadLyrics(song: Song, preferSynced: Boolean = true): String? {
-        val artists = song.allArtists?.split(",")?.map { it.trim() } ?: emptyList()
-
-        for (artist in artists) {
             val result = LyricsFetcher.fetchLyrics(
                 title = song.title,
-                artist = artist,
+                artist = song.albumArtist ?: song.artistName,
                 album = song.albumName,
                 durationMs = song.duration
             )
@@ -23,8 +20,7 @@ object LyricsLoader {
                         ?: result?.syncedLyrics?.takeIf { it.isNotBlank() }
             }
             if (!lyrics.isNullOrBlank()) return lyrics
+                
+            return null
         }
-
-        return null
-    }
 }

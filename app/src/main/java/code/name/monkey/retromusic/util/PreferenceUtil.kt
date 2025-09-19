@@ -68,6 +68,34 @@ object PreferenceUtil {
             }
         }
 
+    
+    const val ARTIST_DELIMITERS = "artist_delimiters"
+
+    val defaultDelimiters: List<String> = listOf(
+        ",",
+        ";",
+        "/",
+        "&",
+        " feat. ",
+        " ft. ",
+        " vs "
+    )
+
+    var artistDelimiters: List<String>?
+        get() {
+            val saved = sharedPreferences.getStringSet(ARTIST_DELIMITERS, null)
+            return saved?.toList()
+        }
+        set(value) {
+            sharedPreferences.edit().apply {
+                if (value.isNullOrEmpty()) {
+                    remove(ARTIST_DELIMITERS)
+                } else {
+                    putStringSet(ARTIST_DELIMITERS, value.toSet())
+                }
+            }.apply()
+        }
+
     fun registerOnSharedPreferenceChangedListener(
         listener: OnSharedPreferenceChangeListener,
     ) = sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
@@ -141,6 +169,15 @@ object PreferenceUtil {
             false
         )
         set(value) = sharedPreferences.edit { putBoolean(ALBUM_ARTISTS_ONLY, value) }
+
+    const val PLAYLIST_DETAIL_SONG_SORT_ORDER = "playlist_detail_song_sort_order"
+
+    var playlistDetailSongSortOrder
+        get() = sharedPreferences.getStringOrDefault(
+            PLAYLIST_DETAIL_SONG_SORT_ORDER,
+            PlaylistSongSortOrder.SONG_A_Z
+        )
+        set(value) = sharedPreferences.edit { putString(PLAYLIST_DETAIL_SONG_SORT_ORDER, value) }
 
     var albumDetailSongSortOrder
         get() = sharedPreferences.getStringOrDefault(
@@ -702,6 +739,12 @@ object PreferenceUtil {
             .getInt(CROSS_FADE_DURATION, 0)
 
     val isCrossfadeEnabled get() = crossFadeDuration > 0
+    
+    const val SKIP_TO_PREVIOUS = "is_skip_to_previous"
+
+    val isSkipToPrevious
+        get() = sharedPreferences
+            .getInt(SKIP_TO_PREVIOUS, 2)
 
     val materialYou
         get() = sharedPreferences.getBoolean(MATERIAL_YOU, VersionUtils.hasS())
@@ -872,6 +915,24 @@ object PreferenceUtil {
     var fixYear: Boolean
         get() = sharedPreferences.getBoolean(FIX_YEAR, false)
         set(value) = sharedPreferences.edit { putBoolean(FIX_YEAR, value) }
+
+    var isSquiggly: Boolean
+        get() = sharedPreferences.getBoolean(IS_SQUIGGLY, true)
+        set(value) = sharedPreferences.edit { putBoolean(IS_SQUIGGLY, value) }
+
+    const val IS_SQUIGGLY = "is_squiggly"
+
+    const val REPLAY_GAIN = "replay_gain"
+
+    var enableReplayGain: Boolean
+        get() = sharedPreferences.getBoolean(REPLAY_GAIN, false)
+        set(value) = sharedPreferences.edit { putBoolean(REPLAY_GAIN, value) }
+
+    const val PREFER_ALBUM_GAIN = "prefer_album_gain"
+
+    var preferAlbumGain: Boolean
+        get() = sharedPreferences.getBoolean(PREFER_ALBUM_GAIN, false)
+        set(value) = sharedPreferences.edit { putBoolean(PREFER_ALBUM_GAIN, value) }
 
     const val SHOW_NOW_PLAYING_QUEUE_BUTTON = "show_now_playing_queue_button"
     const val SHOW_OPTIONS_MENU = "show_options_menu"

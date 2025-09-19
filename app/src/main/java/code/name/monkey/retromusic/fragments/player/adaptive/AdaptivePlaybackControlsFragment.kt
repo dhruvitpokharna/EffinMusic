@@ -18,6 +18,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.SeekBar
 import code.name.monkey.appthemehelper.util.ATHUtil
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.MaterialValueHelper
@@ -37,7 +38,7 @@ class AdaptivePlaybackControlsFragment :
     private var _binding: FragmentAdaptivePlayerPlaybackControlsBinding? = null
     private val binding get() = _binding!!
 
-    override val progressSlider: Slider
+    override val seekBar: SeekBar
         get() = binding.progressSlider
 
     override val shuffleButton: ImageButton
@@ -88,6 +89,11 @@ class AdaptivePlaybackControlsFragment :
 
     override fun onPlayStateChanged() {
         updatePlayPauseDrawableState()
+        if (MusicPlayerRemote.isPlaying && PreferenceUtil.isSquiggly) {
+            squiggly.animate = true
+        } else {
+            squiggly.animate = false
+        }
     }
 
     override fun onRepeatModeChanged() {

@@ -122,6 +122,11 @@ class PeekPlayerControlFragment : AbsPlayerControlsFragment(R.layout.fragment_pe
     override fun onPlayStateChanged() {
         super.onPlayStateChanged()
         updatePlayPauseDrawableState()
+        if (MusicPlayerRemote.isPlaying && PreferenceUtil.isSquiggly) {
+            squiggly.animate = true
+        } else {
+            squiggly.animate = false
+        }
     }
 
     override fun onServiceConnected() {

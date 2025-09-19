@@ -18,5 +18,7 @@ data class SongMetadataEntity(
     val artistName: String?,     
     val composer: String?,
     val albumArtist: String?,
-    val allArtists: String?
+    val artistIds: String?,
+    val artistNames: String?
+    
 )

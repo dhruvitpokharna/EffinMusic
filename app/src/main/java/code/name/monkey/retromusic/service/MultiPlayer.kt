@@ -23,8 +23,16 @@ import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.extensions.uri
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.service.playback.Playback.PlaybackCallbacks
+import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.PreferenceUtil.isGapLessPlayback
 import code.name.monkey.retromusic.util.logE
+import code.name.monkey.retromusic.util.Taglib
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import android.media.audiofx.Equalizer
 import android.media.audiofx.BassBoost
 import android.media.audiofx.Virtualizer
@@ -33,6 +41,10 @@ import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.widget.Toast
 import code.name.monkey.retromusic.extensions.showToast
+import kotlin.math.log10
+import kotlin.math.pow
+import kotlin.math.min
+import kotlin.math.max
 
 /**
  * @author Andrew Neal, Karim Abou Zeid (kabouzeid)
@@ -41,6 +53,8 @@ class MultiPlayer(context: Context) : LocalPlayback(context) {
     private var mCurrentMediaPlayer = MediaPlayer()
     private var mNextMediaPlayer: MediaPlayer? = null
     override var callbacks: PlaybackCallbacks? = null
+
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var equalizer: Equalizer? = null
     private var bassBoost: BassBoost? = null
@@ -104,6 +118,46 @@ class MultiPlayer(context: Context) : LocalPlayback(context) {
         setAmplifierStrength(amplifierStrength)
     }
 
+    private fun applyReplayGain(song: Song) {
+        if (PreferenceUtil.enableReplayGain == false) return
+        if (song == Song.emptySong) return
+        val preferAlbumGain = PreferenceUtil.preferAlbumGain
+        
+        scope.launch {
+            val tags =  Taglib.getAllTags(context, song)
+
+            fun parse(value: String?, default: Float = 0f): Float {
+                return value?.replace("dB", "", ignoreCase = true)
+                    ?.replace("[^\\d+-.]".toRegex(), "")
+                    ?.toFloatOrNull() ?: default
+            }
+            val trackGain = parse(tags["REPLAYGAIN_TRACK_GAIN"]?.firstOrNull())
+            val albumGain = parse(tags["REPLAYGAIN_ALBUM_GAIN"]?.firstOrNull())
+            val trackPeak = parse(tags["REPLAYGAIN_TRACK_PEAK"]?.firstOrNull(), 1f)
+            val albumPeak = parse(tags["REPLAYGAIN_ALBUM_PEAK"]?.firstOrNull(), 1f)
+        
+            val adjustDB = if (preferAlbumGain == true) {
+                if ( albumGain != 0f)  albumGain else trackGain
+            } else {
+                if (trackGain != 0f) trackGain else albumGain
+            }
+
+            val peak = if (preferAlbumGain == true) {
+                if (albumPeak != 1f) albumPeak else trackPeak
+            } else {
+                if (trackPeak != 1f) trackPeak else albumPeak
+            }
+        
+            val safeDB = min(adjustDB, -20f * log10(peak))
+        
+            val gain = 10.0f.pow(safeDB / 20f).coerceIn(0f, 1f)
+            
+            scope.launch(Dispatchers.Main) {
+                setVolume(gain)
+            }
+        }
+    }
+
     private val preferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
         when {
             (key?.startsWith("band_") == true || key == "equalizer_enabled") -> {
@@ -145,6 +199,7 @@ class MultiPlayer(context: Context) : LocalPlayback(context) {
 
     override fun release() {
         stop()
+        scope.cancel()
         closeAudioEffectSession() 
         mCurrentMediaPlayer.release()
         mNextMediaPlayer?.release()
@@ -227,6 +282,7 @@ class MultiPlayer(context: Context) : LocalPlayback(context) {
                 initAudioEffects()
                 openAudioEffectSession()
                 applyEqualizerPreferences()
+                applyReplayGain(song)
             }
             completion(isInitialized)
         }

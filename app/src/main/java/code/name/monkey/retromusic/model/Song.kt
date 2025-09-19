@@ -32,7 +32,8 @@ open class Song(
     open val artistName: String,
     open val composer: String?,
     open val albumArtist: String?,
-    open val allArtists: String? = null
+    open val artistIds: String? = null,
+    open val artistNames: String? = null
 ) : Parcelable {
 
     // Manual copy function
@@ -50,11 +51,13 @@ open class Song(
         artistName: String = this.artistName,
         composer: String? = this.composer,
         albumArtist: String? = this.albumArtist,
-        allArtists: String? = this.allArtists
+        artistIds: String? = this.artistIds,
+        artistNames: String? = this.artistNames
     ): Song {
         return Song(
             id, title, trackNumber, year, duration, data, dateModified,
-            albumId, albumName, artistId, artistName, composer, albumArtist, allArtists
+            albumId, albumName, artistId, artistName, composer, albumArtist,
+            artistIds, artistNames
         )
     }
 
@@ -79,7 +82,8 @@ open class Song(
         if (artistName != other.artistName) return false
         if (composer != other.composer) return false
         if (albumArtist != other.albumArtist) return false
-        if (allArtists != other.allArtists) return false
+        if (artistIds != other.artistIds) return false
+        if (artistNames != other.artistNames) return false
 
         return true
     }
@@ -98,7 +102,8 @@ open class Song(
         result = 31 * result + artistName.hashCode()
         result = 31 * result + (composer?.hashCode() ?: 0)
         result = 31 * result + (albumArtist?.hashCode() ?: 0)
-        result = 31 * result + (allArtists?.hashCode() ?: 0)
+        result = 31 * result + artistIds.hashCode()
+        result = 31 * result + artistNames.hashCode()
         return result
     }
 
@@ -120,7 +125,8 @@ open class Song(
             artistName = "",
             composer = "",
             albumArtist = "",
-            allArtists = ""
+            artistIds = "",
+            artistNames = ""
         )
     }
 }

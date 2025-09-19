@@ -257,10 +257,15 @@ class CirclePlayerFragment : AbsPlayerFragment(R.layout.fragment_circle_player),
         binding.title.text = song.title
         
         val artistName = song.artistName?.trim()
-        val allArtists = listOfNotNull(song.albumArtist, song.artistName)
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-            .distinct()
+        
+        val allArtists = if (!PreferenceUtil.fixYear) {
+            listOfNotNull(song.albumArtist, song.artistName)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .distinct()
+        } else {
+            song.artistNames?.split(",")?.map { it.trim() } ?: emptyList()
+        }
             
         individualArtists = allArtists
         
@@ -362,4 +367,4 @@ class CirclePlayerFragment : AbsPlayerFragment(R.layout.fragment_circle_player),
         binding.songTotalTime.text = MusicUtil.getReadableDurationString(total.toLong())
         binding.songCurrentProgress.text = MusicUtil.getReadableDurationString(progress.toLong())
     }
-}
+    }

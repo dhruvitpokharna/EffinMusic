@@ -27,16 +27,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="?actionBarSize"
-                android:paddingBottom="16dp"
-                android:paddingHorizontal="16dp">
+                android:paddingBottom="8dp"
+                android:paddingHorizontal="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/playlistSearchView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/play_button"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/clear_search"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/clear_search"
                     android:background="@null"
                     android:hint="@string/action_search"
                     android:inputType="text|textAutoComplete"
@@ -51,11 +51,25 @@
                     android:background="?roundSelector"
                     android:padding="10dp"
                     android:visibility="gone"
-                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/playlistSearchView"
+                    app:layout_constraintBottom_toBottomOf="@id/playlistSearchView"
+                    app:layout_constraintEnd_toStartOf="@id/song_sort_order"
                     app:srcCompat="@drawable/ic_close"
                     app:tint="?attr/colorControlNormal"
                     tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/song_sort_order"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?roundSelector"
+                    app:icon="@drawable/ic_sort"
+                    app:iconSize="24dp"
+                    app:iconTint="?colorControlNormal"
+                    app:layout_constraintTop_toTopOf="@id/playlistSearchView"
+                    app:layout_constraintBottom_toBottomOf="@id/playlistSearchView"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/image"

@@ -7,12 +7,15 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.core.view.doOnPreDraw
+import android.widget.PopupMenu
+import java.util.Locale
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import code.name.monkey.retromusic.helper.SortOrder
 import androidx.recyclerview.widget.RecyclerView
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.adapter.song.OrderablePlaylistSongAdapter
@@ -60,6 +63,9 @@ class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playli
     private lateinit var playlist: PlaylistWithSongs
     private lateinit var playlistSongAdapter: OrderablePlaylistSongAdapter
 
+    private val savedPlaylistSongSortOrder: String
+        get() = PreferenceUtil.playlistDetailSongSortOrder
+
     private val _searchFlow = MutableSharedFlow<CharSequence?>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +91,7 @@ class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playli
         setUpRecyclerView()
         setUpSearch()
         setupButtons()
+        setupSongSortButton()
         viewModel.getPlaylist().observe(viewLifecycleOwner) { playlistWithSongs ->
             playlist = playlistWithSongs
             Glide.with(this)
@@ -147,6 +154,76 @@ class PlaylistDetailsFragment : AbsMainActivityFragment(R.layout.fragment_playli
         lifecycleScope.launch {
             _searchFlow.debounce(300).collect { text ->
                 playlistSongAdapter.onFilter(text)
+            }
+        }
+    }
+
+    private fun setupSongSortButton() {
+        binding.songSortOrder.setOnClickListener {
+            PopupMenu(requireContext(), binding.songSortOrder).apply {
+                inflate(R.menu.menu_playlist_song_sort_order)
+                setUpSortOrderMenu(menu)
+                setOnMenuItemClickListener { item ->
+                    val sortOrder = when (item.itemId) {
+                        R.id.action_sort_order_title -> SortOrder.ArtistSongSortOrder.SONG_A_Z
+                        R.id.action_sort_order_title_desc -> SortOrder.ArtistSongSortOrder.SONG_Z_A
+                        R.id.action_sort_order_year -> SortOrder.ArtistSongSortOrder.SONG_YEAR
+                        R.id.action_sort_order_song_duration -> SortOrder.ArtistSongSortOrder.SONG_DURATION
+                        else -> {
+                            throw IllegalArgumentException("invalid ${item.title}")
+                        }
+                    }
+                    item.isChecked = true
+                    setSaveSortOrder(sortOrder)
+                    return@setOnMenuItemClickListener true
+                }
+                show()
+            }
+        }
+    }
+
+    private fun setSaveSortOrder(sortOrder: String) {
+        PreferenceUtil.playlistDetailSongSortOrder = sortOrder
+        updateRecyclerView()
+    }
+
+    private fun updateRecyclerView() {
+        if (!::playlist.isInitialized) return
+        
+        val sortedSongs = when (savedPlaylistSongSortOrder) {
+            SortOrder.ArtistSongSortOrder.SONG_A_Z ->
+                playlist.songs.toSongs().sortedBy { it.title.lowercase(Locale.getDefault()) }
+
+            SortOrder.ArtistSongSortOrder.SONG_Z_A ->
+                playlist.songs.toSongs().sortedByDescending { it.title.lowercase(Locale.getDefault()) }
+
+            SortOrder.ArtistSongSortOrder.SONG_YEAR ->
+                playlist.songs.toSongs().sortedBy { it.year }
+
+            SortOrder.ArtistSongSortOrder.SONG_DURATION ->
+                playlist.songs.toSongs().sortedBy { it.duration }
+
+            else -> playlist.songs.toSongs()
+        }
+        playlistSongAdapter.swapDataSet(sortedSongs.toMutableList())
+    }
+
+    private fun setUpSortOrderMenu(sortOrder: Menu) {
+        when (savedPlaylistSongSortOrder) {
+            SortOrder.ArtistSongSortOrder.SONG_A_Z -> sortOrder.findItem(R.id.action_sort_order_title).isChecked =
+                true
+
+            SortOrder.ArtistSongSortOrder.SONG_Z_A -> sortOrder.findItem(R.id.action_sort_order_title_desc).isChecked =
+                true
+
+            SortOrder.ArtistSongSortOrder.SONG_YEAR -> sortOrder.findItem(R.id.action_sort_order_year).isChecked =
+                true
+
+            SortOrder.ArtistSongSortOrder.SONG_DURATION -> sortOrder.findItem(R.id.action_sort_order_song_duration).isChecked =
+                true
+
+            else -> {
+                throw IllegalArgumentException("invalid $savedPlaylistSongSortOrder")
             }
         }
     }

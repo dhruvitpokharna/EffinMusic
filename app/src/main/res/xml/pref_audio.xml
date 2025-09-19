@@ -26,6 +26,16 @@
         android:title="@string/pref_title_cross_fade"
         app:showSeekBarValue="true" />
 
+    <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESeekBarPreference
+        android:defaultValue="2"
+        android:key="is_skip_to_previous"
+        android:layout="@layout/list_item_view_seekbar"
+        app:ateKey_pref_unit="s"
+        android:max="10"
+        android:summary="@string/pref_summary_is_skip_to_previous"
+        android:title="@string/pref_title_is_skip_to_previous"
+        app:showSeekBarValue="true" />
+
     <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
         android:defaultValue="false"
         android:key="gapless_playback"
@@ -53,5 +63,19 @@
         android:layout="@layout/list_item_view_switch"
         android:summary="@string/pref_summary_bluetooth_playback"
         android:title="@string/pref_title_bluetooth_playback" />
+
+    <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+        android:defaultValue="false"
+        android:key="replay_gain"
+        android:layout="@layout/list_item_view_switch"
+        android:summary="@string/pref_summary_replay_gain"
+        android:title="@string/pref_title_replay_gain" />
+
+    <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+        android:defaultValue="false"
+        android:key="prefer_album_gain"
+        android:layout="@layout/list_item_view_switch"
+        android:summary="@string/pref_summary_prefer_album_gain"
+        android:title="@string/pref_title_prefer_album_gain" />
 
 </androidx.preference.PreferenceScreen>

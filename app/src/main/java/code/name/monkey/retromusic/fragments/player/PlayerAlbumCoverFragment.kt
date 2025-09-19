@@ -138,21 +138,7 @@ class PlayerAlbumCoverFragment : AbsMusicServiceFragment(R.layout.fragment_playe
                 true
             }
             setOnClickListener {
-                when (PreferenceUtil.artworkClickAction) {
-                    0 -> {
-                        goToLyrics(requireActivity())
-                    }
-                    1 -> {
-                        // Do nothing
-                    }
-                    2 -> {
-                        if (MusicPlayerRemote.isPlaying) {
-                            MusicPlayerRemote.pauseSong()
-                        } else {
-                            MusicPlayerRemote.resumePlaying()
-                        }
-                    }
-                }
+                goToLyrics(requireActivity())
             }
         }
         binding.fetchLyricsText.setOnClickListener {

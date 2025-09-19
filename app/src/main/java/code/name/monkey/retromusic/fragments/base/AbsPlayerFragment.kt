@@ -328,54 +328,29 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.select_artist)
                         .setItems(individualArtists.toTypedArray()) { _, which ->
-                            val selectedArtistName = individualArtists[which]
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                val albumArtists = libraryViewModel.albumArtists.value
-                                val contributingArtists = libraryViewModel.contributingArtists.value
-                                var selectedArtist: Artist? = null
-                                if (which == 0) {
-                                    selectedArtist = albumArtists?.find {
-                                        it.name.equals(selectedArtistName, ignoreCase = true)
-                                    }
+                            val song = MusicPlayerRemote.currentSong
+                            if (which == 0 && (!PreferenceUtil.fixYear)) {
+                                song.albumArtist?.let { albumArtist ->
+                                    goToAlbumArtist(requireActivity(), albumArtist)
                                 }
-                                if (which == 1) {
-                                    selectedArtist = contributingArtists?.find {
-                                        it.name.equals(selectedArtistName, ignoreCase = true)
-                                    }
-                                }
-                                withContext(Dispatchers.Main) {
-                                    if (selectedArtist != null) {
-                                        if (which == 0) {
-                                            goToAlbumArtist(requireActivity(), selectedArtist.name)
-                                        }
-                                        if (which == 1) {
-                                            goToArtist(requireActivity(), selectedArtist.id)
-                                        }
-                                    } else {
-                                        context?.showToast("Artist not found: $selectedArtistName")
+                            } else {
+                                if (!PreferenceUtil.fixYear) {
+                                    goToArtist(requireActivity(), song.artistId)
+                                } else {
+                                    val ids = song.artistIds
+                                        ?.split(",")
+                                        ?.map { it.trim().toLongOrNull() } 
+                                        ?: emptyList()
+                                    ids.getOrNull(which)?.let { artistId ->
+                                        goToArtist(requireActivity(), artistId)
                                     }
                                 }
                             }
                         }
                         .show()
-                } else {
+                } else { 
                     val song = MusicPlayerRemote.currentSong
-                    val artistName = song.artistName
-                    val artistId = song.artistId
-
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val allArtists = libraryViewModel.artists.value
-                        val artist = allArtists?.find {
-                            it.name.equals(artistName, ignoreCase = true)
-                        }
-                        withContext(Dispatchers.Main) {
-                            if (artist != null) {
-                                goToArtist(requireActivity(), artist.id)
-                            } else {
-                                context?.showToast("Artist not found: $artistName")
-                            }
-                        }
-                    }
+                    goToArtist(requireActivity(), song.artistIds?.toLong() ?: 0L) 
                 }
             }
         }

@@ -79,17 +79,21 @@
 
         <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             android:defaultValue="false"
-            android:key="show_song_only"
-            android:layout="@layout/list_item_view_switch"
-            android:summary="@string/pref_summary_show_song_only"
-            android:title="@string/pref_title_show_song_only" />
-
-        <code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
-            android:defaultValue="false"
             android:key="fix_year"
             android:layout="@layout/list_item_view_switch"
             android:summary="@string/pref_summary_fix_year"
             android:title="@string/pref_title_fix_year" />
+
+        <Preference
+            android:key="rebuild_custom_library"
+            android:layout="@layout/list_item_view"
+            android:title="@string/pref_title_rebuild_custom_library" />
+
+        <code.name.monkey.retromusic.preferences.DelimiterPreference
+            android:key="artist_delimiters"
+            android:layout="@layout/list_item_view"
+            android:summary="@string/pref_summary_artist_delimiters"
+            android:title="@string/pref_title_artist_delimiters" />
 
     </code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
     <code.name.monkey.appthemehelper.common.prefs.supportv7.ATEListPreference

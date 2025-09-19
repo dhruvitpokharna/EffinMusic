@@ -9,38 +9,35 @@ android {
     namespace "code.name.monkey.retromusic"
 
     defaultConfig {
-        minSdk 21
+        minSdk 23
         targetSdk 35
 
         vectorDrawables.useSupportLibrary = true
 
         applicationId "code.effinmr.music"
-        versionCode 10734
-        versionName '7.3.4'
+        versionCode 107602
+        versionName '7.6.2'
 
         buildConfigField("String", "GOOGLE_PLAY_LICENSING_KEY", "\"${getProperty(getProperties('../public.properties'), 'GOOGLE_PLAY_LICENSE_KEY')}\"")
     }
-    def signingProperties = getProperties('retro.properties')
-    def theSigningConfig
-    if (signingProperties != null) {
-        theSigningConfig = signingConfigs.create("release") {
-            storeFile file(getProperty(signingProperties, 'storeFile'))
-            keyAlias getProperty(signingProperties, 'keyAlias')
-            storePassword getProperty(signingProperties, 'storePassword')
-            keyPassword getProperty(signingProperties, 'keyPassword')
+    signingConfigs {
+        release {
+            storeFile file("release-keystore.p12")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+            storeType "PKCS12"
         }
-    } else {
-        theSigningConfig = signingConfigs.debug
     }
     buildTypes {
         release {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig theSigningConfig
+            signingConfig signingConfigs.release
         }
         debug {
-            signingConfig theSigningConfig
+            signingConfig signingConfigs.debug
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
         }
@@ -172,12 +169,12 @@ dependencies {
     implementation libs.chrisbanes.insetter
 
     implementation("io.coil-kt:coil:2.4.0")
+    implementation(files("libs/taglib-release.aar"))
 
     implementation libs.jaudiotagger
     normalImplementation libs.android.lab.library
     implementation libs.slidableactivity
     implementation libs.material.intro
-    implementation libs.dhaval2404.imagepicker
     implementation libs.fastscroll.library
     implementation libs.customactivityoncrash
     implementation libs.tankery.circularSeekBar

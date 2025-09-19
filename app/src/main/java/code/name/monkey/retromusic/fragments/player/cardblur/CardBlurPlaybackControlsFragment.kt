@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageButton
+import android.widget.SeekBar
 import android.widget.TextView
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.TintHelper
@@ -41,7 +42,7 @@ class CardBlurPlaybackControlsFragment :
     private var _binding: FragmentCardBlurPlayerPlaybackControlsBinding? = null
     private val binding get() = _binding!!
 
-    override val progressSlider: Slider
+    override val seekBar: SeekBar
         get() = binding.progressSlider
 
     override val shuffleButton: ImageButton
@@ -126,6 +127,11 @@ class CardBlurPlaybackControlsFragment :
 
     override fun onPlayStateChanged() {
         updatePlayPauseDrawableState()
+        if (MusicPlayerRemote.isPlaying) {
+            squiggly.animate = true
+        } else {
+            squiggly.animate = false
+        }
     }
 
     override fun onRepeatModeChanged() {

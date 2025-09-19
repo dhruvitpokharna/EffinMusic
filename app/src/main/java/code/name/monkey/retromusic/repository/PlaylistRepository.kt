@@ -14,6 +14,7 @@
 
 package code.name.monkey.retromusic.repository
 
+import android.content.Context
 import android.content.ContentResolver
 import android.database.Cursor
 import android.provider.BaseColumns
@@ -21,6 +22,9 @@ import android.provider.MediaStore.Audio.AudioColumns
 import android.provider.MediaStore.Audio.Playlists.*
 import android.provider.MediaStore.Audio.PlaylistsColumns
 import code.name.monkey.retromusic.Constants
+import code.name.monkey.retromusic.db.RetroDatabase
+import code.name.monkey.retromusic.db.SongMetadataEntity
+import code.name.monkey.retromusic.db.SongMetadataDao
 import code.name.monkey.retromusic.extensions.getInt
 import code.name.monkey.retromusic.extensions.getLong
 import code.name.monkey.retromusic.extensions.getString
@@ -28,6 +32,8 @@ import code.name.monkey.retromusic.extensions.getStringOrNull
 import code.name.monkey.retromusic.model.Playlist
 import code.name.monkey.retromusic.model.PlaylistSong
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.util.PreferenceUtil
+import kotlinx.coroutines.runBlocking
 
 /**
  * Created by hemanths on 16/08/17.
@@ -53,8 +59,14 @@ interface PlaylistRepository {
 }
 @Suppress("Deprecation")
 class RealPlaylistRepository(
-    private val contentResolver: ContentResolver
+    private val context: Context
 ) : PlaylistRepository {
+
+    private val contentResolver = context.contentResolver
+
+    private val metadataDao: SongMetadataDao = RetroDatabase.getInstance(context).songMetadataDao()
+
+    private var metadataMap: Map<Long, SongMetadataEntity>? = null
 
     override fun playlist(cursor: Cursor?): Playlist {
         return cursor.use {
@@ -142,38 +154,59 @@ class RealPlaylistRepository(
         return songs
     }
 
+    private suspend fun getMetadata(id: Long): SongMetadataEntity? {
+        if (metadataMap == null) {
+            metadataMap = metadataDao.getAllMetadata().associateBy { it.id }
+        }
+        return metadataMap?.get(id)
+    }
+
     private fun getPlaylistSongFromCursorImpl(cursor: Cursor, playlistId: Long): PlaylistSong {
         val id = cursor.getLong(Members.AUDIO_ID)
-        val title = cursor.getString(AudioColumns.TITLE)
-        val trackNumber = cursor.getInt(AudioColumns.TRACK)
-        val year = cursor.getStringOrNull(AudioColumns.YEAR)
-        val duration = cursor.getLong(AudioColumns.DURATION)
-        val data = cursor.getString(Constants.DATA)
-        val dateModified = cursor.getLong(AudioColumns.DATE_MODIFIED)
-        val albumId = cursor.getLong(AudioColumns.ALBUM_ID)
-        val albumName = cursor.getString(AudioColumns.ALBUM)
-        val artistId = cursor.getLong(AudioColumns.ARTIST_ID)
-        val artistName = cursor.getString(AudioColumns.ARTIST)
-        val idInPlaylist = cursor.getLong(Members._ID)
-        val composer = cursor.getStringOrNull(AudioColumns.COMPOSER)
-        val albumArtist = cursor.getStringOrNull("album_artist")
-        return PlaylistSong(
-            id,
-            title,
-            trackNumber,
-            year,
-            duration,
-            data,
-            dateModified,
-            albumId,
-            albumName,
-            artistId,
-            artistName,
-            playlistId,
-            idInPlaylist,
-            composer ?: "",
-            albumArtist
-        )
+
+        val base = PlaylistSong(
+            id = id,
+            title = cursor.getString(AudioColumns.TITLE),
+            trackNumber = cursor.getInt(AudioColumns.TRACK),
+            year = cursor.getStringOrNull(AudioColumns.YEAR),
+            duration = cursor.getLong(AudioColumns.DURATION),
+            data = cursor.getString(Constants.DATA),
+            dateModified = cursor.getLong(AudioColumns.DATE_MODIFIED),
+            albumId = cursor.getLong(AudioColumns.ALBUM_ID),
+            albumName = cursor.getString(AudioColumns.ALBUM),
+            artistId = cursor.getLong(AudioColumns.ARTIST_ID),
+            artistName = cursor.getString(AudioColumns.ARTIST),
+            playlistId = playlistId,
+            idInPlayList = cursor.getLong(Members._ID),
+            composer = cursor.getStringOrNull(AudioColumns.COMPOSER),
+            albumArtist = cursor.getStringOrNull("album_artist")
+            )
+
+        if (PreferenceUtil.fixYear) {
+            val meta = runBlocking { getMetadata(id) }
+            if (meta != null) {
+                return PlaylistSong(
+                    id = base.id,
+                    title = meta.title ?: base.title,
+                    trackNumber  = meta.trackNumber ?: base.trackNumber,
+                    year         = meta.year ?: base.year,
+                    duration     = meta.duration ?: base.duration,
+                    data         = meta.data ?: base.data,
+                    dateModified = meta.dateModified ?: base.dateModified,
+                    albumId      = meta.albumId ?: base.albumId,
+                    albumName    = meta.albumName ?: base.albumName,
+                    artistId     = meta.artistId ?: base.artistId,
+                    artistName   = meta.artistName ?: base.artistName,
+                    playlistId = base.playlistId,
+                    idInPlayList = base.idInPlayList,
+                    composer     = meta.composer ?: base.composer,
+                    albumArtist  = meta.albumArtist ?: base.albumArtist,
+                    artistIds  = meta.artistIds ?: base.artistIds,
+                    artistNames  = meta.artistNames ?: base.artistNames
+                )
+            }
+        }
+        return base
     }
 
     private fun makePlaylistCursor(
@@ -191,7 +224,6 @@ class RealPlaylistRepository(
             DEFAULT_SORT_ORDER
         )
     }
-
 
     private fun makePlaylistSongCursor(playlistId: Long): Cursor? {
         return contentResolver.query(

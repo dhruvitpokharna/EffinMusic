@@ -354,10 +354,15 @@ class GradientPlayerFragment : AbsPlayerFragment(R.layout.fragment_gradient_play
         binding.playbackControlsFragment.title.text = song.title
 
         val artistName = song.artistName?.trim()
-        val allArtists = listOfNotNull(song.albumArtist, song.artistName)
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-            .distinct()
+        
+        val allArtists = if (!PreferenceUtil.fixYear) {
+            listOfNotNull(song.albumArtist, song.artistName)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .distinct()
+        } else {
+            song.artistNames?.split(",")?.map { it.trim() } ?: emptyList()
+        }
             
         individualArtists = allArtists
         

@@ -188,12 +188,9 @@ class RealSongRepository(private val context: Context) : SongRepository {
         val composer = cursor.getStringOrNull(AudioColumns.COMPOSER)
         val artistName = cursor.getStringOrNull(AudioColumns.ARTIST)
         val albumArtist = cursor.getStringOrNull("album_artist")
-        val allArtists = listOfNotNull(albumArtist, artistName)
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-            .distinct()
-            .joinToString(", ")
         val year = cursor.getStringOrNull(AudioColumns.YEAR)
+        val artistIds = artistId.toString()
+        val artistNames = artistName
 
         return Song(
             id,
@@ -209,7 +206,8 @@ class RealSongRepository(private val context: Context) : SongRepository {
             artistName ?: "",
             composer ?: "",
             albumArtist ?: "",
-            allArtists ?: ""
+            artistIds,
+            artistNames
         )
     }
 
@@ -226,7 +224,7 @@ class RealSongRepository(private val context: Context) : SongRepository {
         val base = parseMediaStoreSong(cursor)
 
         if (PreferenceUtil.fixYear) {
-            val meta = runBlocking { getMetadata(id) } // ✅ solves suspend issue
+            val meta = runBlocking { getMetadata(id) } 
             if (meta != null) {
                 return base.copy(
                     title = meta.title ?: base.title,
@@ -241,7 +239,8 @@ class RealSongRepository(private val context: Context) : SongRepository {
                     artistName   = meta.artistName ?: base.artistName,
                     composer     = meta.composer ?: base.composer,
                     albumArtist  = meta.albumArtist ?: base.albumArtist,
-                    allArtists = base.allArtists
+                    artistIds  = meta.artistIds ?: base.artistIds,
+                    artistNames  = meta.artistNames ?: base.artistNames
                 )
             }
         }

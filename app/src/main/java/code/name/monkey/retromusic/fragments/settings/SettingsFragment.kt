@@ -61,7 +61,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings), ColorCallback {
             R.id.mainSettingsFragment -> R.string.action_settings
             R.id.audioSettings -> R.string.pref_header_audio
             R.id.imageSettingFragment -> R.string.pref_header_images
-            R.id.notificationSettingsFragment -> R.string.notification
             R.id.nowPlayingSettingsFragment -> R.string.now_playing
             R.id.otherSettingsFragment -> R.string.others
             R.id.personalizeSettingsFragment -> R.string.personalize

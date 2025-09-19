@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        variant: [Release]
+        variant: [NormalRelease, FdroidRelease]
 
     steps:
       - name: Checkout code
@@ -24,35 +24,22 @@ jobs:
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
 
+      - name: Decode Keystore
+        run: |
+          printf "%s" "$KEYSTORE_BASE64" | base64 --decode > $GITHUB_WORKSPACE/app/release-keystore.p12
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+
       - name: Build Release APK
         run: ./gradlew assemble${{ matrix.variant }}
-      
-      - uses: ilharp/sign-android-release@v2
-        name: Sign Normal APK
-        id: sign_app
-        with:
-          releaseDir: app/build/outputs/apk/normal/release
-          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
-          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          buildToolsVersion: 36.0.0
-
-      - uses: ilharp/sign-android-release@v2
-        name: Sign F-Droid APK
-        id: sign_fdroid
-        with:
-          releaseDir: app/build/outputs/apk/fdroid/release
-          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
-          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          buildToolsVersion: 36.0.0
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-signed-release.apk-${{ github.run_number }}
+          name: app-signed-${{ matrix.variant }}-${{ github.run_number }}.apk
           path: |
-            ${{steps.sign_app.outputs.signedFile}}
-            ${{steps.sign_fdroid.outputs.signedFile}}
+            app/build/outputs/apk/${{ matrix.variant == 'NormalRelease' && 'normal' || 'fdroid' }}/release/*.apk

@@ -84,6 +84,7 @@
         android:layout_marginStart="16dp"
         android:gravity="center"
         android:minWidth="40dp"
+        android:paddingTop="16dp"
         android:singleLine="true"
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="12sp"
@@ -92,19 +93,17 @@
         app:layout_constraintTop_toTopOf="@id/progressSlider"
         tools:text="@tools:sample/date/hhmmss" />
 
-    <com.google.android.material.slider.Slider
+    <SeekBar
         android:id="@+id/progressSlider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:maxHeight="2dp"
-        style="@style/Widget.Retro.Slider"
-        android:progressDrawable="@drawable/color_progress_seek"
+        android:paddingTop="32dp"
+        android:paddingBottom="16dp"
         app:layout_constraintEnd_toStartOf="@id/songTotalTime"
         app:layout_constraintStart_toEndOf="@id/songCurrentProgress"
         app:layout_constraintTop_toBottomOf="@id/titleContainer"
-        tools:ignore="RtlHardcoded,UnusedAttribute"
-        tools:progress="20" />
+        android:max="100"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/songTotalTime"
@@ -113,6 +112,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="center"
         android:minWidth="40dp"
+        android:paddingTop="16dp"
         android:singleLine="true"
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="12sp"

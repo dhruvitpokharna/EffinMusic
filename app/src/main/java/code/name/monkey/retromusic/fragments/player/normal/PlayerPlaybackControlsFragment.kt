@@ -20,6 +20,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
 import code.name.monkey.appthemehelper.util.ATHUtil
 import code.name.monkey.appthemehelper.util.ColorUtil
@@ -60,7 +61,7 @@ class PlayerPlaybackControlsFragment :
     private var _binding: FragmentPlayerPlaybackControlsBinding? = null
     private val binding get() = _binding!!
 
-    override val progressSlider: Slider
+    override val seekBar: SeekBar
         get() = binding.progressSlider
 
     override val shuffleButton: ImageButton
@@ -139,10 +140,14 @@ class PlayerPlaybackControlsFragment :
         val song = MusicPlayerRemote.currentSong
         binding.title.text = song.title
 
-        val allArtists = listOfNotNull(song.albumArtist, song.artistName)
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-            .distinct()
+        val allArtists = if (!PreferenceUtil.fixYear) {
+            listOfNotNull(song.albumArtist, song.artistName)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .distinct()
+        } else {
+            song.artistNames?.split(",")?.map { it.trim() } ?: emptyList()
+        }
         
         // Always display the full artist name string
         binding.text.text = allArtists
@@ -172,6 +177,11 @@ class PlayerPlaybackControlsFragment :
 
     override fun onPlayStateChanged() {
         updatePlayPauseDrawableState()
+        if (MusicPlayerRemote.isPlaying && PreferenceUtil.isSquiggly) {
+            squiggly.animate = true
+        } else {
+            squiggly.animate = false
+        }
     }
 
     override fun onRepeatModeChanged() {

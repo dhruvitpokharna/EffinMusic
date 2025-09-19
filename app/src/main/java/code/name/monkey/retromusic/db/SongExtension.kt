@@ -62,7 +62,9 @@ fun Song.toSongEntity(playListId: Long): SongEntity {
         artistId = artistId,
         artistName = artistName,
         composer = composer,
-        albumArtist = albumArtist
+        albumArtist = albumArtist,
+        artistIds = artistIds,
+        artistNames = artistNames
     )
 }
 
@@ -80,7 +82,9 @@ fun SongEntity.toSong(): Song {
         artistId = artistId,
         artistName = artistName,
         composer = composer,
-        albumArtist = albumArtist
+        albumArtist = albumArtist,
+        artistIds = artistIds,
+        artistNames = artistNames
     )
 }
 

@@ -57,6 +57,13 @@
     android:summary="@string/pref_summary_swipe_anywhere_now_playing"
     android:title="Swipe Anywhere to Control" />
 
+<code.name.monkey.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+    android:defaultValue="true"
+    android:key="is_squiggly"
+    android:layout="@layout/list_item_view_switch"
+    android:summary="@string/pref_summary_is_squiggly"
+    android:title="@string/pref_title_is_squiggly" />
+
 <code.name.monkey.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory
     android:layout="@layout/preference_category_title"
     android:title="General">

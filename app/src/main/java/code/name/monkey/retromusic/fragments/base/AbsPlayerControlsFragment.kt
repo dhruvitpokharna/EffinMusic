@@ -43,7 +43,10 @@ import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.PreferenceUtil.TIME_DISPLAY_MODE_REMAINING
 import code.name.monkey.retromusic.util.PreferenceUtil.TIME_DISPLAY_MODE_TOGGLE
 import code.name.monkey.retromusic.util.PreferenceUtil.TIME_DISPLAY_MODE_TOTAL
+import code.name.monkey.retromusic.util.PreferenceUtil.TIME_DISPLAY_MODE
+import code.name.monkey.retromusic.util.PreferenceUtil.IS_SQUIGGLY
 import code.name.monkey.retromusic.util.color.MediaNotificationProcessor
+import code.name.monkey.retromusic.views.SquigglyProgress
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.google.android.material.slider.Slider
@@ -70,6 +73,8 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
     private var isSeeking = false
 
     open val progressSlider: Slider? = null
+        
+    protected lateinit var squiggly: SquigglyProgress
 
     open val seekBar: SeekBar? = null
 
@@ -221,6 +226,20 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
             .start()
     }
 
+    private fun setUpSquiggly() {
+        seekBar?.let {
+            val useSquiggly = MusicPlayerRemote.isPlaying && PreferenceUtil.isSquiggly
+            squiggly = SquigglyProgress().apply {
+                strokeWidth = 9f
+                lineAmplitude = 9f
+                waveLength = 80f
+                phaseSpeed = 60f
+                animate = useSquiggly
+            }
+            it.progressDrawable = squiggly
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         hideVolumeIfAvailable()
@@ -230,11 +249,13 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
         super.onStart()
         PreferenceManager.getDefaultSharedPreferences(requireContext())
             .registerOnSharedPreferenceChangeListener(this)
+        if (seekBar != null) {
+            setUpSquiggly()
+        }
         setUpProgressSlider()
         setUpPrevNext()
         setUpShuffleButton()
         setUpRepeatButton()
-        applyButtonSwapLogic()
     }
     
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -242,76 +263,22 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
             applyButtonSwapLogic()
         }
 
-        if (key == PreferenceUtil.TIME_DISPLAY_MODE) {
+        if (key == TIME_DISPLAY_MODE) {
             val progress = MusicPlayerRemote.position
             val total = MusicPlayerRemote.songDurationMillis
             onUpdateProgressViews(progress, total)
         }
+
+        if (key == IS_SQUIGGLY) {
+            squiggly.animate = (MusicPlayerRemote.isPlaying && PreferenceUtil.isSquiggly)
+        }
     }
 
     private fun applyButtonSwapLogic() {
-        if (PreferenceUtil.swapShuffleRepeatButtons) {
-            val parent = shuffleButton.parent as? ConstraintLayout
-            parent?.let {
-                val constraintSet = ConstraintSet()
-                constraintSet.clone(it)
-
-                // Clear existing constraints for shuffle and repeat buttons
-                constraintSet.clear(shuffleButton.id, ConstraintSet.START)
-                constraintSet.clear(shuffleButton.id, ConstraintSet.END)
-                constraintSet.clear(repeatButton.id, ConstraintSet.START)
-                constraintSet.clear(repeatButton.id, ConstraintSet.END)
-
-                // Swap positions: shuffleButton takes repeatButton's original position
-                // and repeatButton takes shuffleButton's original position.
-                // Original: repeatButton -- previousButton -- playPauseButton -- nextButton -- shuffleButton
-                // New:      shuffleButton -- previousButton -- playPauseButton -- nextButton -- repeatButton
-
-                // Shuffle button takes repeatButton's original position (leftmost)
-                constraintSet.connect(shuffleButton.id, ConstraintSet.END, R.id.previousButton, ConstraintSet.START)
-                constraintSet.connect(shuffleButton.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                constraintSet.setHorizontalBias(shuffleButton.id, 0.5f) // Maintain horizontal bias
-
-                // Repeat button takes shuffleButton's original position (rightmost)
-                constraintSet.connect(repeatButton.id, ConstraintSet.START, R.id.nextButton, ConstraintSet.END)
-                constraintSet.connect(repeatButton.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constraintSet.setHorizontalBias(repeatButton.id, 0.5f) // Maintain horizontal bias
-
-                constraintSet.applyTo(parent)
-                // manual app restart
-            }
-        }
-        else {
-            val parent = shuffleButton.parent as? ConstraintLayout
-            parent?.let {
-                val constraintSet = ConstraintSet()
-                constraintSet.clone(it)
-
-                // Clear existing constraints for shuffle and repeat buttons
-                constraintSet.clear(shuffleButton.id, ConstraintSet.START)
-                constraintSet.clear(shuffleButton.id, ConstraintSet.END)
-                constraintSet.clear(repeatButton.id, ConstraintSet.START)
-                constraintSet.clear(repeatButton.id, ConstraintSet.END)
-
-                // Swap positions: shuffleButton takes repeatButton's original position
-                // and repeatButton takes shuffleButton's original position.
-                // Original: repeatButton -- previousButton -- playPauseButton -- nextButton -- shuffleButton
-                // New:      shuffleButton -- previousButton -- playPauseButton -- nextButton -- repeatButton
-
-                // Shuffle button takes repeatButton's original position (leftmost)
-                constraintSet.connect(repeatButton.id, ConstraintSet.END, R.id.previousButton, ConstraintSet.START)
-                constraintSet.connect(repeatButton.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                constraintSet.setHorizontalBias(repeatButton.id, 0.5f) // Maintain horizontal bias
-
-                // Repeat button takes shuffleButton's original position (rightmost)
-                constraintSet.connect(shuffleButton.id, ConstraintSet.START, R.id.nextButton, ConstraintSet.END)
-                constraintSet.connect(shuffleButton.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constraintSet.setHorizontalBias(shuffleButton.id, 0.5f) // Maintain horizontal bias
-
-                constraintSet.applyTo(parent)
-            }
-        }
-            
+        setUpShuffleButton()
+        updateShuffleState()
+        setUpRepeatButton()
+        updateRepeatState()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -321,11 +288,13 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
     }
 
     private fun setUpShuffleButton() {
-        shuffleButton.setOnClickListener { MusicPlayerRemote.toggleShuffleMode() }
+        getShuffle().setOnClickListener { MusicPlayerRemote.toggleShuffleMode() }
+        getShuffle().setImageResource(R.drawable.ic_shuffle)
     }
 
     private fun setUpRepeatButton() {
-        repeatButton.setOnClickListener { MusicPlayerRemote.cycleRepeatMode() }
+        getRepeat().setOnClickListener { MusicPlayerRemote.cycleRepeatMode() }
+        getRepeat().setImageResource(R.drawable.ic_repeat)
     }
 
     fun updatePrevNextColor() {
@@ -334,7 +303,7 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
     }
 
     fun updateShuffleState() {
-        shuffleButton.setColorFilter(
+        getShuffle().setColorFilter(
             when (MusicPlayerRemote.shuffleMode) {
                 MusicService.SHUFFLE_MODE_SHUFFLE -> lastPlaybackControlsColor
                 else -> lastDisabledPlaybackControlsColor
@@ -342,25 +311,31 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
         )
     }
 
+    private fun getRepeat(): ImageButton =
+        if (!PreferenceUtil.swapShuffleRepeatButtons) repeatButton else shuffleButton
+
+    private fun getShuffle(): ImageButton =
+        if (!PreferenceUtil.swapShuffleRepeatButtons) shuffleButton else repeatButton
+
     fun updateRepeatState() {
         when (MusicPlayerRemote.repeatMode) {
             MusicService.REPEAT_MODE_NONE -> {
-                repeatButton.setImageResource(R.drawable.ic_repeat)
-                repeatButton.setColorFilter(
+                getRepeat().setImageResource(R.drawable.ic_repeat)
+                getRepeat().setColorFilter(
                     lastDisabledPlaybackControlsColor,
                     PorterDuff.Mode.SRC_IN
                 )
             }
             MusicService.REPEAT_MODE_ALL -> {
-                repeatButton.setImageResource(R.drawable.ic_repeat)
-                repeatButton.setColorFilter(
+                getRepeat().setImageResource(R.drawable.ic_repeat)
+                getRepeat().setColorFilter(
                     lastPlaybackControlsColor,
                     PorterDuff.Mode.SRC_IN
                 )
             }
             MusicService.REPEAT_MODE_THIS -> {
-                repeatButton.setImageResource(R.drawable.ic_repeat_one)
-                repeatButton.setColorFilter(
+                getRepeat().setImageResource(R.drawable.ic_repeat_one)
+                getRepeat().setColorFilter(
                     lastPlaybackControlsColor,
                     PorterDuff.Mode.SRC_IN
                 )
@@ -382,6 +357,13 @@ abstract class AbsPlayerControlsFragment(@LayoutRes layout: Int) : AbsMusicServi
 
     override fun onResume() {
         super.onResume()
+        if (seekBar != null) {
+            setUpSquiggly()
+            val max = seekBar?.max?.coerceAtLeast(1) ?: 1
+            val progress = seekBar?.progress ?: 0
+            val level = ((progress * 10000f) / max).toInt()
+            squiggly?.level = level
+        }
         progressViewUpdateHelper.start()
     }
 

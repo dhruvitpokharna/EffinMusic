@@ -41,7 +41,7 @@
     <string-array name="artwork_click_options_values">
         <item>0</item>
         <item>1</item>
-        <item>3</item>
+        <item>2</item>
     </string-array>
 
     <string-array name="pref_tab_text_mode_values">

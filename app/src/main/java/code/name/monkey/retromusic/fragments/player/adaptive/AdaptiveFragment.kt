@@ -151,8 +151,7 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player),
                                                     selectedArtist = albumArtists?.find {
                                                         it.name.equals(selectedArtistName, ignoreCase = true)
                                                     }
-                                                }
-                                                if (which == 1) {
+                                                } else {
                                                     selectedArtist = contributingArtists?.find {
                                                         it.name.equals(selectedArtistName, ignoreCase = true)
                                                     }
@@ -160,8 +159,7 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player),
                                                 if (selectedArtist != null) {
                                                     if (which == 0) {
                                                         goToAlbumArtist(requireActivity(), selectedArtist.name)
-                                                    }
-                                                    if (which == 1) {
+                                                    } else {
                                                         goToArtist(requireActivity(), selectedArtist.id)
                                                     }
                                                 } else {
@@ -211,15 +209,20 @@ class AdaptiveFragment : AbsPlayerFragment(R.layout.fragment_adaptive_player),
         binding.playerToolbar.title = song.title
 
         val artistName = song.artistName?.trim()
-        val allArtists = listOfNotNull(song.albumArtist, song.artistName)
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-            .distinct()
+        
+        val allArtists = if (!PreferenceUtil.fixYear) {
+            listOfNotNull(song.albumArtist, song.artistName)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .distinct()
+        } else {
+            song.artistNames?.split(",")?.map { it.trim() } ?: emptyList()
+        }
             
         individualArtists = allArtists
         
         // Always display the full artist name string
-        binding.playerToolbar.subtitle = song.allArtists
+        binding.playerToolbar.subtitle = allArtists.joinToString(", ")
         applyMarqueeToToolbarTitle()
     }
 

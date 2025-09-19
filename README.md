@@ -23,16 +23,11 @@
 
 
 ## 📦 Included Features
-- Fast!
 - Major bugs fixed
 - LRCLIB Lyrics
 - Improved Search Bar
 - Minimal Artist
-- Artist Delimiter
-- Wavy Slider
-- ReplayGain
 - Settings Search Bar
-- Double Tap to Favorite
 - Built-in Equalizer
 - Playlist Drag-Drop
 - Sort by Recording date

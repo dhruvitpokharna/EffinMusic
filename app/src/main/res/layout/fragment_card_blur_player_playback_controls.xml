@@ -48,16 +48,15 @@
             tools:text="22.00" />
     </LinearLayout>
 
-    <com.google.android.material.slider.Slider
+    <SeekBar
         android:id="@+id/progressSlider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxHeight="2dp"
-        style="@style/Widget.Retro.Slider"
+        android:paddingVertical="16dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:progressDrawable="@drawable/color_progress_seek"
-        tools:progress="20" />
+        android:max="100"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/songInfo"

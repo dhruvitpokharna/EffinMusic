@@ -22,7 +22,7 @@ import code.name.monkey.retromusic.db.SongMetadataEntity
 
 @Database(
     entities = [PlaylistEntity::class, SongEntity::class, HistoryEntity::class, PlayCountEntity::class, SongMetadataEntity::class],
-    version = 27,
+    version = 29,
     exportSchema = false
 )
 abstract class RetroDatabase : RoomDatabase() {

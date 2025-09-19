@@ -16,6 +16,7 @@ package code.name.monkey.retromusic.adapter.album
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.GestureDetector
@@ -40,6 +41,7 @@ import code.name.monkey.retromusic.extensions.currentFragment
 import code.name.monkey.retromusic.fragments.AlbumCoverStyle
 import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.fragments.NowPlayingScreen.*
+import code.name.monkey.retromusic.fragments.ReloadType
 import code.name.monkey.retromusic.fragments.base.goToLyrics
 import code.name.monkey.retromusic.glide.RetroGlideExtension
 import code.name.monkey.retromusic.glide.RetroGlideExtension.asBitmapPalette
@@ -58,6 +60,7 @@ import com.bumptech.glide.RequestBuilder
 import android.net.Uri
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -146,7 +149,6 @@ class AlbumCoverPagerAdapter(
                     }
                     return true
                 }
-                
                 override fun onDoubleTap(e: MotionEvent): Boolean {
                     if (!PreferenceUtil.isDoubleTapFavorite) {
                         return false
@@ -154,14 +156,35 @@ class AlbumCoverPagerAdapter(
                     lifecycleScope.launch(Dispatchers.IO) {
                         val song = MusicPlayerRemote.currentSong
                         val playlist: PlaylistEntity = libraryViewModel.favoritePlaylist()
+                        val songEntity = song.toSongEntity(playlist.playListId)
                         if (!libraryViewModel.isSongFavorite(song.id)) {
-                            libraryViewModel.insertSongs(listOf(song.toSongEntity(playlist.playListId)))
+                            libraryViewModel.insertSongs(listOf(songEntity))
+                            withContext(Dispatchers.Main) {
+                                val heart = view.findViewById<ImageView>(R.id.heartView)
+                                heart.visibility = View.VISIBLE
+                                heart.setImageResource(R.drawable.heart_pop_anim)
+                                val anim = heart.drawable as AnimatedVectorDrawable
+                                anim.start()
+                                lifecycleScope.launch {
+                                    delay(400) 
+                                    heart.visibility = View.GONE
+                                }
+                            }
+                            libraryViewModel.forceReload(ReloadType.Playlists)
                             LocalBroadcastManager.getInstance(requireContext())
                                 .sendBroadcast(Intent(MusicService.FAVORITE_STATE_CHANGED))
                         } else {
+                            libraryViewModel.removeSongFromPlaylist(songEntity)
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(requireContext(), "Already in Favorites", Toast.LENGTH_SHORT).show()
+                                val heart = view.findViewById<ImageView>(R.id.heartView)
+                                heart.visibility = View.VISIBLE
+                                heart.setImageResource(R.drawable.heart_break_anim)
+                                val anim = heart.drawable as AnimatedVectorDrawable
+                                anim.start()
                             }
+                            libraryViewModel.forceReload(ReloadType.Playlists)
+                            LocalBroadcastManager.getInstance(requireContext())
+                                .sendBroadcast(Intent(MusicService.FAVORITE_STATE_CHANGED))
                         }
                     }
                     return true

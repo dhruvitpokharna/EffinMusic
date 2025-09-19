@@ -191,6 +191,25 @@ class SortOrder {
         }
     }
 
+    interface PlaylistSongSortOrder {
+
+        companion object {
+
+            /* Album song sort order A-Z */
+            const val SONG_A_Z = MediaStore.Audio.Media.DEFAULT_SORT_ORDER
+
+            /* Album song sort order Z-A */
+            const val SONG_Z_A = "$SONG_A_Z DESC"
+
+            /* Album song sort order track list */
+            const val SONG_TRACK_LIST = (MediaStore.Audio.Media.TRACK + ", " +
+                    MediaStore.Audio.Media.DEFAULT_SORT_ORDER)
+
+            /* Album song sort order duration */
+            const val SONG_DURATION = SongSortOrder.SONG_DURATION
+        }
+    }
+
     /**
      * Playlist sort order entries.
      */

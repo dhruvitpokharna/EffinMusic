@@ -646,6 +646,9 @@
 
     <string name="pref_title_show_fab_on_scroll">Show FAB on Scroll</string>
     <string name="pref_summary_show_fab_on_scroll">Keep the Floating Action Button visible when scrolling</string>
+    
+    <string name="pref_title_artist_delimiters">Artist Delimiters</string>
+    <string name="pref_summary_artist_delimiters">Works only for custom library</string>
 
     <string name="pref_title_offline_mode">Offline Mode</string>
     <string name="pref_title_auto_hide_mini_player">Auto-hide Mini Player</string>
@@ -659,8 +662,22 @@
     <string name="pref_title_show_song_only">Minimal Artist</string>
     <string name="pref_summary_show_song_only">Show Songs/Albums only in Artist</string>
 
-    <string name="pref_title_fix_year">Fix Year</string>
-    <string name="pref_summary_fix_year">Fix year when sorting (slow)</string>
+    <string name="pref_title_is_skip_to_previous">Previous/Restart Threshold</string>
+    <string name="pref_summary_is_skip_to_previous">Under X sec → previous track, over X sec → restart song</string>
+
+    <string name="pref_title_rebuild_custom_library">Rebuild Custom Library</string>
+
+    <string name="pref_title_fix_year">Custom Library</string>
+    <string name="pref_summary_fix_year">For sort by year, multiple artist support</string>
+
+    <string name="pref_title_is_squiggly">Wavy Bar</string>
+    <string name="pref_summary_is_squiggly">Use Wavy SeekBar for Player</string>
+
+    <string name="pref_title_replay_gain">Replay Gain</string>
+    <string name="pref_summary_replay_gain">Apply replay gain</string>
+
+    <string name="pref_title_prefer_album_gain">Prefer Album Gain</string>
+    <string name="pref_summary_prefer_album_gain">Prefer album gain over track gain</string>
 
     <string name="pref_title_swap_shuffle_repeat">Swap Shuffle and Repeat Buttons</string>
     <string name="pref_summary_swap_shuffle_repeat">Swap the positions of the shuffle and repeat buttons on the now playing screen.</string>

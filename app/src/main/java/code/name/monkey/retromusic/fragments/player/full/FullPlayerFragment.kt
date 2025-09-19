@@ -69,7 +69,9 @@ class FullPlayerFragment : AbsPlayerFragment(R.layout.fragment_full) {
 
     private fun setupArtist() {
         binding.artistImage.setOnClickListener {
-goToArtist(mainActivity, MusicPlayerRemote.currentSong.artistId)
+            val song = MusicPlayerRemote.currentSong
+            val ids = song.artistIds?.split(",")?.mapNotNull { it.trim().toLongOrNull() } ?: emptyList()
+            goToArtist(mainActivity, ids[0])
         }
     }
 
@@ -129,7 +131,12 @@ goToArtist(mainActivity, MusicPlayerRemote.currentSong.artistId)
     }
 
     private fun updateArtistImage() {
-        libraryViewModel.artist(MusicPlayerRemote.currentSong.artistId)
+        val song = MusicPlayerRemote.currentSong
+        val ids = song.artistIds?.split(",")?.mapNotNull { it.trim().toLongOrNull() } ?: emptyList()
+        if (ids.isEmpty()) {
+            return
+        }
+        libraryViewModel.artist(ids[0])
             .observe(viewLifecycleOwner) { artist ->
                 if (artist.id != -1L) {
                     Glide.with(requireActivity())
