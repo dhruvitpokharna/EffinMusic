@@ -17,7 +17,7 @@
 ## 🆕 Material You Design Music Player for Android music lovers 
 
 ## Download
-[<img src="https://raw.githubusercontent.com/effinmr/EffinMusic/refs/heads/main/app/src/main/assets/get-it-on-github.png"
+[<img src="https://raw.githubusercontent.com/effinmr/EffinMusic/refs/heads/dev/app/src/main/assets/get-it-on-github.png"
       alt='Get it on GitHub'
       height="80">](https://github.com/effinmr/EffinMusic/releases/latest)
 
