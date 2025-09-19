@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        variant: [normalDebug] # matrix with only one item for now
+        variant: [normalDebug] 
 
     steps:
       - name: Checkout code
